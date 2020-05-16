@@ -28,4 +28,5 @@ Functions to add:
 5. Add function to scale everything relative to a certain date, or to scale year-on-year in SafeGraph style.
 6. Add NAICS titles internally (Nick H-K has a file)
 7. Easy and attractive template **ggplot2** graph for "foot traffic in [brand/NAICS X, Y, Z] for range A-B relative to date C" (Nick H-K has code)
+8. AWS downloader
 
