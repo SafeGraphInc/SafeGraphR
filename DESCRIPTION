@@ -1,0 +1,23 @@
+Package: SafeGraphR
+Type: Package
+Title: Package for Processing and Analyzing SafeGraph Data
+Version: 0.1.0
+Authors@R: c(
+    person(given = "Nick", family = "Huntington-Klein", role = c("aut","cre"), 
+           email = "nhuntington-klein@fullerton.edu", 
+           comment = c(ORCID = "0000-0002-7352-3991")))
+Description: This package is designed to make it easy to read SafeGraph files
+    into R, and to perform basic preprocessing on SafeGraph data to ready it for analysis.
+License: MIT
+Encoding: UTF-8
+LazyData: true
+Depends: 
+    R (>= 3.4),
+Imports:
+    lubridate,
+    data.table,
+    magrittr,
+    dplyr,
+    purrr,
+    stringr
+RoxygenNote: 7.1.0
