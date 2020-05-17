@@ -21,11 +21,12 @@ Fixes for `read_distancing`:
 
 Functions to add:
 
-1. Move the "CSV exploder" internal code to its own function, and ideally speed up although it's already pretty fast <- PRIORITY, WILL AFFECT MOST OTHER CODE
-2. Run hierarchical Bayes (Nick H-K has code)
-3. Add easy Census data internally
-4. Do population weighting when aggregating (Nick H-K has code)
-5. Add function to scale everything relative to a certain date, or to scale year-on-year in SafeGraph style.
-6. Add NAICS titles internally (Nick H-K has a file)
-7. Easy and attractive template **ggplot2** graph for "foot traffic in [brand/NAICS X, Y, Z] for range A-B relative to date C" (Nick H-K has code)
+1. Move the "CSV exploder" internal code to its own function, and ideally speed up although it's already pretty fast <- DONE BUT NEEDS TESTING
+2. Make a version of the CSV exploder for named JSON entries
+3. Run hierarchical Bayes (Nick H-K has code)
+4. Add easy Census data internally
+5. Do population weighting when aggregating (Nick H-K has code)
+6. Add function to scale everything relative to a certain date, or to scale year-on-year in SafeGraph style.
+7. Add NAICS titles internally (Nick H-K has a file)
+8. Easy and attractive template **ggplot2** graph for "foot traffic in [brand/NAICS X, Y, Z] for range A-B relative to date C" (Nick H-K has code)
 

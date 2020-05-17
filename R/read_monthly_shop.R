@@ -35,17 +35,10 @@ read_monthly_shop <- function(filename,dir='./') {
     norm <- data.table::fread('normalization_stats.csv')
 
     # Total visits
-    total_visits <- patterns[visits_by_day != '',
-                             .(total_visits=Reduce("+",
-                                                   map(
-                                                     str_split(
-                                                       str_sub(
-                                                         visits_by_day,2,
-                                                         nchar(visits_by_day)-1),
-                                                       ','),
-                                                     as.numeric))),
-                             by=.(region)]
-    total_visits[,day := seq_len(.N),by=region]
+    total_visits <- expand_integer_json(patterns,
+                                        expand = 'visits_by_day',
+                                        index = 'day',
+                                        by = 'region')
     total_visits <- dplyr::as_tibble(total_visits)
 
 
@@ -59,17 +52,11 @@ read_monthly_shop <- function(filename,dir='./') {
     # For speed!
     data.table::setkey(patterns,'naics_code','region')
 
-    daily_visits <- patterns[visits_by_day != '',
-                             .(visits_by_day=Reduce("+",
-                                                    purrr::map(
-                                                      str_split(
-                                                        str_sub(
-                                                          visits_by_day,2,
-                                                          nchar(visits_by_day)-1),
-                                                        ','),
-                                                      as.numeric))),
-                             by=.(naics_code,region)]
-    daily_visits[,day := seq_len(.N),by=.(naics_code,region)]
+    daily_visits <- expand_integer_json(patterns,
+                                        expand = 'visits_by_day',
+                                        index = 'day',
+                                        by = c('region','naics_code'),
+                                        set_key = FALSE)
 
     # Flatten patterns down
     p_naics_code <- patterns[,.(raw_visit_counts=sum(raw_visit_counts,na.rm=TRUE)),
@@ -89,17 +76,11 @@ read_monthly_shop <- function(filename,dir='./') {
     # then brands
     data.table::setkey(patterns,'brands','region')
 
-    daily_visits <- patterns[brands != '' & visits_by_day != '',
-                             .(visits_by_day=Reduce("+",
-                                                    purrr::map(
-                                                      stringr::str_split(
-                                                        stringr::str_sub(
-                                                          visits_by_day,2,
-                                                          nchar(visits_by_day)-1),
-                                                        ','),
-                                                      as.numeric))),
-                             by=.(brands,region)]
-    daily_visits[,day := seq_len(.N),by=.(brands,region)]
+    daily_visits <- expand_integer_json(patterns,
+                                        expand = 'visits_by_day',
+                                        index = 'day',
+                                        by = c('region','brands'),
+                                        set_key = FALSE)
 
     # Flatten patterns down
     p_brands <- patterns[brands != '',
@@ -120,17 +101,11 @@ read_monthly_shop <- function(filename,dir='./') {
     # then sub_category
     data.table::setkey(patterns,'top_category','sub_category','region')
 
-    daily_visits <- patterns[visits_by_day != '',
-                             .(visits_by_day=Reduce("+",
-                                                    purrr::map(
-                                                      stringr::str_split(
-                                                        stringr::str_sub(
-                                                          visits_by_day,2,
-                                                          nchar(visits_by_day)-1),
-                                                        ','),
-                                                      as.numeric))),
-                             by=.(top_category,sub_category,region)]
-    daily_visits[,day := seq_len(.N),by=.(top_category,sub_category,region)]
+    daily_visits <- expand_integer_json(patterns,
+                                        expand = 'visits_by_day',
+                                        index = 'day',
+                                        by = c('region','top_category','sub_category'),
+                                        set_key = FALSE)
 
     # Flatten patterns down
     p_sub_category <- patterns[sub_category != '',
