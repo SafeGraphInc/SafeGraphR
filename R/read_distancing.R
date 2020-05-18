@@ -34,8 +34,7 @@ read_distancing <- function(start,end,dir) {
 
     # Convert CBG to string so we can easily extract state and county indicators
     dt[,origin_census_block_group := as.character(origin_census_block_group)]
-    dt[,c('state','county') := list(str_sub(origin_census_block_group,1,2 - (nchar(origin_census_block_group) == 11)),
-                                    str_sub(origin_census_block_group,3 - (nchar(origin_census_block_group) == 11),5 - (nchar(origin_census_block_group) == 11)))]
+    dt[,c('state','county') := fips_from_cbg(origin_census_block_group)]
     dt[,origin_census_block_group := NULL]
 
     # Collapse to the county level, summing up number of devices
