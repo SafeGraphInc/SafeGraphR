@@ -8,7 +8,7 @@ Authors@R: c(
            comment = c(ORCID = "0000-0002-7352-3991")))
 Description: This package is designed to make it easy to read SafeGraph files
     into R, and to perform basic preprocessing on SafeGraph data to ready it for analysis.
-License: MIT
+License: Apache 2.0
 Encoding: UTF-8
 LazyData: true
 Depends: 
