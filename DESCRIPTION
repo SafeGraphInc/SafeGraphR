@@ -19,5 +19,6 @@ Imports:
     magrittr,
     dplyr,
     purrr,
-    stringr
+    stringr,
+    jsonlite
 RoxygenNote: 7.1.0

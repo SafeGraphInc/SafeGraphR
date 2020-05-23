@@ -4,7 +4,17 @@
 \alias{read_distancing}
 \title{Read in Stay-at-Home Data}
 \usage{
-read_distancing(start, end, dir)
+read_distancing(
+  start,
+  end,
+  dir = ".",
+  gen_fips = TRUE,
+  by = c("state_fips", "county_fips"),
+  select = c("origin_census_block_group", "device_count",
+    "completely_home_device_count", "part_time_work_behavior_devices",
+    "full_time_work_behavior_devices"),
+  ...
+)
 }
 \arguments{
 \item{start}{Date object with the starting date to read in stay-at-home data.}
@@ -12,6 +22,14 @@ read_distancing(start, end, dir)
 \item{end}{Ending date to read stay-at-home data to.}
 
 \item{dir}{The folder in which the "2020" (etc.) folder resides.}
+
+\item{gen_fips}{Set to \code{TRUE} to use the \code{origin_census_block_group} variable to generate \code{state_fips} and \code{county_fips} variables. This will also result in \code{origin_census_block_group} being converted to character.}
+
+\item{by}{After reading, collapse to this level by \code{sum}ming all the data. Usually \code{c('state_fips','county_fips')} with \code{gen_fips = TRUE}. Set to \code{NULL} to aggregate across all initial rows, or set to \code{FALSE} to not aggregate at all.}
+
+\item{select}{Character vector of variables to get from the file. Set to \code{NULL} to get all variables.}
+
+\item{...}{Other arguments to be passed to \code{data.table::fread} when reading in the file. For example, \code{nrows} to only read in a certain number of rows.}
 }
 \description{
 Takes a folder of stay-at-home Safegraph data structured how it comes from AWS (i.e. folders 2020/04/03 for April 3 2020) and reads them in.

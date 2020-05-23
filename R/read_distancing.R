@@ -5,9 +5,17 @@
 #' @param start Date object with the starting date to read in stay-at-home data.
 #' @param end Ending date to read stay-at-home data to.
 #' @param dir The folder in which the "2020" (etc.) folder resides.
+#' @param gen_fips Set to \code{TRUE} to use the \code{origin_census_block_group} variable to generate \code{state_fips} and \code{county_fips} variables. This will also result in \code{origin_census_block_group} being converted to character.
+#' @param by After reading, collapse to this level by \code{sum}ming all the data. Usually \code{c('state_fips','county_fips')} with \code{gen_fips = TRUE}. Set to \code{NULL} to aggregate across all initial rows, or set to \code{FALSE} to not aggregate at all.
+#' @param select Character vector of variables to get from the file. Set to \code{NULL} to get all variables.
+#' @param ... Other arguments to be passed to \code{data.table::fread} when reading in the file. For example, \code{nrows} to only read in a certain number of rows.
 #' @export
 
-read_distancing <- function(start,end,dir) {
+read_distancing <- function(start,end,dir = '.',gen_fips = TRUE, by = c('state_fips','county_fips'), select = c('origin_census_block_group',
+                                                                                                             'device_count',
+                                                                                                             'completely_home_device_count',
+                                                                                                             'part_time_work_behavior_devices',
+                                                                                                             'full_time_work_behavior_devices'), ...) {
 
   # List of dates that I want
   dates <- dplyr::tibble(date = start + lubridate::days(0:(end - start))) %>%
@@ -26,19 +34,26 @@ read_distancing <- function(start,end,dir) {
     print(target)
 
     # Read in only these columns
-    dt <- temp_unzip(target,data.table::fread,select=c('origin_census_block_group',
-                                           'device_count',
-                                           'completely_home_device_count',
-                                           'part_time_work_behavior_devices',
-                                           'full_time_work_behavior_devices'))
+    if (is.null(select)) {
+      dt <- temp_unzip(target,data.table::fread,...)
+    } else {
+      dt <- temp_unzip(target,data.table::fread,select = select,...)
+    }
 
     # Convert CBG to string so we can easily extract state and county indicators
-    dt[,origin_census_block_group := as.character(origin_census_block_group)]
-    dt[,c('state','county') := fips_from_cbg(origin_census_block_group)]
-    dt[,origin_census_block_group := NULL]
+    if (gen_fips) {
+      dt[,origin_census_block_group := as.character(origin_census_block_group)]
+      dt[,c('state','county') := fips_from_cbg(origin_census_block_group)]
+    }
 
-    # Collapse to the county level, summing up number of devices
-    dt <- dt[,lapply(.SD, sum, na.rm=TRUE), by=.(state,county)]
+    # Collapse
+    if (!is.logical(by)) {
+      # Can keep only summable or by-variables
+      dt <- subset(dt,select = (sapply(dt,is.numeric) |
+        names(dt) %in% by))
+      dt <- dt[,lapply(.SD, sum, na.rm=TRUE), by=by]
+    }
+
     # Add the date column
     dt[,date := dates$date[r]]
 
@@ -50,4 +65,5 @@ read_distancing <- function(start,end,dir) {
     }
   }
 
+  return(compiled_data)
 }
