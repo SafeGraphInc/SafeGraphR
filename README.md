@@ -26,3 +26,4 @@ Functions to add:
 7. AWS downloader
 8. Add county and state names
 9. Add NAICS codes
+10. Read-in of normalization and home-patterns files (easy)
