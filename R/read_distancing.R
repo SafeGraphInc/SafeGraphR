@@ -35,9 +35,9 @@ read_distancing <- function(start,end,dir = '.',gen_fips = TRUE, by = c('state_f
 
     # Read in only these columns
     if (is.null(select)) {
-      dt <- temp_unzip(target,data.table::fread,...)
+      dt <- data.table::fread(file = target,...)
     } else {
-      dt <- temp_unzip(target,data.table::fread,select = select,...)
+      dt <- data.table::fread(file = target,select = select,...)
     }
 
     # Convert CBG to string so we can easily extract state and county indicators

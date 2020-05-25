@@ -5,18 +5,13 @@ This package is under development.
 
 Current to-do list:
 
-Fixes for `read_monthly_shop` and `read_weekly_aws`:
+Fixes for reading-in functions:
 
-1. Check if everything works with, say, monthly AWS files and weekly shop files, and then generalize the documentation to match
-2. Automatically merge in NAICS titles for by-NAICS data
-3. Automatically merge county and state names
-
-Fixes for `read_distancing`:
-
-1. Default to automatically read in all the distancing data you have
+1. Automatically merge in NAICS titles for by-NAICS data
 2. Automatically merge county and state names
+3. Create read_shop for reading files as they come from the shop
 
-Functions to add:
+Other functions to add:
 1. Run hierarchical Bayes (Nick H-K has code)
 2. Add easy Census data internally
 3. Do population weighting when aggregating (Nick H-K has code)
@@ -26,4 +21,3 @@ Functions to add:
 7. AWS downloader
 8. Add county and state names
 9. Add NAICS codes
-10. Read-in of normalization and home-patterns files (easy)

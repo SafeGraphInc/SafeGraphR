@@ -1,24 +1,26 @@
-#' Read Weekly Patterns as Downloaded from AWS
+#' Read Safegraph Patterns
 #'
-#' Be aware that the files this is designed to work with are large and this function may take a while to execute. This function takes a single \code{.csv.gz} patterns file as provided for data via AWS and reads it in. The output is a \code{data.table} (or a list of them if multiple are specified) including the file \code{filename} collapsed and expanded in different ways.
+#' Be aware that the files this is designed to work with are large and this function may take a while to execute. This function takes a single \code{.csv.gz} SafeGraph patterns file and reads it in. The output is a \code{data.table} (or a list of them if multiple are specified) including the file \code{filename} collapsed and expanded in different ways.
 #'
 #' @param filename The filename of the \code{.csv.gz} file.
 #' @param dir The directory in which the file sits.
 #' @param by A character vector giving the variable names of the level to be collapsed to using \code{sum(na.rm=TRUE)}. The resulting data will have X rows per unique combination of \code{by}, where X is 1 if no expand variables are specified, or the length of the expand variable if specified. Set to \code{NULL} to aggregate across all initial rows, or set to \code{FALSE} to not aggregate at all (this will also add an \code{initial_rowno} column showing the original row number).
+#' @param fun Function to use to aggregate the expanded variable to the \code{by} level.
+#' @param na.rm Whether to remove any missing values of the expanded before aggregating.
 #' @param expand_int A character variable with the name of The first e JSON variable in integer format ([1,2,3,...]) to be expanded into rows. Cannot be specified along with \code{expand_cat}.
 #' @param expand_cat A JSON variable in categorical format ({A: 2, B: 3, etc.}) to be expanded into rows.  Ignored if \code{expand_int} is specified.
 #' @param expand_name The name of the new variable to be created with the category index for the expanded variable.
-#' @param multi A list of named lists, for the purposes of creating a list of multiple processed files. This will vastly speed up processing over doing each of them one at a time. Each named list has the entry \code{name} as well as any of the options \code{by, expand_int, expand_cat, expand_name} as specified above. If specified, will override other entries of \code{by}, etc..
+#' @param multi A list of named lists, for the purposes of creating a list of multiple processed files. This will vastly speed up processing over doing each of them one at a time. Each named list has the entry \code{name} as well as any of the options \code{by, fun, expand_int, expand_cat, expand_name} as specified above. If specified, will override other entries of \code{by}, etc..
 #' @param select Character vector of variables to get from the file. Set to \code{NULL} to get all variables.
 #' @param gen_fips Set to \code{TRUE} to use the \code{poi_cbg} variable to generate \code{state_fips} and \code{county_fips} variables. This will also result in \code{poi_cbg} being converted to character.
 #' @param start_date The first date in the file, as a date object. If omitted, will assume that the filename begins YYYY-MM-DD.
 #' @param ... Other arguments to be passed to \code{data.table::fread} when reading in the file. For example, \code{nrows} to only read in a certain number of rows.
 #' @export
 
-read_sg_aws <- function(filename,dir = '.',by = NULL,
+read_patterns <- function(filename,dir = '.',by = NULL, fun = sum, na.rm = TRUE,
                         expand_int = NULL, expand_cat = NULL,
                         expand_name = NULL, multi = NULL,
-                        select=NULL, gen_fips = TRUE, start_date = NULL) {
+                        select=NULL, gen_fips = TRUE, start_date = NULL, ...) {
 
   f <- paste0(dir,filename)
 
@@ -29,9 +31,9 @@ read_sg_aws <- function(filename,dir = '.',by = NULL,
 
   # Read in data
   if (is.null(select)) {
-    patterns <- temp_unzip(f,data.table::fread)
+    patterns <- data.table::fread(file = f, ...)
   } else {
-    patterns <- temp_unzip(f,data.table::fread, select = select)
+    patterns <- data.table::fread(file = f, select = select, ...)
   }
 
   # Get state and county fips
@@ -56,7 +58,7 @@ read_sg_aws <- function(filename,dir = '.',by = NULL,
 
   # If one is specified, convert to list format for code reuse
   if (is.null(multi)) {
-    multi <- list(list(name = 'out', by = by, expand_int = expand_int,
+    multi <- list(list(name = 'out', by = by, fun = fun, na.rm = na.rm, expand_int = expand_int,
                        expand_cat = expand_cat, expand_name = expand_name))
   }
 
@@ -66,6 +68,8 @@ read_sg_aws <- function(filename,dir = '.',by = NULL,
   for (o in multi) {
     name = o[['name']]
     by = o[['by']]
+    fun = o[['fun']]
+    na.rm = o[['na.rm']]
     expand_int = o[['expand_int']]
     expand_cat = o[['expand_cat']]
     expand_name = o[['expand_name']]
@@ -101,6 +105,8 @@ read_sg_aws <- function(filename,dir = '.',by = NULL,
                                       expand = expand_int,
                                       index = expand_name,
                                       by = by,
+                                      fun = fun,
+                                      na.rm = na.rm,
                                       set_key = FALSE)
     }
 
@@ -110,6 +116,8 @@ read_sg_aws <- function(filename,dir = '.',by = NULL,
                                           expand = expand_int,
                                           index = expand_name,
                                           by = by,
+                                          fun = fun,
+                                          na.rm = na.rm,
                                           set_key = FALSE)
     }
 
