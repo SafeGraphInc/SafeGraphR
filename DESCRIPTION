@@ -19,7 +19,9 @@ Imports:
     R.utils,
     magrittr,
     dplyr,
+    ggplot2,
     purrr,
     stringr,
-    jsonlite
+    jsonlite,
+    utils
 RoxygenNote: 7.1.0

@@ -10,6 +10,7 @@ read_patterns(
   by = NULL,
   fun = sum,
   na.rm = TRUE,
+  filter = NULL,
   expand_int = NULL,
   expand_cat = NULL,
   expand_name = NULL,
@@ -31,13 +32,15 @@ read_patterns(
 
 \item{na.rm}{Whether to remove any missing values of the expanded before aggregating.}
 
+\item{filter}{A character string describing a logical statement for filtering the data, for example \code{filter = 'state_fips == 6'} would give you only data from California. Will be used as an \code{i} argument in a \code{data.table}, see \code{help(data.table)}. Filtering here instead of afterwards can cut down on time and memory demands.}
+
 \item{expand_int}{A character variable with the name of The first e JSON variable in integer format ([1,2,3,...]) to be expanded into rows. Cannot be specified along with \code{expand_cat}.}
 
 \item{expand_cat}{A JSON variable in categorical format ({A: 2, B: 3, etc.}) to be expanded into rows.  Ignored if \code{expand_int} is specified.}
 
 \item{expand_name}{The name of the new variable to be created with the category index for the expanded variable.}
 
-\item{multi}{A list of named lists, for the purposes of creating a list of multiple processed files. This will vastly speed up processing over doing each of them one at a time. Each named list has the entry \code{name} as well as any of the options \code{by, fun, expand_int, expand_cat, expand_name} as specified above. If specified, will override other entries of \code{by}, etc..}
+\item{multi}{A list of named lists, for the purposes of creating a list of multiple processed files. This will vastly speed up processing over doing each of them one at a time. Each named list has the entry \code{name} as well as any of the options \code{by, fun, filter, expand_int, expand_cat, expand_name} as specified above. If specified, will override other entries of \code{by}, etc..}
 
 \item{select}{Character vector of variables to get from the file. Set to \code{NULL} to get all variables.}
 

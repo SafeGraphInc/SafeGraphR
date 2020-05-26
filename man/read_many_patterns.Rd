@@ -10,6 +10,7 @@ read_many_patterns(
   by = NULL,
   fun = sum,
   na.rm = TRUE,
+  filter = NULL,
   expand_int = NULL,
   expand_cat = NULL,
   expand_name = NULL,
@@ -25,7 +26,7 @@ read_many_patterns(
 
 \item{dir}{Name of the directory the files are in.}
 
-\item{by, fun, na.rm, expand_int, expand_cat, expand_name, multi, select, gen_fips, start_date, ...}{Arguments to be passed to \code{read_patterns}, specified as in \code{help(read_patterns)}.}
+\item{by, fun, na.rm, filter, expand_int, expand_cat, expand_name, multi, select, gen_fips, start_date, ...}{Arguments to be passed to \code{read_patterns}, specified as in \code{help(read_patterns)}.}
 }
 \description{
 This accepts a directory. It will use \code{read_patterns} to load every \code{csv.gz} in that folder, assuming they are all patterns files. It will then row-bind together each of the produced processed files.

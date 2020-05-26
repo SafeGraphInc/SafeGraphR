@@ -5,13 +5,14 @@
 #' @param start Date object with the starting date to read in stay-at-home data.
 #' @param end Ending date to read stay-at-home data to.
 #' @param dir The folder in which the "2020" (etc.) folder resides.
-#' @param gen_fips Set to \code{TRUE} to use the \code{origin_census_block_group} variable to generate \code{state_fips} and \code{county_fips} variables. This will also result in \code{origin_census_block_group} being converted to character.
+#' @param gen_fips Set to \code{TRUE} to use the \code{origin_census_block_group} variable to generate \code{state_fips} and \code{county_fips} as numeric variables. This will also result in \code{origin_census_block_group} being converted to character.
 #' @param by After reading, collapse to this level by \code{sum}ming all the data. Usually \code{c('state_fips','county_fips')} with \code{gen_fips = TRUE}. Set to \code{NULL} to aggregate across all initial rows, or set to \code{FALSE} to not aggregate at all.
+#' @param filter A character string describing a logical statement for filtering the data, for example \code{filter = 'state_fips == 6'} would give you only data from California. Will be used as an \code{i} argument in a \code{data.table}, see \code{help(data.table)}.  Filtering here instead of afterwards can cut down on time and memory demands.
 #' @param select Character vector of variables to get from the file. Set to \code{NULL} to get all variables.
 #' @param ... Other arguments to be passed to \code{data.table::fread} when reading in the file. For example, \code{nrows} to only read in a certain number of rows.
 #' @export
 
-read_distancing <- function(start,end,dir = '.',gen_fips = TRUE, by = c('state_fips','county_fips'), select = c('origin_census_block_group',
+read_distancing <- function(start,end,dir = '.',gen_fips = TRUE, by = c('state_fips','county_fips'), filter = NULL, select = c('origin_census_block_group',
                                                                                                              'device_count',
                                                                                                              'completely_home_device_count',
                                                                                                              'part_time_work_behavior_devices',
@@ -38,6 +39,10 @@ read_distancing <- function(start,end,dir = '.',gen_fips = TRUE, by = c('state_f
       dt <- data.table::fread(file = target,...)
     } else {
       dt <- data.table::fread(file = target,select = select,...)
+    }
+
+    if (!is.null(filter)) {
+      dt <- dt[eval(parse(text=filter))]
     }
 
     # Convert CBG to string so we can easily extract state and county indicators

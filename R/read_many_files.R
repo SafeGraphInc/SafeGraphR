@@ -15,10 +15,21 @@ read_many_csvs <- function(dir = '.', filelist = NULL, makedate = FALSE, ...) {
                       list.files(path=dir,pattern = '\\.csv.gz'))
   }
 
-  filelist %>%
-    purrr::map(function(x) data.table::fread(x,...)) %>%
-    data.table::rbindlist() %>%
-    return()
+  if (makedate) {
+    filelist %>%
+      purrr::map(function(x) {
+        dt <- data.table::fread(x,...)
+        dt[,date := lubridate::ymd(paste(year,month,day,sep='-'))]
+        return(dt)
+        }) %>%
+      data.table::rbindlist() %>%
+      return()
+  } else {
+    filelist %>%
+      purrr::map(function(x) data.table::fread(x,...)) %>%
+      data.table::rbindlist() %>%
+      return()
+  }
 }
 
 #' Read and row-bind many patterns files
@@ -27,9 +38,10 @@ read_many_csvs <- function(dir = '.', filelist = NULL, makedate = FALSE, ...) {
 #'
 #' @param dir Name of the directory the files are in.
 #' @param filelist Optionally specify only a subset of the filename to read in.
-#' @param by,fun,na.rm,expand_int,expand_cat,expand_name,multi,select,gen_fips,start_date,... Arguments to be passed to \code{read_patterns}, specified as in \code{help(read_patterns)}.
+#' @param by,fun,na.rm,filter,expand_int,expand_cat,expand_name,multi,select,gen_fips,start_date,... Arguments to be passed to \code{read_patterns}, specified as in \code{help(read_patterns)}.
+#' @export
 
-read_many_patterns <- function(filelist,dir = '.',by = NULL, fun = sum, na.rm = TRUE,
+read_many_patterns <- function(filelist,dir = '.',by = NULL, fun = sum, na.rm = TRUE, filter = NULL,
                         expand_int = NULL, expand_cat = NULL,
                         expand_name = NULL, multi = NULL,
                         select=NULL, gen_fips = TRUE, start_date = NULL, ...) {
@@ -41,7 +53,7 @@ read_many_patterns <- function(filelist,dir = '.',by = NULL, fun = sum, na.rm = 
   # data table that can be bound right away
   if (is.null(multi)) {
     filelist %>%
-      purrr::map(function(x) read_sg_aws(x, dir = dir, by = by, fun = fun, na.rm = na.rm,
+      purrr::map(function(x) read_patterns(x, dir = dir, by = by, fun = fun, na.rm = na.rm, filter = filter,
                                   expand_int = expand_int, expand_cat = expand_cat,
                                   expand_name = expand_name, multi = NULL,
                                   select = select, gen_fips = gen_fips, start_date = start_date, ...)) %>%
@@ -51,7 +63,7 @@ read_many_patterns <- function(filelist,dir = '.',by = NULL, fun = sum, na.rm = 
 
   # Otherwise we'll get back a list that we need to unpack before binding
   patterns <- filelist %>%
-    purrr::map(function(x) read_sg_aws(x, dir = dir, multi = multi,
+    purrr::map(function(x) read_patterns(x, dir = dir, multi = multi,
                                 select = select, gen_fips = gen_fips, start_date = start_date, ...))
 
   # Bind each of them together

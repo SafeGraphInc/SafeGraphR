@@ -10,6 +10,7 @@ read_distancing(
   dir = ".",
   gen_fips = TRUE,
   by = c("state_fips", "county_fips"),
+  filter = NULL,
   select = c("origin_census_block_group", "device_count",
     "completely_home_device_count", "part_time_work_behavior_devices",
     "full_time_work_behavior_devices"),
@@ -23,9 +24,11 @@ read_distancing(
 
 \item{dir}{The folder in which the "2020" (etc.) folder resides.}
 
-\item{gen_fips}{Set to \code{TRUE} to use the \code{origin_census_block_group} variable to generate \code{state_fips} and \code{county_fips} variables. This will also result in \code{origin_census_block_group} being converted to character.}
+\item{gen_fips}{Set to \code{TRUE} to use the \code{origin_census_block_group} variable to generate \code{state_fips} and \code{county_fips} as numeric variables. This will also result in \code{origin_census_block_group} being converted to character.}
 
 \item{by}{After reading, collapse to this level by \code{sum}ming all the data. Usually \code{c('state_fips','county_fips')} with \code{gen_fips = TRUE}. Set to \code{NULL} to aggregate across all initial rows, or set to \code{FALSE} to not aggregate at all.}
+
+\item{filter}{A character string describing a logical statement for filtering the data, for example \code{filter = 'state_fips == 6'} would give you only data from California. Will be used as an \code{i} argument in a \code{data.table}, see \code{help(data.table)}.  Filtering here instead of afterwards can cut down on time and memory demands.}
 
 \item{select}{Character vector of variables to get from the file. Set to \code{NULL} to get all variables.}
 
