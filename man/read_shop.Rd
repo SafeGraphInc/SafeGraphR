@@ -21,6 +21,7 @@ read_shop(
   multi = NULL,
   select = NULL,
   gen_fips = TRUE,
+  silent = FALSE,
   start_date = NULL,
   ...
 )
@@ -36,7 +37,7 @@ read_shop(
 
 \item{cleanup}{Set to \code{TRUE} to delete all the unzipped files after being read in.}
 
-\item{by, fun, na.rm, filter, expand_int, expand_cat, expand_name, multi, select, gen_fips, ...}{Other arguments to be passed to \code{read_patterns}, specified as in \code{help(read_patterns)}.}
+\item{by, fun, na.rm, filter, expand_int, expand_cat, expand_name, multi, select, gen_fips, silent, ...}{Other arguments to be passed to \code{read_patterns}, specified as in \code{help(read_patterns)}.}
 
 \item{start_date}{An argument to be passed to \code{read_patterns} giving the first date present in the file, as a date object. When using \code{read_shop} this should usually be included, since the patterns file names in the shop files are not in a format \code{read_patterns} can pick up on automatically.}
 }

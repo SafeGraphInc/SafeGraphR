@@ -18,6 +18,7 @@ read_patterns(
   select = NULL,
   gen_fips = TRUE,
   start_date = NULL,
+  silent = FALSE,
   ...
 )
 }
@@ -47,6 +48,8 @@ read_patterns(
 \item{gen_fips}{Set to \code{TRUE} to use the \code{poi_cbg} variable to generate \code{state_fips} and \code{county_fips} variables. This will also result in \code{poi_cbg} being converted to character.}
 
 \item{start_date}{The first date in the file, as a date object. If omitted, will assume that the filename begins YYYY-MM-DD.}
+
+\item{silent}{Set to TRUE to suppress timecode message.}
 
 \item{...}{Other arguments to be passed to \code{data.table::fread} when reading in the file. For example, \code{nrows} to only read in a certain number of rows.}
 }

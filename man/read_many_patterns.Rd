@@ -5,8 +5,8 @@
 \title{Read and row-bind many patterns files}
 \usage{
 read_many_patterns(
-  filelist,
   dir = ".",
+  filelist = NULL,
   by = NULL,
   fun = sum,
   na.rm = TRUE,
@@ -18,15 +18,18 @@ read_many_patterns(
   select = NULL,
   gen_fips = TRUE,
   start_date = NULL,
+  silent = FALSE,
   ...
 )
 }
 \arguments{
-\item{filelist}{Optionally specify only a subset of the filename to read in.}
-
 \item{dir}{Name of the directory the files are in.}
 
-\item{by, fun, na.rm, filter, expand_int, expand_cat, expand_name, multi, select, gen_fips, start_date, ...}{Arguments to be passed to \code{read_patterns}, specified as in \code{help(read_patterns)}.}
+\item{filelist}{Optionally specify only a subset of the files to read in.}
+
+\item{by, fun, na.rm, filter, expand_int, expand_cat, expand_name, multi, select, gen_fips, silent, ...}{Arguments to be passed to \code{read_patterns}, specified as in \code{help(read_patterns)}.}
+
+\item{start_date}{A vector of dates giving the first date present in each zip file, to be passed to \code{read_patterns} giving the first date present in the file, as a date object.}
 }
 \description{
 This accepts a directory. It will use \code{read_patterns} to load every \code{csv.gz} in that folder, assuming they are all patterns files. It will then row-bind together each of the produced processed files.

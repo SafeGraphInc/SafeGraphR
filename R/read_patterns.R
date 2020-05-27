@@ -15,15 +15,18 @@
 #' @param select Character vector of variables to get from the file. Set to \code{NULL} to get all variables.
 #' @param gen_fips Set to \code{TRUE} to use the \code{poi_cbg} variable to generate \code{state_fips} and \code{county_fips} variables. This will also result in \code{poi_cbg} being converted to character.
 #' @param start_date The first date in the file, as a date object. If omitted, will assume that the filename begins YYYY-MM-DD.
+#' @param silent Set to TRUE to suppress timecode message.
 #' @param ... Other arguments to be passed to \code{data.table::fread} when reading in the file. For example, \code{nrows} to only read in a certain number of rows.
 #' @export
 
 read_patterns <- function(filename,dir = '.',by = NULL, fun = sum, na.rm = TRUE, filter = NULL,
                         expand_int = NULL, expand_cat = NULL,
                         expand_name = NULL, multi = NULL,
-                        select=NULL, gen_fips = TRUE, start_date = NULL, ...) {
+                        select=NULL, gen_fips = TRUE, start_date = NULL, silent = FALSE, ...) {
 
-  message(paste('Starting to read',filename,'at',Sys.time()))
+  if (!silent) {
+    message(paste('Starting to read',filename,'at',Sys.time()))
+  }
 
   if (stringr::str_sub(dir,nchar(dir)) == '/') {
     f <- paste0(dir,filename)
