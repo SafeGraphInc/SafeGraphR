@@ -10,14 +10,14 @@
 #' @param exdir Name of the directory to unzip to.
 #' @param cleanup Set to \code{TRUE} to delete all the unzipped files after being read in.
 #' @param start_date An argument to be passed to \code{read_patterns} giving the first date present in the file, as a date object. When using \code{read_shop} this should usually be included, since the patterns file names in the shop files are not in a format \code{read_patterns} can pick up on automatically.
-#' @param by,fun,na.rm,filter,expand_int,expand_cat,expand_name,multi,select,gen_fips,silent,... Other arguments to be passed to \code{read_patterns}, specified as in \code{help(read_patterns)}.
+#' @param by,fun,na.rm,filter,expand_int,expand_cat,expand_name,multi,naics_link,select,gen_fips,silent,... Other arguments to be passed to \code{read_patterns}, specified as in \code{help(read_patterns)}.
 #' @export
 
 read_shop <- function(file,dir = '.',keeplist = c('patterns','normalization_stats.csv','home_panel_summary.csv','visit_panel_summary.csv','brand_info.csv'),
                       exdir = dir, cleanup = TRUE,
                       by = NULL, fun = sum, na.rm = TRUE, filter = NULL,
                       expand_int = NULL, expand_cat = NULL,
-                      expand_name = NULL, multi = NULL,
+                      expand_name = NULL, multi = NULL, naics_link = NULL,
                       select=NULL, gen_fips = TRUE, silent = FALSE, start_date = NULL, ...) {
 
   # Where's our zip?
@@ -48,7 +48,7 @@ read_shop <- function(file,dir = '.',keeplist = c('patterns','normalization_stat
 
       retDT[['patterns']] <- read_many_patterns(patfiles, dir = exdir, by = by, fun = fun, na.rm = na.rm, filter = filter,
                                            expand_int = expand_int, expand_cat = expand_cat,
-                                           expand_name = expand_name, multi = multi,
+                                           expand_name = expand_name, multi = multi, naics_link = naics_link,
                                            select = select, gen_fips = gen_fips, start_date = start_date, silent = silent, ...)
     } else {
       if (stringr::str_sub(dir,nchar(exdir)) == '/') {

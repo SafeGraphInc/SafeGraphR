@@ -15,6 +15,7 @@ read_many_patterns(
   expand_cat = NULL,
   expand_name = NULL,
   multi = NULL,
+  naics_link = NULL,
   select = NULL,
   gen_fips = TRUE,
   start_date = NULL,
@@ -27,10 +28,13 @@ read_many_patterns(
 
 \item{filelist}{Optionally specify only a subset of the files to read in.}
 
-\item{by, fun, na.rm, filter, expand_int, expand_cat, expand_name, multi, select, gen_fips, silent, ...}{Arguments to be passed to \code{read_patterns}, specified as in \code{help(read_patterns)}.}
+\item{by, fun, na.rm, filter, expand_int, expand_cat, expand_name, multi, naics_link, select, gen_fips, silent, ...}{Arguments to be passed to \code{read_patterns}, specified as in \code{help(read_patterns)}.}
 
 \item{start_date}{A vector of dates giving the first date present in each zip file, to be passed to \code{read_patterns} giving the first date present in the file, as a date object.}
 }
 \description{
 This accepts a directory. It will use \code{read_patterns} to load every \code{csv.gz} in that folder, assuming they are all patterns files. It will then row-bind together each of the produced processed files.
+}
+\details{
+Note that after reading in data, if \code{gen_fips = TRUE}, state and county names can be merged in using \code{data(fips_to_names)}.
 }

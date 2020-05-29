@@ -36,15 +36,17 @@ read_many_csvs <- function(dir = '.', filelist = NULL, makedate = FALSE, ...) {
 #'
 #' This accepts a directory. It will use \code{read_patterns} to load every \code{csv.gz} in that folder, assuming they are all patterns files. It will then row-bind together each of the produced processed files.
 #'
+#' Note that after reading in data, if \code{gen_fips = TRUE}, state and county names can be merged in using \code{data(fips_to_names)}.
+#'
 #' @param dir Name of the directory the files are in.
 #' @param filelist Optionally specify only a subset of the files to read in.
 #' @param start_date A vector of dates giving the first date present in each zip file, to be passed to \code{read_patterns} giving the first date present in the file, as a date object.
-#' @param by,fun,na.rm,filter,expand_int,expand_cat,expand_name,multi,select,gen_fips,silent,... Arguments to be passed to \code{read_patterns}, specified as in \code{help(read_patterns)}.
+#' @param by,fun,na.rm,filter,expand_int,expand_cat,expand_name,multi,naics_link,select,gen_fips,silent,... Arguments to be passed to \code{read_patterns}, specified as in \code{help(read_patterns)}.
 #' @export
 
 read_many_patterns <- function(dir = '.',filelist=NULL,by = NULL, fun = sum, na.rm = TRUE, filter = NULL,
                         expand_int = NULL, expand_cat = NULL,
-                        expand_name = NULL, multi = NULL,
+                        expand_name = NULL, multi = NULL, naics_link = NULL,
                         select=NULL, gen_fips = TRUE, start_date = NULL, silent = FALSE, ...) {
   if (is.null(filelist)) {
     filelist <- list.files(path=dir,pattern = '\\.csv\\.gz')
@@ -63,7 +65,7 @@ read_many_patterns <- function(dir = '.',filelist=NULL,by = NULL, fun = sum, na.
     1:length(filelist) %>%
       purrr::map(function(x) read_patterns(filelist[x], dir = dir, by = by, fun = fun, na.rm = na.rm, filter = filter,
                                   expand_int = expand_int, expand_cat = expand_cat,
-                                  expand_name = expand_name, multi = NULL,
+                                  expand_name = expand_name, multi = NULL, naics_link = naics_link,
                                   select = select, gen_fips = gen_fips, start_date = start_date[x], silent = silent, ...)) %>%
       rbindlist() %>%
       return()
@@ -71,7 +73,7 @@ read_many_patterns <- function(dir = '.',filelist=NULL,by = NULL, fun = sum, na.
 
   # Otherwise we'll get back a list that we need to unpack before binding
   patterns <- 1:length(filelist) %>%
-    purrr::map(function(x) read_patterns(filelist[x], dir = dir, multi = multi,
+    purrr::map(function(x) read_patterns(filelist[x], dir = dir, multi = multi, naics_link = naics_link,
                                 select = select, gen_fips = gen_fips, start_date = start_date[x], silent = silent, ...))
 
   # Bind each of them together
@@ -83,11 +85,13 @@ read_many_patterns <- function(dir = '.',filelist=NULL,by = NULL, fun = sum, na.
 #'
 #' This accepts a directory. It will use \code{read_shop} to load every \code{zip} in that folder, assuming they are all files downloaded from the SafeGraph shop. It will then row-bind together each of the subfiles, so you'll get a list where one entry all the normalization data row-bound together, another is all the patterns files, and so on.
 #' .
+#' Note that after reading in data, if \code{gen_fips = TRUE}, state and county names can be merged in using \code{data(fips_to_names)}.
+#'
 #' @param dir Name of the directory the files are in.
 #' @param filelist Optionally specify only a subset of the filename to read in.
 #' @param start_date A vector of dates giving the first date present in each zip file, to be passed to \code{read_patterns} giving the first date present in the file, as a date object. When using \code{read_many_shop} this **really** should be included, since the patterns file names in the shop files are not in a format \code{read_patterns} can pick up on automatically. If left unspecified, will produce an error. To truly go ahead unspecified, set this to \code{FALSE}.
 #' @param keeplist,exdir,cleanup Arguments to be passed to \code{read_shop}, specified as in \code{help(read_shop)}.
-#' @param by,fun,na.rm,filter,expand_int,expand_cat,expand_name,multi,select,gen_fips,silent,... Other arguments to be passed to \code{read_patterns}, specified as in \code{help(read_patterns)}.
+#' @param by,fun,na.rm,filter,expand_int,expand_cat,expand_name,multi,naics_link,select,gen_fips,silent,... Other arguments to be passed to \code{read_patterns}, specified as in \code{help(read_patterns)}.
 #' @export
 
 read_many_shop <- function(dir = '.',filelist=NULL,start_date = NULL,
@@ -95,7 +99,7 @@ read_many_shop <- function(dir = '.',filelist=NULL,start_date = NULL,
                            exdir = dir, cleanup = TRUE,
                            by = NULL, fun = sum, na.rm = TRUE, filter = NULL,
                            expand_int = NULL, expand_cat = NULL,
-                           expand_name = NULL, multi = NULL,
+                           expand_name = NULL, multi = NULL, naics_link = NULL,
                            select=NULL, gen_fips = TRUE, silent = FALSE, ...) {
 
   if (is.null(filelist)) {
@@ -126,7 +130,7 @@ read_many_shop <- function(dir = '.',filelist=NULL,start_date = NULL,
                exdir = exdir, cleanup = cleanup,
                by = by, fun = fun, na.rm = na.rm, filter = filter,
                expand_int = expand_int, expand_cat = expand_cat,
-               expand_name = expand_name, multi = multi,
+               expand_name = expand_name, multi = multi, naics_link = naics_link,
                select=select, gen_fips = gen_fips, start_date = start_date[x],silent=silent, ...)) %>%
     rbind_by_list_pos() %>%
     return()

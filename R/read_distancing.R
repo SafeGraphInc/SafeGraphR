@@ -2,6 +2,8 @@
 #'
 #' Takes a folder of stay-at-home Safegraph data structured how it comes from AWS (i.e. folders 2020/04/03 for April 3 2020) and reads them in.
 #'
+#' Note that after reading in data, if \code{gen_fips = TRUE}, state and county names can be merged in using \code{data(fips_to_names)}.
+#'
 #' @param start Date object with the starting date to read in stay-at-home data.
 #' @param end Ending date to read stay-at-home data to.
 #' @param dir The folder in which the "2020" (etc.) folder resides.

@@ -12,10 +12,9 @@ License: Apache 2.0
 Encoding: UTF-8
 LazyData: true
 Depends: 
-    R (>= 3.4),
+    R (>= 3.4)
 Imports:
     lubridate,
-    data.table,
     R.utils,
     magrittr,
     dplyr,
@@ -23,5 +22,6 @@ Imports:
     purrr,
     stringr,
     jsonlite,
-    utils
+    utils,
+    data.table
 RoxygenNote: 7.1.0

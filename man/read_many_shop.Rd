@@ -20,6 +20,7 @@ read_many_shop(
   expand_cat = NULL,
   expand_name = NULL,
   multi = NULL,
+  naics_link = NULL,
   select = NULL,
   gen_fips = TRUE,
   silent = FALSE,
@@ -35,9 +36,10 @@ read_many_shop(
 
 \item{keeplist, exdir, cleanup}{Arguments to be passed to \code{read_shop}, specified as in \code{help(read_shop)}.}
 
-\item{by, fun, na.rm, filter, expand_int, expand_cat, expand_name, multi, select, gen_fips, silent, ...}{Other arguments to be passed to \code{read_patterns}, specified as in \code{help(read_patterns)}.}
+\item{by, fun, na.rm, filter, expand_int, expand_cat, expand_name, multi, naics_link, select, gen_fips, silent, ...}{Other arguments to be passed to \code{read_patterns}, specified as in \code{help(read_patterns)}.}
 }
 \description{
 This accepts a directory. It will use \code{read_shop} to load every \code{zip} in that folder, assuming they are all files downloaded from the SafeGraph shop. It will then row-bind together each of the subfiles, so you'll get a list where one entry all the normalization data row-bound together, another is all the patterns files, and so on.
 .
+Note that after reading in data, if \code{gen_fips = TRUE}, state and county names can be merged in using \code{data(fips_to_names)}.
 }
