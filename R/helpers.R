@@ -63,3 +63,15 @@ rbind_by_list_pos <- function(dtl,ignore_names=FALSE) {
 
   return(retDT)
 }
+
+
+#' Seven-Day Moving Average
+#'
+#' This function returns a (by default) seven-day moving average of the variable passed in. Make sure the data is pre-sorted by date, and grouped by the appropriate grouping. The data should have no gaps in time.
+#'
+#' @param x The variable to calculate the moving average of.
+#' @param n The number of lags to cover in the moving average.
+#' @export
+ma <- function(x,n=7){
+  as.numeric(stats::filter(as.ts(x),rep(1/n,n), sides=1))
+}
