@@ -17,6 +17,7 @@ Imports:
     lubridate,
     R.utils,
     magrittr,
+    scales,
     dplyr,
     ggplot2,
     purrr,
