@@ -6,29 +6,29 @@
 \usage{
 scale_to_date(
   data,
+  adj_vars,
   date,
   date_var = "date",
-  adj_vars,
   by = NULL,
-  growth = FALSE,
+  growth = TRUE,
   format_percent = FALSE,
   accuracy = 0.1
 )
 }
 \arguments{
-\item{data}{A \code{data.frame}, \code{tibble}, or \code{data.table}. Note that a \code{data.table} will be returned.}
+\item{data}{Any type of data set that can be coerced to a \code{data.table}. Note that a \code{data.table} will be returned.}
+
+\item{adj_vars}{Character vector of the variable names you'd like adjusted to be relative to the date.}
 
 \item{date}{The date you'd like everything relative to, as a date object.}
 
-\item{date_var}{The name of the date variable.}
-
-\item{adj_vars}{Character vector of the variable names you'd like adjusted to be relative to the date.}
+\item{date_var}{The name of the date variable, as a string.}
 
 \item{by}{Character vector of the variable names you'd like the operation to be performed by. There should only be one observation for which \code{date_var == date} within each combination of the \code{by} variables, or else your results will be arbitrary.}
 
 \item{growth}{Set to \code{TRUE} to get \code{new/old - 1} (i.e. a percentage growth). Set to \code{FALSE} to get \code{new/old} (i.e. a relative value).}
 
-\item{format_percent}{Set to \code{TRUE} to get back a formatted percentage, i.e. "50%", instead of a number.}
+\item{format_percent}{Set to \code{TRUE} to get back a formatted percentage, i.e. "50\%", instead of a number.}
 
 \item{accuracy}{If \code{format_percent = TRUE}, the number of digits after the decimal place to round to, as in \code{scales::percent}.}
 }

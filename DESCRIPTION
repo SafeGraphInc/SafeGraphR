@@ -18,11 +18,10 @@ Imports:
     R.utils,
     magrittr,
     scales,
-    dplyr,
-    ggplot2,
     purrr,
     stringr,
     jsonlite,
     utils,
-    data.table
+    data.table,
+    aws.s3
 RoxygenNote: 7.1.0
