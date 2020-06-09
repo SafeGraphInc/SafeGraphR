@@ -73,5 +73,8 @@ rbind_by_list_pos <- function(dtl,ignore_names=FALSE) {
 #' @param n The number of lags to cover in the moving average.
 #' @export
 ma <- function(x,n=7){
-  as.numeric(stats::filter(as.ts(x),rep(1/n,n), sides=1))
+  if(length(x) >= 7) {
+    return(as.numeric(stats::filter(as.ts(x),rep(1/n,n), sides=1)))
+  }
+  return(NA_real_)
 }
