@@ -55,7 +55,7 @@ Documentation status: **NEEDS EXAMPLES**
 Testing status: **COMPLETE**
 Documentation status: **NEEDS EXAMPLES**
 
-`rbind_by_list_pos`: Take a list of lists of `data.table`s and row-binds them by their position in the sub-list. For example, `rbind_by_list_pos(list(A,B),list(C,D)) would return list(rbind(A,C),rbind(B,D)). Can be used after `read_` functions, which in some cases return a list of `data.table`s for each file they read.
+`rbind_by_list_pos`: Take a list of lists of `data.table`s and row-binds them by their position in the sub-list. For example, `rbind_by_list_pos(list(A,B),list(C,D))` would return `list(rbind(A,C),rbind(B,D))`. Can be used after `read_` functions, which in some cases return a list of `data.table`s for each file they read.
 
 Testing status: **MODERATE**
 Documentation status: **NEEDS EXAMPLES**

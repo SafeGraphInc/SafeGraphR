@@ -61,7 +61,7 @@ read_patterns <- function(filename,dir = '.',by = NULL, fun = sum, na.rm = TRUE,
   # Get state and county fips
   if (gen_fips) {
     patterns[,poi_cbg := as.character(poi_cbg)]
-    dt[,c('state_fips','county_fips') := fips_from_cbg(poi_cbg)]
+    patterns[,c('state_fips','county_fips') := fips_from_cbg(poi_cbg)]
   }
 
   if (is.null(start_date)) {
