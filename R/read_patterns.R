@@ -15,7 +15,7 @@
 #' @param expand_name The name of the new variable to be created with the category index for the expanded variable.
 #' @param multi A list of named lists, for the purposes of creating a list of multiple processed files. This will vastly speed up processing over doing each of them one at a time. Each named list has the entry \code{name} as well as any of the options \code{by, fun, filter, expand_int, expand_cat, expand_name} as specified above. If specified, will override other entries of \code{by}, etc..
 #' @param naics_link A \code{data.table}, possibly produced by \code{link_poi_naics}, that links \code{safegraph_place_id} and \code{naics_code}. This will allow you to include \code{'naics_code'} in the \code{by} argument. Technically you could have stuff other than \code{naics_code} in here and use that in \code{by} too, I won't stop ya.
-#' @param select Character vector of variables to get from the file. Set to \code{NULL} to get all variables.
+#' @param select Character vector of variables to get from the file. Set to \code{NULL} to get all variables. **Specifying select is very much recommended, and will speed up the function a lot.**
 #' @param gen_fips Set to \code{TRUE} to use the \code{poi_cbg} variable to generate \code{state_fips} and \code{county_fips} variables. This will also result in \code{poi_cbg} being converted to character.
 #' @param start_date The first date in the file, as a date object. If omitted, will assume that the filename begins YYYY-MM-DD.
 #' @param silent Set to TRUE to suppress timecode message.
@@ -24,7 +24,15 @@
 #'
 #' \dontrun{
 #' # '2020-04-06-weekly-patterns.csv.gz' is a weekly patterns file in the main-file folder, which is the working directory
-#'
+#' patterns <- read_patterns('2020-04-06-weekly-patterns.csv.gz',
+#'     # We only need these variables (and poi_cbg which is auto-added with gen_fips = TRUE)
+#'     select = c('brands','visits_by_day'),
+#'     # We want two formatted files to come out. The first aggregates to the state-brand-day level, getting visits by day
+#'     multi = list(list(name = 'by_brands', by = c('state_fips','brands'), expand_int = 'visits_by_day'),
+#'     # The second aggregates to the state-county-day level but only for Colorado and COnnecticut (see the filter)
+#'     list(name = 'co_and_ct', by = c('state_fips','county_fips'), filter = 'state_fips %in% 8:9', expand_int = 'visits_by_day')))
+#' patterns_brands <- patterns[[1]]
+#' patterns_co_and_ct <- patterns[[2]]
 #' }
 #' @export
 

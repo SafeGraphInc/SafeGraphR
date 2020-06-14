@@ -29,7 +29,7 @@ Documentation status: **NEEDS EXAMPLES**
 `read_many_patterns` and `read_patterns`: Reads a bunch of (or one, respectively) monthly or weekly patterns `.csv.gz` files all in the same folder, does appropriate processing, and row-binds the results together.
 
 Testing status: **VERY LITTLE**
-Documentation status: **NEEDS EXAMPLES**
+Documentation status: **EXAMPLES HAVE REVEALED BUG**
 
 `read_many_shop` and `read_shop`: Reads a bunch of (or one, respectively) `.zip` files in the format they come in from the shop and combines the data sets inside the zip across zip-files appropriately.
 
