@@ -4,8 +4,10 @@
 #'
 #' This function doesn't add too much, but it does make the default behavior you probably want a bit easier. If you plan to specify the \code{s3sync::aws.s3} "bucket" option yourself, this function is largely useless.
 #'
+#' See catalog.safegraph.io for more description of the various buckets.
+#'
 #' @param path The local directory to synchronize.
-#' @param patterns The SafeGraph bucket to get from. Can be "weekly", "monthly", "distancing", "core", or, to get the baseline bucket, "none". v2 versions always selected.
+#' @param patterns The SafeGraph bucket to get from. Can be "weekly", "monthly", "monthly backfill", "distancing", "transactions", "core", or, to get the baseline bucket, "none". v2 versions always selected.
 #' @param bucket_only Instead of doing an \code{aws.s3::s3sync} call, just return the correct bucket as a string. Then you can use that to do your own \code{aws.s3::s3sync} call.
 #' @param key A character string containing an AWS Access Key ID.
 #' @param secret A character string containing an AWS Secret Access Key.
@@ -24,7 +26,11 @@ safegraph_aws <- function(path = '.', patterns, bucket_only = FALSE, key, secret
   } else if (patterns == 'distancing') {
     buck <- paste0(buck,'social-distancing/v2/')
   } else if (patterns == 'core') {
-    buck <- paste0(buck,'social-distancing/core/')
+    buck <- paste0(buck,'core/')
+  } else if (patterns == 'transactions') {
+    buck <- paste0(buck, 'transactions-facteus/')
+  } else if (patterns == 'monthly backfill') {
+    buck <- paste0(buck, 'monthly-patterns/patterns_backfill/')
   } else if (patterns != 'none') {
     stop('Unrecognized value of patterns.')
   }
@@ -33,5 +39,5 @@ safegraph_aws <- function(path = '.', patterns, bucket_only = FALSE, key, secret
     return(buck)
   }
 
-  aws.s3::s3sync(path,buck,prefix,'download',...)
+  aws.s3::s3sync(path,buck,prefix,'download', key = key, secret = secret, region = region,...)
 }

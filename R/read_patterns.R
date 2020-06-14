@@ -20,6 +20,12 @@
 #' @param start_date The first date in the file, as a date object. If omitted, will assume that the filename begins YYYY-MM-DD.
 #' @param silent Set to TRUE to suppress timecode message.
 #' @param ... Other arguments to be passed to \code{data.table::fread} when reading in the file. For example, \code{nrows} to only read in a certain number of rows.
+#' @examples
+#'
+#' \dontrun{
+#' # '2020-04-06-weekly-patterns.csv.gz' is a weekly patterns file in the main-file folder, which is the working directory
+#'
+#' }
 #' @export
 
 read_patterns <- function(filename,dir = '.',by = NULL, fun = sum, na.rm = TRUE, filter = NULL,
@@ -99,7 +105,13 @@ read_patterns <- function(filename,dir = '.',by = NULL, fun = sum, na.rm = TRUE,
     name <- o[['name']]
     by <- o[['by']]
     fun <- o[['fun']]
+    if (is.null(fun)) {
+      fun <- sum
+    }
     na.rm <- o[['na.rm']]
+    if (is.null(na.rm)) {
+      na.rm <- TRUE
+    }
     filter <- o[['filter']]
     expand_int <- o[['expand_int']]
     expand_cat <- o[['expand_cat']]

@@ -38,7 +38,7 @@ Documentation status: **NEEDS EXAMPLES**
 
 `safegraph_aws`: A thin wrapper for `aws.s3::s3sync` that downloads data from the SafeGraph AWS COVID response buckets.
 
-Testing status: **BABY**
+Testing status: **CURRENTLY NOT WORKING**
 Documentation status: **NEEDS EXAMPLES**
 
 
