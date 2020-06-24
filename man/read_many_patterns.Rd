@@ -38,3 +38,19 @@ This accepts a directory. It will use \code{read_patterns} to load every \code{c
 \details{
 Note that after reading in data, if \code{gen_fips = TRUE}, state and county names can be merged in using \code{data(fips_to_names)}.
 }
+\examples{
+\dontrun{
+# Our current working directory is full of .csv.gz files!
+# Too many... we will probably run out of memory if we try to read them all in at once, so let's chunk it
+files <- list.files(pattern = '.gz')
+patterns <- read_many_patterns(filelist = files[1:10],
+    # We only need these variables (and poi_cbg which is auto-added with gen_fips = TRUE)
+    select = c('brands','visits_by_day'),
+    # We want two formatted files to come out. The first aggregates to the state-brand-day level, getting visits by day
+    multi = list(list(name = 'by_brands', by = c('state_fips','brands'), expand_int = 'visits_by_day'),
+    # The second aggregates to the state-county-day level but only for Colorado and COnnecticut (see the filter)
+    list(name = 'co_and_ct', by = c('state_fips','county_fips'), filter = 'state_fips \%in\% 8:9', expand_int = 'visits_by_day')))
+patterns_brands <- patterns[[1]]
+patterns_co_and_ct <- patterns[[2]]
+}
+}

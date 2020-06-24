@@ -89,7 +89,7 @@ read_patterns <- function(filename,dir = '.',by = NULL, fun = sum, na.rm = TRUE,
       message(paste0('Attempted to find start_date from filename but failed. Start of filename is ',
                      stringr::str_sub(filename,1,10)))
     } else {
-      message(paste0('Attempted to find start_date from filename. I think it\'s ',start_date))
+      message(paste0('Attempted to find start_date from filename. I think it\'s YYYY-MM-DD ',start_date))
     }
   }
   patterns[,start_date := start_date]

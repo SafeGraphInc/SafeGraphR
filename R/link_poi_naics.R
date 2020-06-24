@@ -7,6 +7,12 @@
 #' @param exdir Name of the directory to unzip to.
 #' @param cleanup Set to \code{TRUE} to delete all the unzipped files after being read in.
 #' @param silent Suppress timing messages.
+#' @examples
+#'
+#' \dontrun{
+#' # Core-USA-June2020-Release-CORE_POI-2020_05-2020-06-06.zip is a Core places file in the working directory
+#' poi_link <- link_poi_naics('Core-USA-June2020-Release-CORE_POI-2020_05-2020-06-06.zip')
+#' }
 #' @export
 
 link_poi_naics <- function(filename, dir = '.', exdir = dir, cleanup = TRUE, silent = FALSE) {
@@ -14,8 +20,11 @@ link_poi_naics <- function(filename, dir = '.', exdir = dir, cleanup = TRUE, sil
   # Where's our zip?
   if (!(stringr::str_sub(dir,nchar(dir)) == '/')) {
     dir <- paste0(dir,'/')
-
   }
+  if (stringr::str_sub(exdir,nchar(exdir)) == '/') {
+    exdir <- stringr::str_sub(exdir, 1, nchar(exdir)-1)
+  }
+
   f <- paste0(dir,filename)
 
   # Get the list of files
@@ -27,17 +36,19 @@ link_poi_naics <- function(filename, dir = '.', exdir = dir, cleanup = TRUE, sil
 
   files_in_zip %>%
     paste0(dir,.) %>%
-    purrr:map(function(x) {
+    purrr::map(function(x) {
       if (!silent) {
         message(paste('Starting to read',x,'at',Sys.time()))
       }
-      patterns <- fread(x, select = c('safegraph_place_id',
+      patterns <- data.table::fread(x, select = c('safegraph_place_id',
                                       'naics_code'))
       patterns <- patterns[!is.na(naics_code)]
-      file.remove(x)
+      if (cleanup) {
+        file.remove(x)
+      }
       return(patterns)
     }) %>%
-    rbindlist() %>%
+    data.table::rbindlist() %>%
     unique() %>%
     return()
 

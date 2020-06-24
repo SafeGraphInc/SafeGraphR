@@ -4,8 +4,13 @@
 #'
 #' Why a list and not a vector? For \code{data.table} usage.
 #'
-#' @param cbg CBG code, in numeric or string form.
+#' @param cbg CBG code, in numeric or string form. To aid speed since this function is called millions of times, \code{cbg} is not checked to ensure it is a valid CBG identifier.
 #' @param return Set to 'state' to get back only state FIPS, 'county' for only county, or 'both' for a list of both (state then county).
+#' @examples
+#'
+#' a_cbg <- '560610112022'
+#' fips_from_cbg(a_cbg)
+#'
 #' @export
 
 fips_from_cbg <- function(cbg,return='both') {
@@ -33,10 +38,24 @@ fips_from_cbg <- function(cbg,return='both') {
 
 #' Row-binds data.tables in a list of lists
 #'
-#' This function takes a list of lists of \code{data.table}s, and then row-binds them by position or name. For example, if passed \code{list(list(first=A,second=B),list(first=C,second=D))}, you would get back \code{list(first=rbind(A,C),second=rbind(B,D))}.
+#' This function takes a list of lists of \code{data.table}s (or anything that \code{data.table::rbind} accepts, like \code{data.frame}s), and then row-binds them by position or name. For example, if passed \code{list(list(first=A,second=B),list(first=C,second=D))}, you would get back \code{list(first=rbind(A,C),second=rbind(B,D))}.
 #'
 #' @param dtl List of lists of \code{data.table}s.
 #' @param ignore_names If the list is named, match objects across lists only by their position in the list and not by their names.
+#' @examples
+#'
+#' list_of_lists <- list(
+#'     list(data.frame(a = 1), data.frame(a = 2), data.frame(a = 3)),
+#'     list(data.frame(a = 4), data.frame(a = 5), data.frame(a = 6))
+#' )
+#' rbind_by_list_pos(list_of_lists)
+#'
+#' list_of_named_lists <- list(
+#'     list(A = data.frame(a = 1), B = data.frame(a = 2), C = data.frame(a = 3)),
+#'     list(C = data.frame(a = 4), A = data.frame(a = 5), B = data.frame(a = 6))
+#'  )
+#' rbind_by_list_pos(list_of_named_lis)
+#'
 #' @export
 
 rbind_by_list_pos <- function(dtl,ignore_names=FALSE) {
@@ -71,6 +90,10 @@ rbind_by_list_pos <- function(dtl,ignore_names=FALSE) {
 #'
 #' @param x The variable to calculate the moving average of.
 #' @param n The number of lags to cover in the moving average.
+#' @examples
+#'
+#' ma(1:9)
+#'
 #' @export
 ma <- function(x,n=7){
   if(length(x) >= 7) {

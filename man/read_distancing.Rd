@@ -40,3 +40,17 @@ Takes a folder of stay-at-home Safegraph data structured how it comes from AWS (
 \details{
 Note that after reading in data, if \code{gen_fips = TRUE}, state and county names can be merged in using \code{data(fips_to_names)}.
 }
+\examples{
+
+\dontrun{
+
+# The directory distdat is the folder we have downloaded the distancing data to from AWS.
+# Read and compile all distancing data from May 1 to May 7
+distancing <- read_distancing(
+    start = lubridate::ymd('2020-05-01'),
+    end = lubridate::ymd('2020-05-07'),
+    dir = distdat
+)
+
+}
+}

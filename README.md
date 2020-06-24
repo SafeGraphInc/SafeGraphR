@@ -3,7 +3,14 @@ Package for reading and analyzing SafeGraph foot traffic data
 
 This package is under development.
 
-It is fully featured but currently untested (some of the **BABY** functions I haven't even fully tried), and lacks examples in the documentation, or vignettes.
+It is fully featured but currently lacks full testing, and lacks examples in the documentation, or vignettes.
+
+To-dos:
+
+1. Perform basic testing on all remaining functions
+2. Provide examples for all remaining functions
+3. Get the AWS function working
+4. Vignettes!
 
 Please give it a shot and report any errors!
 
@@ -13,23 +20,23 @@ Below is a list of what's in the package with a brief description, and a testing
 
 `link_poi_naics`: Read in a Core Places file and use it to create a crosswalk between SafeGraph POI codes and NAICS codes.
 
-Testing status: **BABY**
-Documentation status: **NEEDS EXAMPLES**
+Testing status: **COMPLETE**
+Documentation status: **COMPLETE**
 
 `read_distancing`: Given a list of dates, reads in and aggregates SafeGraph social-distancing v2 files.
 
-Testing status: **BABY**
-Documentation status: **NEEDS EXAMPLES**
+Testing status: **COMPLETE**
+Documentation status: **COMPLETE**
 
 `read_many_csvs`: Reads a bunch of CSVs in the same folder and row-binds them all together. Useful for stuff like normalization data.
 
-Testing status: **MODERATE**
-Documentation status: **NEEDS EXAMPLES**
+Testing status: **COMPLETE**
+Documentation status: **COMPLETE**
 
 `read_many_patterns` and `read_patterns`: Reads a bunch of (or one, respectively) monthly or weekly patterns `.csv.gz` files all in the same folder, does appropriate processing, and row-binds the results together.
 
-Testing status: **VERY LITTLE**
-Documentation status: **EXAMPLES HAVE REVEALED BUG**
+Testing status: **BASIC TESTING DONE; SOME FUNCTIONALITY UNTESTED**
+Documentation status: **GOOD**
 
 `read_many_shop` and `read_shop`: Reads a bunch of (or one, respectively) `.zip` files in the format they come in from the shop and combines the data sets inside the zip across zip-files appropriately.
 
@@ -47,18 +54,18 @@ Documentation status: **NEEDS EXAMPLES**
 
 `expand_cat_json` and `expand_integer_json`: Take SafeGraph data with a column of categorical (named) or numeric (unnamed) JSON data and expand that column, pivot the data to long format, and then aggregate to the desired level.
 
-Testing status: **BABY**
+Testing status: **INTEGER VERSION COMPLETE, CAT VERSION BABY-LEVEL**
 Documentation status: **NEEDS EXAMPLES**
 
 `fips_from_cbg`: Take a census block group identifier and extract the state and/or county FIPS codes.
 
 Testing status: **COMPLETE**
-Documentation status: **NEEDS EXAMPLES**
+Documentation status: **COMPLETE**
 
 `rbind_by_list_pos`: Take a list of lists of `data.table`s and row-binds them by their position in the sub-list. For example, `rbind_by_list_pos(list(A,B),list(C,D))` would return `list(rbind(A,C),rbind(B,D))`. Can be used after `read_` functions, which in some cases return a list of `data.table`s for each file they read.
 
-Testing status: **MODERATE**
-Documentation status: **NEEDS EXAMPLES**
+Testing status: **COMPLETE**
+Documentation status: **COMPLETE**
 
 ## Final-Stages Processing Functions
 
@@ -70,7 +77,7 @@ Documentation status: **NEEDS EXAMPLES**
 `ma`: Calculates a (by default) seven day moving average on pre-sorted data with no gaps.
 
 Testing status: **COMPLETE**
-Documentation status: **NEEDS EXAMPLES**
+Documentation status: **COMPLETE**
 
 `sample_size_adjust`: Adjusts data for differences in sampling rates across geographic locations.
 

@@ -14,3 +14,8 @@ ma(x, n = 7)
 \description{
 This function returns a (by default) seven-day moving average of the variable passed in. Make sure the data is pre-sorted by date, and grouped by the appropriate grouping. The data should have no gaps in time.
 }
+\examples{
+
+ma(1:9)
+
+}

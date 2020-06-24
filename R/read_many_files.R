@@ -6,6 +6,13 @@
 #' @param filelist Optionally specify only a subset of the filename to read in.
 #' @param makedate Use \code{year}, \code{month}, and \code{day} columns in the data to create a \code{date} variable. Works with normalization files.
 #' @param ... Other arguments to pass to \code{data.table::fread}.
+#' @examples
+#' \dontrun{
+#'
+#' # The current working directory contains all the normalization .csv files
+#' normalization <- read_many_csvs(makedate = TRUE)
+#'
+#' }
 #' @export
 
 read_many_csvs <- function(dir = '.', filelist = NULL, makedate = FALSE, ...) {
@@ -13,6 +20,12 @@ read_many_csvs <- function(dir = '.', filelist = NULL, makedate = FALSE, ...) {
   if (is.null(filelist)) {
     filelist <- union(list.files(path=dir,pattern = '\\.csv'),
                       list.files(path=dir,pattern = '\\.csv\\.gz'))
+  }
+
+  if (stringr::str_sub(dir,nchar(dir)) == '/') {
+    filelist <- paste0(dir,filelist)
+  } else {
+    filelist <- paste(dir,filelist,sep='/')
   }
 
   if (makedate) {
@@ -42,6 +55,21 @@ read_many_csvs <- function(dir = '.', filelist = NULL, makedate = FALSE, ...) {
 #' @param filelist Optionally specify only a subset of the files to read in.
 #' @param start_date A vector of dates giving the first date present in each zip file, to be passed to \code{read_patterns} giving the first date present in the file, as a date object.
 #' @param by,fun,na.rm,filter,expand_int,expand_cat,expand_name,multi,naics_link,select,gen_fips,silent,... Arguments to be passed to \code{read_patterns}, specified as in \code{help(read_patterns)}.
+#' @examples
+#' \dontrun{
+#' # Our current working directory is full of .csv.gz files!
+#' # Too many... we will probably run out of memory if we try to read them all in at once, so let's chunk it
+#' files <- list.files(pattern = '.gz')
+#' patterns <- read_many_patterns(filelist = files[1:10],
+#'     # We only need these variables (and poi_cbg which is auto-added with gen_fips = TRUE)
+#'     select = c('brands','visits_by_day'),
+#'     # We want two formatted files to come out. The first aggregates to the state-brand-day level, getting visits by day
+#'     multi = list(list(name = 'by_brands', by = c('state_fips','brands'), expand_int = 'visits_by_day'),
+#'     # The second aggregates to the state-county-day level but only for Colorado and COnnecticut (see the filter)
+#'     list(name = 'co_and_ct', by = c('state_fips','county_fips'), filter = 'state_fips %in% 8:9', expand_int = 'visits_by_day')))
+#' patterns_brands <- patterns[[1]]
+#' patterns_co_and_ct <- patterns[[2]]
+#' }
 #' @export
 
 read_many_patterns <- function(dir = '.',filelist=NULL,by = NULL, fun = sum, na.rm = TRUE, filter = NULL,

@@ -7,7 +7,7 @@
 fips_from_cbg(cbg, return = "both")
 }
 \arguments{
-\item{cbg}{CBG code, in numeric or string form.}
+\item{cbg}{CBG code, in numeric or string form. To aid speed since this function is called millions of times, \code{cbg} is not checked to ensure it is a valid CBG identifier.}
 
 \item{return}{Set to 'state' to get back only state FIPS, 'county' for only county, or 'both' for a list of both (state then county).}
 }
@@ -16,4 +16,10 @@ This function takes a CBG code (as numeric or string) and returns the state and 
 }
 \details{
 Why a list and not a vector? For \code{data.table} usage.
+}
+\examples{
+
+a_cbg <- '560610112022'
+fips_from_cbg(a_cbg)
+
 }

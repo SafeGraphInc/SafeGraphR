@@ -18,3 +18,11 @@ read_many_csvs(dir = ".", filelist = NULL, makedate = FALSE, ...)
 \description{
 This accepts a directory. It will load every \code{csv} or \code{csv.gz} in that folder and attempt to row-bind them together. You can alternately specify a list of files if you don't want everything in the folder. This is designed for use with the normalization and home-summary files as downloaded from AWS.
 }
+\examples{
+\dontrun{
+
+# The current working directory contains all the normalization .csv files
+normalization <- read_many_csvs(makedate = TRUE)
+
+}
+}
