@@ -46,7 +46,7 @@ read_patterns(
 
 \item{naics_link}{A \code{data.table}, possibly produced by \code{link_poi_naics}, that links \code{safegraph_place_id} and \code{naics_code}. This will allow you to include \code{'naics_code'} in the \code{by} argument. Technically you could have stuff other than \code{naics_code} in here and use that in \code{by} too, I won't stop ya.}
 
-\item{select}{Character vector of variables to get from the file. Set to \code{NULL} to get all variables.}
+\item{select}{Character vector of variables to get from the file. Set to \code{NULL} to get all variables. **Specifying select is very much recommended, and will speed up the function a lot.**}
 
 \item{gen_fips}{Set to \code{TRUE} to use the \code{poi_cbg} variable to generate \code{state_fips} and \code{county_fips} variables. This will also result in \code{poi_cbg} being converted to character.}
 
@@ -61,4 +61,19 @@ Be aware that the files this is designed to work with are large and this functio
 }
 \details{
 Note that after reading in data, if \code{gen_fips = TRUE}, state and county names can be merged in using \code{data(fips_to_names)}.
+}
+\examples{
+
+\dontrun{
+# '2020-04-06-weekly-patterns.csv.gz' is a weekly patterns file in the main-file folder, which is the working directory
+patterns <- read_patterns('2020-04-06-weekly-patterns.csv.gz',
+    # We only need these variables (and poi_cbg which is auto-added with gen_fips = TRUE)
+    select = c('brands','visits_by_day'),
+    # We want two formatted files to come out. The first aggregates to the state-brand-day level, getting visits by day
+    multi = list(list(name = 'by_brands', by = c('state_fips','brands'), expand_int = 'visits_by_day'),
+    # The second aggregates to the state-county-day level but only for Colorado and COnnecticut (see the filter)
+    list(name = 'co_and_ct', by = c('state_fips','county_fips'), filter = 'state_fips \%in\% 8:9', expand_int = 'visits_by_day')))
+patterns_brands <- patterns[[1]]
+patterns_co_and_ct <- patterns[[2]]
+}
 }

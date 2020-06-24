@@ -79,16 +79,18 @@ read_patterns <- function(filename,dir = '.',by = NULL, fun = sum, na.rm = TRUE,
   }
 
   if (is.null(start_date)) {
-    message(paste0('Attempting to find format of start_date from filename. It looks like ',
-                   stringr::str_sub(filename,1,4),'-',
-                   stringr::str_sub(filename,6,7),'-',
-                   stringr::str_sub(filename,9,10),'.'))
     start_date <- lubridate::ymd(paste(
       stringr::str_sub(filename,1,4),
       stringr::str_sub(filename,6,7),
       stringr::str_sub(filename,9,10),
       sep = '-'
     ))
+    if (is.na(start_date)) {
+      message(paste0('Attempted to find start_date from filename but failed. Start of filename is ',
+                     stringr::str_sub(filename,1,10)))
+    } else {
+      message(paste0('Attempted to find start_date from filename. I think it\'s ',start_date))
+    }
   }
   patterns[,start_date := start_date]
 
@@ -184,12 +186,17 @@ read_patterns <- function(filename,dir = '.',by = NULL, fun = sum, na.rm = TRUE,
                             names(patternsb) %in% by)
 
       # And collapse
-      patternsb <- patternsb[, lapply(.SD, sum, na.rm=TRUE), by=by]
+      if (ncol(patternsb) > length(by)) {
+        patternsb <- patternsb[, lapply(.SD, fun),
+                               by = by]
+      } else {
+        patternsb <- unique(patternsb)
+      }
     }
 
     # Merge in expanded data
     if (!is.null(expand_cat) | !is.null(expand_int)) {
-      patternsb <- merge(patternsb, expanded_var, all = TRUE)
+      patternsb <- merge(patternsb, expanded_var, all = TRUE, by = by)
     }
 
     # Add start_date back in if lost from collapsing
