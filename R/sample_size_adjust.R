@@ -47,19 +47,20 @@ sample_size_adjust <- function(data,from_id = 'census_block_group',
 
   # if we have CBG, get state and county FIPS
   data <- data.table::as.data.table(data)
-  data <- data[,c(sample_id,from_id,by)]
+  data <- subset(data, select = c(sample_id, from_id, by))
 
   # For ease of use
+
   data.table::setnames(data,sample_id,'sample_pop')
 
   # Create county and state FIPS if we don't have them
   if (length(from_id) == 1) {
     data[,c('state_fips','county_fips') := fips_from_cbg(eval(parse(text=from_id)))]
-    scid <- c('state_fips','county_fips')
 
     # If we're from-county, collapse
     if (from_level == 'county') {
-      data <- data[,.(sample_pop = sum(sample_pop)), by = c(scid, by)]
+      data <- data[, .(sample_pop = sum(sample_pop)), by = c('state_fips','county_fips',
+                                                             by)]
     }
 
     # Line up names for cbg
@@ -72,12 +73,7 @@ sample_size_adjust <- function(data,from_id = 'census_block_group',
   }
 
   # Get the to-level of the sample
-  if (to_level == 'county') {
-    agg_level <- c(scid,by)
-  } else {
-    agg_level <- c(scid[1],by)
-  }
-  data[,.(top_sample = sum(sample_pop)),by=agg_level]
+  data <- data[,.(top_sample = sum(sample_pop)),by=c(from_id,by)]
 
   # Merge together
   data <- merge(data,pop_data, all.x = TRUE, by = from_id)
