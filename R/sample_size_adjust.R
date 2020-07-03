@@ -81,5 +81,5 @@ sample_size_adjust <- function(data,from_id = 'census_block_group',
   # And create adjust_factor
   data[,adjust_factor := (unweighted_pop/big_pop)*(sample_pop/top_sample)]
 
-  return(data[,c(from_id,by,'adjust_factor')])
+  return(subset(data,select=c(from_id,by,'adjust_factor')))
 }
