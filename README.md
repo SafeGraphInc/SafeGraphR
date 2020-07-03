@@ -81,8 +81,8 @@ Documentation status: **COMPLETE**
 
 `sample_size_adjust`: Adjusts data for differences in sampling rates across geographic locations.
 
-Testing status: **BABY**
-Documentation status: **NEEDS EXAMPLES**
+Testing status: **COMPLETE**
+Documentation status: **COMPLETE**
 
 `scale_to_date`: Adjusts data to be relative to a specific date.
 

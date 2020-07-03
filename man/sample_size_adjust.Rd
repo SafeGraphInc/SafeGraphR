@@ -32,3 +32,25 @@ sample_size_adjust(
 \description{
 This function uses 2016 American Community Survey data to adjust SafeGraph counts for the portion of the population that is sampled. This function will return a \code{data.table} with columns for a geographic ID and the variable \code{adjust_factor}, which you can merge into your data and then multiply whatever count variables you like by \code{adjust_factor} to adjust them for sampling differences.
 }
+\examples{
+\dontrun{
+# The current working directory has many home_panel_summary files
+# Do some futzing with the census_block_group variable to
+# Get it in the same format as how it is in cbg_pop
+home_panel <- read_many_csvs(colClasses= c(census_block_group='character'))
+home_panel[,census_block_group := as.character(as.numeric(census_block_group))]
+
+# Create the data set with the adjust_factor variable
+# This will adjust CBG populations to county ones, by default
+adj_factor <- sample_size_adjust(home_panel, by = 'date_range_start')
+
+# Now take some distancing data I have
+# (where census_block_group is stored as origin_census_block_group)
+data.table::setnames(adj_factor, census_block_group, origin_census_block_group)
+# and merge in the adjustment factor
+distancing <- merge(distancing, adj_factor, all.x = TRUE, by = 'origin_census_block_group')
+# And use that adjustment factor to adjust!
+distancing[,adj_device_count := device_count*adj_factor]
+
+}
+}

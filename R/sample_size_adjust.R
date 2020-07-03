@@ -9,6 +9,27 @@
 #' @param to_level Either \code{'county'} or \code{'state'}, indicating the geographic level that the \code{from_level} components are to be adjusted to, for example \code{from_level='county'} and \code{to_level='state'} wouuld give an adjustment factor for each county as though each county in the state was sampled at the same rate.
 #' @param by The data returned will be on the \code{from_level} level. Specify other vairables here to have it instead be on the \code{from_level}-\code{by} level, perhaps a timecode. \code{by} should not split the \code{from_level} counts. If, for example, \code{by} is used to split a county in two geographic subcounties, then the population adjustment will not be correct.
 #' @param pop_data If a populatinon data file other than \code{data(cbg_pop)} or \code{data(county_pop)} should be used, enter it here. Should be in the same format, and with the same variable names, as \code{cbg_pop} if \code{from_level='cbg'}, or the same as \code{county_pop} if \code{from_level='county'}.
+#' @examples
+#' \dontrun{
+#' # The current working directory has many home_panel_summary files
+#' # Do some futzing with the census_block_group variable to
+#' # Get it in the same format as how it is in cbg_pop
+#' home_panel <- read_many_csvs(colClasses= c(census_block_group='character'))
+#' home_panel[,census_block_group := as.character(as.numeric(census_block_group))]
+#'
+#' # Create the data set with the adjust_factor variable
+#' # This will adjust CBG populations to county ones, by default
+#' adj_factor <- sample_size_adjust(home_panel, by = 'date_range_start')
+#'
+#' # Now take some distancing data I have
+#' # (where census_block_group is stored as origin_census_block_group)
+#' data.table::setnames(adj_factor, census_block_group, origin_census_block_group)
+#' # and merge in the adjustment factor
+#' distancing <- merge(distancing, adj_factor, all.x = TRUE, by = 'origin_census_block_group')
+#' # And use that adjustment factor to adjust!
+#' distancing[,adj_device_count := device_count*adj_factor]
+#'
+#' }
 #' @export
 
 sample_size_adjust <- function(data,from_id = 'census_block_group',
@@ -79,7 +100,7 @@ sample_size_adjust <- function(data,from_id = 'census_block_group',
   data <- merge(data,pop_data, all.x = TRUE, by = from_id)
 
   # And create adjust_factor
-  data[,adjust_factor := (unweighted_pop/big_pop)*(sample_pop/top_sample)]
+  data[,adjust_factor := (unweighted_pop/big_pop)/(sample_pop/top_sample)]
 
   return(subset(data,select=c(from_id,by,'adjust_factor')))
 }
