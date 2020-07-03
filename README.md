@@ -71,8 +71,8 @@ Documentation status: **COMPLETE**
 
 `hb_shrink`: Perform hierarchical Bayesian shrinkage on the CBG-to-county or county-to-state level.
 
-Testing status: **BABY**
-Documentation status: **NEEDS EXAMPLES**
+Testing status: **COMPLETE**
+Documentation status: **COMPLETE**
 
 `ma`: Calculates a (by default) seven day moving average on pre-sorted data with no gaps.
 

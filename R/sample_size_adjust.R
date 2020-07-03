@@ -1,6 +1,6 @@
 #' Adjust SafeGraph Data for Sampling Size Differences
 #'
-#' This function uses 2016 American Community Survey data to adjust SafeGraph counts for the portion of the population that is sampled. This function will return a \code{data.table} with two columns: a geographic ID and the variable \code{adjust_factor}, which you can merge into your data and then multiply whatever count variables you like by \code{adjust_factor} adjust them for sampling differences.
+#' This function uses 2016 American Community Survey data to adjust SafeGraph counts for the portion of the population that is sampled. This function will return a \code{data.table} with columns for a geographic ID and the variable \code{adjust_factor}, which you can merge into your data and then multiply whatever count variables you like by \code{adjust_factor} to adjust them for sampling differences.
 #'
 #' @param data A \code{data.frame} (or \code{tibble} or \code{data.table}) containing (among other things potentially) geographic ID variables and a variable for the number of SafeGraph devices observed in that area. Often this is from a \code{home-panel-summary} file.
 #' @param from_id A character vector either giving the variable name of the census block group ID, or both the state FIPS and county FIPS variables (which must be numeric, and in state, then county order). Census block group must be specified if \code{from_level='cbg'}.
@@ -12,7 +12,7 @@
 #' @export
 
 sample_size_adjust <- function(data,from_id = 'census_block_group',
-                               sample_num = 'number_devices_residing',
+                               sample_id = 'number_devices_residing',
                                from_level = 'cbg',
                                to_level = 'county',
                                by = NULL,
@@ -80,9 +80,6 @@ sample_size_adjust <- function(data,from_id = 'census_block_group',
     agg_level <- c(scid[1],by)
   }
   data[,.(top_sample = sum(sample_pop)),by=agg_level]
-
-  # And only keep what we need
-  data <- data[,c()]
 
   # Merge together
   data <- merge(data,pop_data, all.x = TRUE, by = from_id)

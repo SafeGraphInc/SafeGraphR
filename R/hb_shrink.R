@@ -6,6 +6,23 @@
 #'
 #' @param success A numeric integer variable containing the number of successes.
 #' @param total A numeric integer variable containing the total sample size.
+#' @examples
+#' \dontrun{
+#' # The directory distdat is the folder we have downloaded the distancing data to from AWS.
+#' # Read and compile all distancing data from May 1 to May 7
+#' distancing <- read_distancing(
+#'     start = lubridate::ymd('2020-05-01'),
+#'     end = lubridate::ymd('2020-05-07'),
+#'     dir = distdat
+#' )
+#'
+#' # Shrink county to state
+#' distancing <- distancing[,.(county_fips = county_fips,
+#'                            unshrunk_stay_home = completely_home_device_count/device_count,
+#'                            shrunk_stay_home = hb_shrink(completely_home_device_count, device_count)),
+#'                            by = .(state_fips, date)]
+#'
+#' }
 #' @export
 
 hb_shrink <- function(success,total) {
