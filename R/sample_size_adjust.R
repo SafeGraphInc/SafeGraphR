@@ -31,11 +31,9 @@ sample_size_adjust <- function(data,from_id = 'census_block_group',
   if (from_level == 'cbg' & is.null(pop_data)) {
     data("cbg_pop", package = 'SafeGraphR')
     pop_data <- cbg_pop
-    rm(cbg_pop)
   } else if (from_level == 'county' & is.null(pop_data)) {
     data("county_pop", package = 'SafeGraphR')
     pop_data <- county_pop
-    rm(county_pop)
   }
 
   # See what proportion the from group is of the to group population
@@ -49,10 +47,10 @@ sample_size_adjust <- function(data,from_id = 'census_block_group',
 
   # if we have CBG, get state and county FIPS
   data <- data.table::as.data.table(data)
-  data <- data[,c(sample_num,from_id,by)]
+  data <- data[,c(sample_id,from_id,by)]
 
   # For ease of use
-  data.table::setnames(data,sample_num,'sample_pop')
+  data.table::setnames(data,sample_id,'sample_pop')
 
   # Create county and state FIPS if we don't have them
   if (length(from_id) == 1) {
