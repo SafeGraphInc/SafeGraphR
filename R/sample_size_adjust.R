@@ -69,11 +69,11 @@ sample_size_adjust <- function(data,from_id = 'census_block_group',
   } else {
     # rename the population data state and county IDs to match the data
     data.table::setnames(pop_data,c('state_fips','county_fips'),from_id)
-    scid <- from_id
   }
 
   # Get the to-level of the sample
-  data <- data[,.(top_sample = sum(sample_pop)),by=c(from_id,by)]
+  data <- data[,.(top_sample = sum(sample_pop),
+                  sample_pop = sample_pop),by=c(from_id,by)]
 
   # Merge together
   data <- merge(data,pop_data, all.x = TRUE, by = from_id)
