@@ -97,8 +97,8 @@ expand_cat_json <- function(dt, expand,
   dt[,eval(parse(text='expand')) := stringr::str_replace_all(eval(parse(text=expand)), '\\"\\"','\\"')]
 
   # Read with fromJSON and add
-  exptext <- paste0(".(",expand,"= Reduce('+',purrr::map(purrr::map(",
-                    expand,",jsonlite::fromJSON),unlist)))")
+  exptext <- paste0(".(", expand, "= Reduce('+',purrr::map(purrr::map(purrr::map(",
+                    expand, ",jsonlite::fromJSON),unlist),as.numeric)))")
 
   # The names
   catnames <- jsonlite::fromJSON(dt[[expand]][1]) %>% unlist() %>% names()

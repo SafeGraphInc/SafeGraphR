@@ -10,6 +10,16 @@
 #' @param growth Set to \code{TRUE} to get \code{new/old - 1} (i.e. a percentage growth). Set to \code{FALSE} to get \code{new/old} (i.e. a relative value).
 #' @param format_percent Set to \code{TRUE} to get back a formatted percentage, i.e. "50\%", instead of a number.
 #' @param accuracy If \code{format_percent = TRUE}, the number of digits after the decimal place to round to, as in \code{scales::percent}.
+#' @examples
+#'
+#' # Create some data to scale relative to
+#' patterns <- data.table(date = c(lubridate::ymd('2020-01-15'),
+#'                                 lubridate::ymd('2020-01-16'),
+#'                                 lubridate::ymd('2020-01-17')),
+#'                                 visits_by_day = c(1,2,3))
+#'
+#' # Make everything relative to January 15!
+#' scale_to_date(patterns, 'visits_by_day', lubridate::ymd('2020-01-15'))[]
 #' @export
 
 scale_to_date <- function(data, adj_vars, date, date_var = 'date',
@@ -72,6 +82,18 @@ scale_to_date <- function(data, adj_vars, date, date_var = 'date',
 #' @param growth Set to \code{TRUE} to get \code{new/old - 1} (i.e. a percentage growth). Set to \code{FALSE} to get \code{new/old} (i.e. a relative value).
 #' @param format_percent Set to \code{TRUE} to get back a formatted percentage, i.e. "50\%", instead of a number.
 #' @param accuracy If \code{format_percent = TRUE}, the number of digits after the decimal place to round to, as in \code{scales::percent}.
+#' @examples
+#'
+#' # Create some fake data to do year-on-year calculations with
+#' patterns <- data.table::data.table(date = c(lubridate::ymd('2019-01-15'),
+#'                                 lubridate::ymd('2019-01-16'),
+#'                                 lubridate::ymd('2020-01-15'),
+#'                                 lubridate::ymd('2020-01-16')),
+#'                                 visits_by_day = c(1,2,3,4))
+#'
+#' # And scale relative to the year before!
+#' scale_yoy(patterns, 'visits_by_day')[]
+#'
 #' @export
 
 scale_yoy <- function(data, yoy_vars, date_var = 'date',
