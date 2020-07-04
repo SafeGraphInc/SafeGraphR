@@ -54,8 +54,8 @@ Documentation status: **NEEDS EXAMPLES**
 
 `expand_cat_json` and `expand_integer_json`: Take SafeGraph data with a column of categorical (named) or numeric (unnamed) JSON data and expand that column, pivot the data to long format, and then aggregate to the desired level.
 
-Testing status: **INTEGER VERSION COMPLETE, CAT VERSION BABY-LEVEL**
-Documentation status: **NEEDS EXAMPLES**
+Testing status: **COMPLETE**
+Documentation status: **COMPLETE**
 
 `fips_from_cbg`: Take a census block group identifier and extract the state and/or county FIPS codes.
 
@@ -86,13 +86,13 @@ Documentation status: **COMPLETE**
 
 `scale_to_date`: Adjusts data to be relative to a specific date.
 
-Testing status: **BABY**
-Documentation status: **NEEDS EXAMPLES**
+Testing status: **COMPLETE**
+Documentation status: **COMPLETE**
 
 `scale_yoy`: Adjusts data to be relative to the same date the previous year.
 
-Testing status: **BABY**
-Documentation status: **NEEDS EXAMPLES**
+Testing status: **COMPLETE**
+Documentation status: **COMPLETE**
 
 ## Data Sets
 

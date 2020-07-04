@@ -11,6 +11,17 @@
 #' @param fun Function that takes a vector and returns a single value to use when collapsing to the \code{by} level.
 #' @param na.rm Ignore missing values of \code{expand}
 #' @param set_key Set the key of \code{dt} to \code{by}. Set to \code{FALSE} if you have already set the key or want it returned without key.
+#' @examples
+#'
+#' # Example data
+#' patterns <- data.table::data.table(state_fips = c(1,1,2,2),
+#'                                      int_origin = c('[2,3]',
+#'                                                     '[3,4]',
+#'                                                     '[4,5]',
+#'                                                     '[5,6]'))
+#'
+#' expand_integer_json(patterns, 'int_origin', by = 'state_fips')[]
+#'
 #' @export
 
 expand_integer_json <- function(dt, expand,
@@ -67,6 +78,16 @@ expand_integer_json <- function(dt, expand,
 #' @param fun Function that takes a vector and returns a single value to use when collapsing to the \code{by} level.
 #' @param na.rm Ignore missing values of \code{expand}
 #' @param set_key Set the key of \code{dt} to \code{by}. Set to \code{FALSE} if you have already set the key or want it returned without key.
+#' @examples
+#'
+#' # Raw example data for expanding/collapsing
+#' patterns <- data.table::data.table(state_fips = c(1,1,2,2),
+#'                                    cat_origin = c('{"a": "2", "b": "3"}',
+#'                                                 '{"a": "3", "b": "4"}',
+#'                                                 '{"a": "4", "b": "5"}',
+#'                                                 '{"a": "5", "b": "6"}'))
+#'
+#' expand_cat_json(patterns, 'cat_origin', by = 'state_fips')[]
 #' @export
 
 expand_cat_json <- function(dt, expand,
