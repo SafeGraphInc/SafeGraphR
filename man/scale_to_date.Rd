@@ -35,3 +35,14 @@ scale_to_date(
 \description{
 Pick a date and provide some variables. Those variables will be adjusted to be relative to their value on that date. Usually used to calculate foot traffic growth relative to a certain date.
 }
+\examples{
+
+# Create some data to scale relative to
+patterns <- data.table(date = c(lubridate::ymd('2020-01-15'),
+                                lubridate::ymd('2020-01-16'),
+                                lubridate::ymd('2020-01-17')),
+                                visits_by_day = c(1,2,3))
+
+# Make everything relative to January 15!
+scale_to_date(patterns, 'visits_by_day', lubridate::ymd('2020-01-15'))[]
+}

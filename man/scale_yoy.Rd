@@ -38,3 +38,16 @@ This takes a data set with a date variable and calculates year-on-year changes f
 \details{
 This will add new variables using \code{yoy_vars}, adding \code{lag} and \code{YOY} variants.
 }
+\examples{
+
+# Create some fake data to do year-on-year calculations with
+patterns <- data.table::data.table(date = c(lubridate::ymd('2019-01-15'),
+                                lubridate::ymd('2019-01-16'),
+                                lubridate::ymd('2020-01-15'),
+                                lubridate::ymd('2020-01-16')),
+                                visits_by_day = c(1,2,3,4))
+
+# And scale relative to the year before!
+scale_yoy(patterns, 'visits_by_day')[]
+
+}

@@ -15,7 +15,7 @@ expand_integer_json(
 )
 }
 \arguments{
-\item{dt}{data.table object}
+\item{dt}{data.table object  (or something that can be coerced to data.table)}
 
 \item{expand}{String indicating the JSON column to be expanded.}
 
@@ -34,4 +34,16 @@ This function accepts a \code{data.table} along with a set of grouping variables
 }
 \details{
 It expands that JSON column into long format, with one row per observation per value of the JSON column, and then collapses everything according to the set of grouping variables.
+}
+\examples{
+
+# Example data
+patterns <- data.table::data.table(state_fips = c(1,1,2,2),
+                                     int_origin = c('[2,3]',
+                                                    '[3,4]',
+                                                    '[4,5]',
+                                                    '[5,6]'))
+
+expand_integer_json(patterns, 'int_origin', by = 'state_fips')[]
+
 }

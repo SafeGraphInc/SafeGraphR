@@ -15,7 +15,7 @@ expand_cat_json(
 )
 }
 \arguments{
-\item{dt}{data.table object}
+\item{dt}{data.table object (or something that can be coerced to data.table)}
 
 \item{expand}{String indicating the JSON column to be expanded.}
 
@@ -36,4 +36,15 @@ This function accepts a \code{data.table} along with a set of grouping variables
 WARNING: currently does not work properly if different rows have different categories.
 
 It expands that JSON column into long format, with one row per observation per value of the JSON column, and then collapses everything according to the set of grouping variables.
+}
+\examples{
+
+# Raw example data for expanding/collapsing
+patterns <- data.table::data.table(state_fips = c(1,1,2,2),
+                                   cat_origin = c('{"a": "2", "b": "3"}',
+                                                '{"a": "3", "b": "4"}',
+                                                '{"a": "4", "b": "5"}',
+                                                '{"a": "5", "b": "6"}'))
+
+expand_cat_json(patterns, 'cat_origin', by = 'state_fips')[]
 }

@@ -4,7 +4,7 @@
 #'
 #' It expands that JSON column into long format, with one row per observation per value of the JSON column, and then collapses everything according to the set of grouping variables.
 #'
-#' @param dt data.table object
+#' @param dt data.table object  (or something that can be coerced to data.table)
 #' @param expand String indicating the JSON column to be expanded.
 #' @param index String indicating the name of the new index column
 #' @param by Character vector indicating the variables to group by after expanding. Set to \code{NULL} to aggregate across all initial rows, or set to \code{FALSE} to not aggregate at all (this will also add an \code{initial_rowno} column showing the original row number).
@@ -27,6 +27,10 @@
 expand_integer_json <- function(dt, expand,
                                 index = 'index', by = NULL,
                                 fun = sum, na.rm = TRUE, set_key = TRUE) {
+
+  if (!('data.table' %in% class(dt))) {
+    dt <- data.table::as.data.table(dt)
+  }
 
   if (is.logical(by)) {
     set_key <- FALSE
@@ -71,7 +75,7 @@ expand_integer_json <- function(dt, expand,
 #'
 #' It expands that JSON column into long format, with one row per observation per value of the JSON column, and then collapses everything according to the set of grouping variables.
 #'
-#' @param dt data.table object
+#' @param dt data.table object (or something that can be coerced to data.table)
 #' @param expand String indicating the JSON column to be expanded.
 #' @param index String indicating the name of the new index column
 #' @param by Character vector indicating the variables to group by after expanding. Set to \code{NULL} to aggregate across all initial rows, or set to \code{FALSE} to not aggregate at all (this will also add an \code{initial_rowno} column showing the original row number).
@@ -93,6 +97,10 @@ expand_integer_json <- function(dt, expand,
 expand_cat_json <- function(dt, expand,
                                 index = 'index', by = NULL,
                                 fun = sum, na.rm = TRUE, set_key = TRUE) {
+
+  if (!('data.table' %in% class(dt))) {
+    dt <- data.table::as.data.table(dt)
+  }
 
   if (is.logical(by)) {
     set_key <- FALSE
@@ -128,6 +136,7 @@ expand_cat_json <- function(dt, expand,
            eval(parse(text=exptext)),
            by=by]
   dt[,index := catnames, by = by]
+  setnames(dt,'index',index)
 
   return(dt)
 }
