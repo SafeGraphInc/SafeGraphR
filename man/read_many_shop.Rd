@@ -6,6 +6,7 @@
 \usage{
 read_many_shop(
   dir = ".",
+  recursive = FALSE,
   filelist = NULL,
   start_date = NULL,
   keeplist = c("patterns", "normalization_stats.csv", "home_panel_summary.csv",
@@ -29,6 +30,8 @@ read_many_shop(
 }
 \arguments{
 \item{dir}{Name of the directory the files are in.}
+
+\item{recursive}{Look for files in all subdirectories as well.}
 
 \item{filelist}{Optionally specify only a subset of the filename to read in.}
 

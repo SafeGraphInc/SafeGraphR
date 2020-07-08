@@ -8,9 +8,10 @@ safegraph_aws(
   path = ".",
   patterns,
   bucket_only = FALSE,
+  base_url = "s3.wasabisys.com",
   key,
   secret,
-  region = "us-west-2",
+  region = "",
   prefix = "",
   ...
 )
@@ -18,9 +19,11 @@ safegraph_aws(
 \arguments{
 \item{path}{The local directory to synchronize.}
 
-\item{patterns}{The SafeGraph bucket to get from. Can be "weekly", "monthly", "monthly backfill", "distancing", "transactions", "core", or, to get the baseline bucket, "none". v2 versions always selected.}
+\item{patterns}{The SafeGraph bucket to get from. Can be "weekly", "weekly-new" (new method since June 2020), "monthly", "monthly backfill", "distancing", "transactions", "core", "geo-supplement" or, to get the baseline bucket, "none". v2 versions always selected.}
 
-\item{bucket_only}{Instead of doing an \code{aws.s3::s3sync} call, just return the correct bucket as a string. Then you can use that to do your own \code{aws.s3::s3sync} call.}
+\item{bucket_only}{Instead of doing an \code{aws.s3::s3sync} call, just return the correct bucket as a string. Then you can use that to do your own \code{aws.s3::s3sync} call, or work with the AWS CLI.}
+
+\item{base_url}{The base URL to pull the data from.}
 
 \item{key}{A character string containing an AWS Access Key ID.}
 

@@ -4,12 +4,20 @@
 \alias{read_many_csvs}
 \title{Read and row-bind many CSVs}
 \usage{
-read_many_csvs(dir = ".", filelist = NULL, makedate = FALSE, ...)
+read_many_csvs(
+  dir = ".",
+  recursive = FALSE,
+  filelist = NULL,
+  makedate = FALSE,
+  ...
+)
 }
 \arguments{
 \item{dir}{Name of the directory the files are in.}
 
-\item{filelist}{Optionally specify only a subset of the filename to read in.}
+\item{recursive}{Search in all subdirectories as well.}
+
+\item{filelist}{Optionally specify only a subset of the filename to read in (can contain paths).}
 
 \item{makedate}{Use \code{year}, \code{month}, and \code{day} columns in the data to create a \code{date} variable. Works with normalization files.}
 

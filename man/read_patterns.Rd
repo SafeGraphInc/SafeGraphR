@@ -24,7 +24,7 @@ read_patterns(
 )
 }
 \arguments{
-\item{filename}{The filename of the \code{.csv.gz} file.}
+\item{filename}{The filename of the \code{.csv.gz} file or the path to the file. Note that if \code{start_date} is not specified, \code{read_patterns} will attempt to get the start date from the first ten characters of the path. In "new format" filepaths ("2020/01/09/core-patterns-part-1.csv.gz"), nine days will be subtracted from the date found.}
 
 \item{dir}{The directory in which the file sits.}
 

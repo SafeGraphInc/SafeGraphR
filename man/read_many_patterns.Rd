@@ -6,6 +6,7 @@
 \usage{
 read_many_patterns(
   dir = ".",
+  recursive = FALSE,
   filelist = NULL,
   by = NULL,
   fun = sum,
@@ -25,6 +26,8 @@ read_many_patterns(
 }
 \arguments{
 \item{dir}{Name of the directory the files are in.}
+
+\item{recursive}{Search in all subdirectories as well, as with the since-June-24-2020 format of the AWS downloads. There is not currently a way to include only a subset of these subdirectory files. Perhaps run \code{list.files(recursive=TRUE)} on your own and pass a subset of the results to the \code{filelist} option.}
 
 \item{filelist}{Optionally specify only a subset of the files to read in.}
 
