@@ -4,7 +4,7 @@
 #'
 #' Note that after reading in data, if \code{gen_fips = TRUE}, state and county names can be merged in using \code{data(fips_to_names)}.
 #'
-#' @param filename The filename of the \code{.csv.gz} file.
+#' @param filename The filename of the \code{.csv.gz} file or the path to the file. Note that if \code{start_date} is not specified, \code{read_patterns} will attempt to get the start date from the first ten characters of the path. In "new format" filepaths ("2020/01/09/core-patterns-part-1.csv.gz"), nine days will be subtracted from the date found.
 #' @param dir The directory in which the file sits.
 #' @param by A character vector giving the variable names of the level to be collapsed to using \code{sum(na.rm=TRUE)}. The resulting data will have X rows per unique combination of \code{by}, where X is 1 if no expand variables are specified, or the length of the expand variable if specified. Set to \code{NULL} to aggregate across all initial rows, or set to \code{FALSE} to not aggregate at all (this will also add an \code{initial_rowno} column showing the original row number).
 #' @param fun Function to use to aggregate the expanded variable to the \code{by} level.
@@ -85,6 +85,9 @@ read_patterns <- function(filename,dir = '.',by = NULL, fun = sum, na.rm = TRUE,
       stringr::str_sub(filename,9,10),
       sep = '-'
     ))
+    if (stringr::str_sub(filename,5,5) == '/' & stringr::str_sub(filename,8,8) == '/') {
+      start_date <- start_date - lubridate::days(9)
+    }
     if (is.na(start_date)) {
       message(paste0('Attempted to find start_date from filename but failed. Start of filename is ',
                      stringr::str_sub(filename,1,10)))

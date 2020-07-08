@@ -7,8 +7,9 @@
 #' See catalog.safegraph.io for more description of the various buckets.
 #'
 #' @param path The local directory to synchronize.
-#' @param patterns The SafeGraph bucket to get from. Can be "weekly", "monthly", "monthly backfill", "distancing", "transactions", "core", or, to get the baseline bucket, "none". v2 versions always selected.
-#' @param bucket_only Instead of doing an \code{aws.s3::s3sync} call, just return the correct bucket as a string. Then you can use that to do your own \code{aws.s3::s3sync} call.
+#' @param patterns The SafeGraph bucket to get from. Can be "weekly", "weekly-new" (new method since June 2020), "monthly", "monthly backfill", "distancing", "transactions", "core", "geo-supplement" or, to get the baseline bucket, "none". v2 versions always selected.
+#' @param bucket_only Instead of doing an \code{aws.s3::s3sync} call, just return the correct bucket as a string. Then you can use that to do your own \code{aws.s3::s3sync} call, or work with the AWS CLI.
+#' @param base_url The base URL to pull the data from.
 #' @param key A character string containing an AWS Access Key ID.
 #' @param secret A character string containing an AWS Secret Access Key.
 #' @param region A character string containing the AWS region.
@@ -16,7 +17,7 @@
 #' @param ... Additional parameters to be sent to \code{aws.s3::s3sync} and from there on to \code{aws.s3:s3HTTP}. "direction" will be ignored.
 #' @export
 
-safegraph_aws <- function(path = '.', patterns, bucket_only = FALSE, key, secret, region = 'us-west-2', prefix ='', ...) {
+safegraph_aws <- function(path = '.', patterns, bucket_only = FALSE, base_url = 's3.wasabisys.com', key, secret, region = '', prefix ='', ...) {
   buck <- 's3://sg-c19-response/'
 
   if (patterns == 'monthly') {
@@ -31,6 +32,10 @@ safegraph_aws <- function(path = '.', patterns, bucket_only = FALSE, key, secret
     buck <- paste0(buck, 'transactions-facteus/')
   } else if (patterns == 'monthly backfill') {
     buck <- paste0(buck, 'monthly-patterns/patterns_backfill/')
+  } else if (patterns == 'geo-supplement') {
+    buck <- paste0(buck, 'geo-supplement/')
+  } else if (patterns == 'weekly-new') {
+    buck <- paste0(buck, 'weekly-patterns-delivery/weekly/')
   } else if (patterns != 'none') {
     stop('Unrecognized value of patterns.')
   }
@@ -39,5 +44,5 @@ safegraph_aws <- function(path = '.', patterns, bucket_only = FALSE, key, secret
     return(buck)
   }
 
-  aws.s3::s3sync(path,buck,prefix,'download', key = key, secret = secret, region = region,...)
+  aws.s3::s3sync(path,buck,prefix,'download', key = key, base_url = base_url, secret = secret, region = region, direction = 'download', ...)
 }

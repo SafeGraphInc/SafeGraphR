@@ -3,7 +3,8 @@
 #' This accepts a directory. It will load every \code{csv} or \code{csv.gz} in that folder and attempt to row-bind them together. You can alternately specify a list of files if you don't want everything in the folder. This is designed for use with the normalization and home-summary files as downloaded from AWS.
 #'
 #' @param dir Name of the directory the files are in.
-#' @param filelist Optionally specify only a subset of the filename to read in.
+#' @param recursive Search in all subdirectories as well.
+#' @param filelist Optionally specify only a subset of the filename to read in (can contain paths).
 #' @param makedate Use \code{year}, \code{month}, and \code{day} columns in the data to create a \code{date} variable. Works with normalization files.
 #' @param ... Other arguments to pass to \code{data.table::fread}.
 #' @examples
@@ -15,11 +16,11 @@
 #' }
 #' @export
 
-read_many_csvs <- function(dir = '.', filelist = NULL, makedate = FALSE, ...) {
+read_many_csvs <- function(dir = '.', recursive = FALSE, filelist = NULL, makedate = FALSE, ...) {
 
   if (is.null(filelist)) {
-    filelist <- union(list.files(path=dir,pattern = '\\.csv'),
-                      list.files(path=dir,pattern = '\\.csv\\.gz'))
+    filelist <- union(list.files(path=dir,pattern = '\\.csv', recursive = recursive),
+                      list.files(path=dir,pattern = '\\.csv\\.gz', recursive = recursive))
   }
 
   if (stringr::str_sub(dir,nchar(dir)) == '/') {
@@ -52,6 +53,7 @@ read_many_csvs <- function(dir = '.', filelist = NULL, makedate = FALSE, ...) {
 #' Note that after reading in data, if \code{gen_fips = TRUE}, state and county names can be merged in using \code{data(fips_to_names)}.
 #'
 #' @param dir Name of the directory the files are in.
+#' @param recursive Search in all subdirectories as well, as with the since-June-24-2020 format of the AWS downloads. There is not currently a way to include only a subset of these subdirectory files. Perhaps run \code{list.files(recursive=TRUE)} on your own and pass a subset of the results to the \code{filelist} option.
 #' @param filelist Optionally specify only a subset of the files to read in.
 #' @param start_date A vector of dates giving the first date present in each zip file, to be passed to \code{read_patterns} giving the first date present in the file, as a date object.
 #' @param by,fun,na.rm,filter,expand_int,expand_cat,expand_name,multi,naics_link,select,gen_fips,silent,... Arguments to be passed to \code{read_patterns}, specified as in \code{help(read_patterns)}.
@@ -72,12 +74,12 @@ read_many_csvs <- function(dir = '.', filelist = NULL, makedate = FALSE, ...) {
 #' }
 #' @export
 
-read_many_patterns <- function(dir = '.',filelist=NULL,by = NULL, fun = sum, na.rm = TRUE, filter = NULL,
+read_many_patterns <- function(dir = '.',recursive=FALSE, filelist=NULL,by = NULL, fun = sum, na.rm = TRUE, filter = NULL,
                         expand_int = NULL, expand_cat = NULL,
                         expand_name = NULL, multi = NULL, naics_link = NULL,
                         select=NULL, gen_fips = TRUE, start_date = NULL, silent = FALSE, ...) {
   if (is.null(filelist)) {
-    filelist <- list.files(path=dir,pattern = '\\.csv\\.gz')
+    filelist <- list.files(path=dir,pattern = '\\.csv\\.gz', recursive = recursive)
   }
   if (!is.null(start_date)) {
     if (length(start_date) != length(filelist)) {
@@ -116,13 +118,14 @@ read_many_patterns <- function(dir = '.',filelist=NULL,by = NULL, fun = sum, na.
 #' Note that after reading in data, if \code{gen_fips = TRUE}, state and county names can be merged in using \code{data(fips_to_names)}.
 #'
 #' @param dir Name of the directory the files are in.
+#' @param recursive Look for files in all subdirectories as well.
 #' @param filelist Optionally specify only a subset of the filename to read in.
 #' @param start_date A vector of dates giving the first date present in each zip file, to be passed to \code{read_patterns} giving the first date present in the file, as a date object. When using \code{read_many_shop} this **really** should be included, since the patterns file names in the shop files are not in a format \code{read_patterns} can pick up on automatically. If left unspecified, will produce an error. To truly go ahead unspecified, set this to \code{FALSE}.
 #' @param keeplist,exdir,cleanup Arguments to be passed to \code{read_shop}, specified as in \code{help(read_shop)}.
 #' @param by,fun,na.rm,filter,expand_int,expand_cat,expand_name,multi,naics_link,select,gen_fips,silent,... Other arguments to be passed to \code{read_patterns}, specified as in \code{help(read_patterns)}.
 #' @export
 
-read_many_shop <- function(dir = '.',filelist=NULL,start_date = NULL,
+read_many_shop <- function(dir = '.',recursive = FALSE,filelist=NULL,start_date = NULL,
                            keeplist = c('patterns','normalization_stats.csv','home_panel_summary.csv','visit_panel_summary.csv','brand_info.csv'),
                            exdir = dir, cleanup = TRUE,
                            by = NULL, fun = sum, na.rm = TRUE, filter = NULL,
@@ -131,7 +134,7 @@ read_many_shop <- function(dir = '.',filelist=NULL,start_date = NULL,
                            select=NULL, gen_fips = TRUE, silent = FALSE, ...) {
 
   if (is.null(filelist)) {
-    filelist <- list.files(path=dir,pattern = '\\.zip')
+    filelist <- list.files(path=dir,pattern = '\\.zip', recursive = recursive)
   }
 
   if (is.null(start_date)) {
