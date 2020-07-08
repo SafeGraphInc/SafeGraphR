@@ -34,6 +34,18 @@ read_distancing <- function(start,end,dir = '.',gen_fips = TRUE, by = c('state_f
                                                                                                              'full_time_work_behavior_devices'), ...) {
 
 
+  # Make sure defaults are desired
+  if (getOption("distancing.warning", TRUE) &
+      identical(select,c('origin_census_block_group',
+                         'device_count',
+                         'completely_home_device_count',
+                         'part_time_work_behavior_devices',
+                         'full_time_work_behavior_devices')) &
+      identical(by, c('state_fips','county_fips'))) {
+    message("Running read_distancing with default select and by - this will select only the device count variables, and aggregate to the county level. Change the select and by options if you don't want this. This message will be displayed only once per session.")
+    options("distancing.warning" = FALSE)
+  }
+
   # List of dates that I want
   dates <- start + lubridate::days(0:(end - start))
 
