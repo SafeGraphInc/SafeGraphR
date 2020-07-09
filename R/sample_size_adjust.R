@@ -59,9 +59,9 @@ sample_size_adjust <- function(data,from_id = 'census_block_group',
 
   # See what proportion the from group is of the to group population
   if (to_level == 'county') {
-    pop_data[,big_pop := sum(unweighted_pop),by=c('state_fips','county_fips')]
+    pop_data[,big_pop := sum(unweighted_pop, na.rm = TRUE),by=c('state_fips','county_fips')]
   } else if (to_level == 'state') {
-    pop_data[,big_pop := sum(unweighted_pop),by='state_fips']
+    pop_data[,big_pop := sum(unweighted_pop, na.rm = TRUE),by='state_fips']
   }
 
   pop_data[,pop_prop := unweighted_pop/big_pop]
@@ -102,5 +102,6 @@ sample_size_adjust <- function(data,from_id = 'census_block_group',
   # And create adjust_factor
   data[,adjust_factor := (unweighted_pop/big_pop)/(sample_pop/top_sample)]
 
-  return(subset(data,select=c(from_id,by,'adjust_factor')))
+  return(unique(subset(data,select=c(from_id,by,'adjust_factor'))))
 }
+

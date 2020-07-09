@@ -1,5 +1,7 @@
 #' Download SafeGraph data from AWS COVID Response
 #'
+#' THIS FUNCTION CURRENTLY DOES NOT WORK. USE THE AWS CLI INSTEAD.
+#'
 #' This is a thin wrapper for \code{aws.s3::s3sync} that will aim you at the right directory to synchronize.
 #'
 #' This function doesn't add too much, but it does make the default behavior you probably want a bit easier. If you plan to specify the \code{s3sync::aws.s3} "bucket" option yourself, this function is largely useless.

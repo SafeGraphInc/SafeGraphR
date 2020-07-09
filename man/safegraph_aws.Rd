@@ -36,9 +36,11 @@ safegraph_aws(
 \item{...}{Additional parameters to be sent to \code{aws.s3::s3sync} and from there on to \code{aws.s3:s3HTTP}. "direction" will be ignored.}
 }
 \description{
-This is a thin wrapper for \code{aws.s3::s3sync} that will aim you at the right directory to synchronize.
+THIS FUNCTION CURRENTLY DOES NOT WORK. USE THE AWS CLI INSTEAD.
 }
 \details{
+This is a thin wrapper for \code{aws.s3::s3sync} that will aim you at the right directory to synchronize.
+
 This function doesn't add too much, but it does make the default behavior you probably want a bit easier. If you plan to specify the \code{s3sync::aws.s3} "bucket" option yourself, this function is largely useless.
 
 See catalog.safegraph.io for more description of the various buckets.

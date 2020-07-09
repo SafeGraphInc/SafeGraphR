@@ -5,7 +5,7 @@
 \alias{fips_to_names}
 \title{State and county names by FIPS codes}
 \format{
-A \code{data.table} with 3142 rows and 3 variables:
+A \code{data.table} with 3142 rows and 4 variables:
 \describe{
   \item{state_fips}{State FIPS code}
   \item{county_fips}{County FIPS code}

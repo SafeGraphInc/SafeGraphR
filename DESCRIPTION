@@ -24,4 +24,7 @@ Imports:
     utils,
     data.table,
     aws.s3
+Suggests:
+    ggplot2,
+    directlabels
 RoxygenNote: 7.1.0

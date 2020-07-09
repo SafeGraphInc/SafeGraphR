@@ -2,7 +2,7 @@
 % Please edit documentation in R/read_patterns.R
 \name{read_patterns}
 \alias{read_patterns}
-\title{Read Safegraph Patterns}
+\title{Read SafeGraph Patterns}
 \usage{
 read_patterns(
   filename,
@@ -42,7 +42,7 @@ read_patterns(
 
 \item{expand_name}{The name of the new variable to be created with the category index for the expanded variable.}
 
-\item{multi}{A list of named lists, for the purposes of creating a list of multiple processed files. This will vastly speed up processing over doing each of them one at a time. Each named list has the entry \code{name} as well as any of the options \code{by, fun, filter, expand_int, expand_cat, expand_name} as specified above. If specified, will override other entries of \code{by}, etc..}
+\item{multi}{A list of lists, for the purposes of creating a list of multiple processed files. This will vastly speed up processing over doing each of them one at a time. Each named list has the entry \code{name} as well as any of the options \code{by, fun, filter, expand_int, expand_cat, expand_name} as specified above. If specified, will override other entries of \code{by}, etc..}
 
 \item{naics_link}{A \code{data.table}, possibly produced by \code{link_poi_naics}, that links \code{safegraph_place_id} and \code{naics_code}. This will allow you to include \code{'naics_code'} in the \code{by} argument. Technically you could have stuff other than \code{naics_code} in here and use that in \code{by} too, I won't stop ya.}
 

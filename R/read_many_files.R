@@ -34,6 +34,9 @@ read_many_csvs <- function(dir = '.', recursive = FALSE, filelist = NULL, makeda
       purrr::map(function(x) {
         dt <- data.table::fread(x,...)
         dt[,date := lubridate::ymd(paste(year,month,day,sep='-'))]
+        dt[,year := NULL]
+        dt[,month := NULL]
+        dt[,day := NULL]
         return(dt)
         }) %>%
       data.table::rbindlist() %>%
