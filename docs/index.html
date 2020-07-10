@@ -78,11 +78,23 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
+
 <div id="safegraphr" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#safegraphr" class="anchor"></a>SafeGraphR</h1></div>
-<p>Package for reading and analyzing SafeGraph foot traffic data</p>
-<p>This package is now in BETA. Everything should be working, so please give it a shot and report any errors!</p>
+<p><strong>SafeGraphR</strong> is an R package designed to make it easy to read in and process data from <a href="safegraph.com">SafeGraph</a>, including data that comes through the SafeGraph COVID-19 consortium or the <a href="catalog.safegraph.io">catalog</a>. You may want to consult the <a href="https://docs.google.com/document/d/1Xx-nzOX1qF3WfOpg4D8aemwFrrAkQaJuT0-1-CbgxQs/edit">Quick Start Guide</a>, the <a href="https://github.com/SafeGraphInc/awesome-safegraph-datascience">Awesome SafeGraph Data Science List</a>, the <a href="https://colab.research.google.com/drive/16BELpcum4TKoH-5wg8Xym_CGgIGgpu1I?usp=sharing">Normalization Best Practices</a>, and especially the <a href="docs.safegraph.com/">SafeGraph Docs</a>.</p>
+<p>You can install <strong>SafeGraphR</strong> directly from GitHub.</p>
+<div class="sourceCode" id="cb1"><pre class="r"><span class="co"># if necessary</span>
+<span class="co"># install.packages('remotes')</span>
+<span class="kw pkg">remotes</span><span class="kw ns">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">'SafeGraphInc/SafeGraphR'</span>)</pre></div>
+<p>The other pages on this site will walk you through how you can use <strong>SafeGraphR</strong> to work with the data.</p>
+</div>
+<div id="bugs-and-help" class="section level1">
+<h1 class="hasAnchor">
+<a href="#bugs-and-help" class="anchor"></a>Bugs and Help!</h1>
+<p><strong>SafeGraphR</strong> is currently in <em>beta</em>. All of its functions work, but of course there may be bugs remaining. The code has also not been checked with every possible combination of options that you could pick. Lastly, the SafeGraph data itself changes format on occasion, which may break some <strong>SafeGraphR</strong> functionality.</p>
+<p>If you run into an issue or bug in the code, please raise an Issue on the <strong>SafeGraphR</strong> Github <a href="https://github.com/SafeGraphInc/SafeGraphR/issues">Issues page</a>.</p>
+<p>If you’re just having trouble getting things to work, you can find help at the <a href="safegraphcovid19.slack.com/">SafeGraph COVID Consortium Slack Channel</a> in the <em>r-troubleshooting</em> room.</p>
 <p>Below is a list of what’s in the package with a brief description.</p>
 <div id="data-reading-functions" class="section level2">
 <h2 class="hasAnchor">
@@ -119,6 +131,7 @@
 <p><code>naics_codes</code>: Data set linking NAICS codes to NAICS code titles, for merging in and labeling (or just knowing what you’re looking at).</p>
 </div>
 </div>
+
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
