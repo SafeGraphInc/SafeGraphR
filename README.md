@@ -1,7 +1,25 @@
 # SafeGraphR
-Package for reading and analyzing SafeGraph foot traffic data
 
-This package is now in BETA. Everything should be working, so please give it a shot and report any errors!
+**SafeGraphR** is an R package designed to make it easy to read in and process data from [SafeGraph](safegraph.com), including data that comes through the SafeGraph COVID-19 consortium or the [catalog](catalog.safegraph.io). You may want to consult the [Quick Start Guide](https://docs.google.com/document/d/1Xx-nzOX1qF3WfOpg4D8aemwFrrAkQaJuT0-1-CbgxQs/edit), the [Awesome SafeGraph Data Science List](https://github.com/SafeGraphInc/awesome-safegraph-datascience), the [Normalization Best Practices](https://colab.research.google.com/drive/16BELpcum4TKoH-5wg8Xym_CGgIGgpu1I?usp=sharing), and especially the [SafeGraph Docs](docs.safegraph.com/).
+
+You can install **SafeGraphR** directly from GitHub.
+
+```r
+# if necessary
+# install.packages('remotes')
+remotes::install_github('SafeGraphInc/SafeGraphR')
+```
+
+The other pages on this site will walk you through how you can use **SafeGraphR** to work with the data.
+
+
+# Bugs and Help!
+
+**SafeGraphR** is currently in *beta*. All of its functions work, but of course there may be bugs remaining. The code has also not been checked with every possible combination of options that you could pick. Lastly, the SafeGraph data itself changes format on occasion, which may break some **SafeGraphR** functionality.
+
+If you run into an issue or bug in the code, please raise an Issue on the **SafeGraphR** Github [Issues page](https://github.com/SafeGraphInc/SafeGraphR/issues).
+
+If you're just having trouble getting things to work, you can find help at the [SafeGraph COVID Consortium Slack Channel](safegraphcovid19.slack.com/) in the *r-troubleshooting* room.
 
 Below is a list of what's in the package with a brief description.
 
