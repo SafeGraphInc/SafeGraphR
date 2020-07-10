@@ -23,7 +23,7 @@ read_many_shop(
   multi = NULL,
   naics_link = NULL,
   select = NULL,
-  gen_fips = TRUE,
+  gen_fips = FALSE,
   silent = FALSE,
   ...
 )
@@ -45,4 +45,32 @@ read_many_shop(
 This accepts a directory. It will use \code{read_shop} to load every \code{zip} in that folder, assuming they are all files downloaded from the SafeGraph shop. It will then row-bind together each of the subfiles, so you'll get a list where one entry all the normalization data row-bound together, another is all the patterns files, and so on.
 .
 Note that after reading in data, if \code{gen_fips = TRUE}, state and county names can be merged in using \code{data(fips_to_names)}.
+}
+\examples{
+
+\dontrun{
+# In the working directory we have two shop ZIP files, one for March and one for April.
+mydata <- read_shop(# I only want some of the sub-files
+                    keeplist = c('patterns','home_panel_summary.csv'),
+                    # For patterns, only keep these variables
+                    select = c('raw_visit_counts', 'region', 'bucketed_dwell_times', 'location_name'),
+                    # I want two aggregations of patterns - one of total visits by state ('region')
+                    # and another by location_name that has the dwell times for each brand
+                    multi = list(
+                      list(name = 'all',
+                           by = 'region'),
+                      list(name = 'location_dwells',
+                           by = 'location_name',
+                           expand_cat = 'bucketed_dwell_times',
+                           expand_name = 'bucketed_times')
+                      ),
+                    # Be sure to specify start_date for read_shop
+                    start_date = c(lubridate::ymd('2020-03-01'),lubridate::ymd('2020-04-01')))
+
+# The result is a list with two items- patterns and home_panel_summary.csv
+# patterns itself is a list with two data.tables inside - 'all' and 'location_name',
+# aggregated as given.
+
+}
+
 }

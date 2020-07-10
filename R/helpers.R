@@ -11,6 +11,10 @@
 #' a_cbg <- '560610112022'
 #' fips_from_cbg(a_cbg)
 #'
+#' # Use with data.table!
+#' DT <- data.table::data.table(cbg = c('560610112022','10310112022'))
+#' DT[,c('state_fips','county_fips') := fips_from_cbg(cbg)]
+#'
 #' @export
 
 fips_from_cbg <- function(cbg,return='both') {
@@ -83,6 +87,16 @@ rbind_by_list_pos <- function(dtl,ignore_names=FALSE) {
   return(retDT)
 }
 
+# Tell me a joke
+#
+# Not for export :)
+tell_me_a_joke <- function() {
+  message('Why did the researcher delete all the visits in the SafeGraph data except for the one recorded at her house?')
+
+  readline(prompt="I dunno, why? [press any key]")
+
+  message('She preferred to be left to her own devices.')
+}
 
 #' Seven-Day Moving Average
 #'

@@ -163,7 +163,7 @@ read_patterns <- function(filename,dir = '.',by = NULL, fun = sum, na.rm = TRUE,
 
     if (!is.null(expand_cat)) {
       expanded_var <- expand_cat_json(patternsb,
-                                      expand = expand_int,
+                                      expand = expand_cat,
                                       index = expand_name,
                                       by = by,
                                       fun = fun,

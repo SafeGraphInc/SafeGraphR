@@ -22,4 +22,8 @@ Why a list and not a vector? For \code{data.table} usage.
 a_cbg <- '560610112022'
 fips_from_cbg(a_cbg)
 
+# Use with data.table!
+DT <- data.table::data.table(cbg = c('560610112022','10310112022'))
+DT[,c('state_fips','county_fips') := fips_from_cbg(cbg)]
+
 }

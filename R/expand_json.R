@@ -111,7 +111,7 @@ expand_cat_json <- function(dt, expand,
   }
 
   if (na.rm) {
-    nmstatement <- paste0('!is.na(',expand,')')
+    nmstatement <- paste0('!is.na(',expand,') & ',expand,' != ""')
     dt <- dt[eval(parse(text=nmstatement))]
   }
 
@@ -136,7 +136,7 @@ expand_cat_json <- function(dt, expand,
            eval(parse(text=exptext)),
            by=by]
   dt[,index := catnames, by = by]
-  setnames(dt,'index',index)
+  data.table::setnames(dt,'index',index)
 
   return(dt)
 }

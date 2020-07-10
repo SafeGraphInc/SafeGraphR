@@ -1,0 +1,151 @@
+---
+title: "Processing and Using SafeGraph Stay-at-Home Data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Processing and Using SafeGraph Stay-at-Home Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.width = 7,
+  fig.height = 5,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(SafeGraphR)
+```
+
+This vignette will walk you through the process of reading in, processing, and displaying SafeGraph stay-at-home data.
+
+This vignette will work with data from the *social-distancing/v2/* SafeGraph Amazon Web Services bucket (see the [SafeGraph Catalog](catalog.safegraph.io) for more information), which could also be downloaded using `safegraph_aws()`. 
+
+Note that throughout this vignette, we will be working with data manipulation using the **data.table** package. **data.table** is used throughout **SafeGraphR** (and on the backend) because it is very fast and can handle large data sets easily. However, once the data is read in and processed, it's often no longer necessary to use **data.table** if you prefer something else. The code in this vignette could have easily used, for example, **dplyr** instead. If you are having trouble understanding the code chunks because you're familiar with **dplyr** but not **data.table**, see [this guide](https://atrebas.github.io/post/2019-03-03-datatable-dplyr/) that links the two.
+
+---
+
+# Reading in Data
+
+We will read in the distancing data using the `read_distancing()` function. This relies on the files in the `social-distancing/v2` bucket in the Amazon Web Services bucket, which you can download using `safegraph_aws()` (or using the AWS CLI). See the [SafeGraph Catalog](catalog.safegraph.io).
+
+Once we've downloaded it, the files will be in a YEAR/MONTH/DAY/FILE structure. We can tell it where to begin and end reading files (we probably don't want ALL the files - that would be very large!) by specifying a `start` and `end` date. Let's get all the data from June 1 to June 14, 2020.
+
+**IMPORTANT**: by default, `read_distancing()` will only `select` the variables necessary to get stay-at-home percentages, and will aggregate `by` the state and county level. If you want more variables from the data, change `select`. And if you want the original raw census block group-level data (`origin_census_block_group`), change `by`. There is also an option to `filter` the data.
+
+```{r, eval = FALSE}
+# Our working directory is in the same folder as the "2020" folder
+distancing <- read_distancing(
+   start = lubridate::ymd('2020-06-01'),
+   end = lubridate::ymd('2020-06-14')
+)
+```
+
+```{r}
+data(distancing)
+distancing[]
+```
+
+---
+
+# Processing Data
+
+We will be calculating and using the percentage of each county that is staying home, which is `completely_home_device_count/device_count`, but we may need to do some adjustments.
+
+We have a few goals at this point:
+
+1. Do any further aggregation or adjustments we like
+2. Smooth out weekend effects
+3. Make the data presentable!
+
+## 1. Do any further aggregation or adjustments we like
+
+Any additional adjustments that we do depend on the level we want the eventual data at. If we want to aggregate the data up to a higher level (perhaps to get stay-at-home by state), we might want to do `sample_size_adjust()` to account for different sampling rates across regions. See the Patterns Vignette for an example of using `sample_size_adjust()`.
+
+If instead we want to report the granular individual-level data, we should perform Bayesian shrinkage with `hb_shrink()`. so that we don't get strange results from small regions with few people in them.
+
+Hierarchical Bayesian shrinkage basically says "we're going to start by assuming that you, the individual county, are exactly the same as the overall state. Then we adjust that assumption by looking at your individual data. If you're small, we won't adjust much, since we don't see much from you. But if you're big, we adjust a lot." We will be doing this to shrink counties to states, but you could instead shrink census block groups to counties or states.
+
+`hb_shrink()` is a shrinkage function that only works with proportions. Conveniently, "the proportion staying home" is a proportion! Note, by the way, that if we had CBG-level data but wanted the eventual data at the county level, shrunk to the state level, we would `sum` up `completely_home_device_count` and `device_count` to the county level *before* using `hb_shrink()`.
+
+```{r}
+distancing <- distancing[,.(county_fips = county_fips,
+                            completely_home_device_count = completely_home_device_count,
+                            device_count = device_count,
+                            raw_stay_home = completely_home_device_count/device_count,
+                            shrunk_stay_home = hb_shrink(completely_home_device_count,device_count)),
+                         by = .(state_fips, date)]
+distancing[]
+```
+
+## 2. Smooth out weekend effects and scale
+
+Next we will likely want to smooth things out and handle day-of-week effects by using the `ma()` moving average function. Don't forget to sort first!
+
+```{r, eval = FALSE}
+# Not actually run since we only have 14 days of data here anyway
+data.table::setorder(distancing, state_fips, county_fips, date)
+distancing[, shrunk_stay_home := ma(shrunk_stay_home), by = c('state_fips', 'county_fips')]
+```
+
+Now we may want to consider scaling the data relative to a specific date in the past. This isn't as necessary for distancing data as it is for patterns data, but it can make things easier to compare sometimes.
+
+We'll skip this scale-to-a-certain-date step with our example (see the Patterns Vignetter for an example of how this is done), but I will provide some code for doing a year-on-year adjustment, in case you want to combine multiple years of data to see how much more at-home we are this year than last year.
+
+```{r}
+# let's pretend we have another year by just duplicating the data we have
+fake_lastyear <- data.table::copy(distancing)
+fake_lastyear[,date := date - lubridate::years(1)]
+fake_lastyear[,shrunk_stay_home := shrunk_stay_home - runif(45158, max = .02)]
+
+fake_lastyear <- rbind(distancing, fake_lastyear)
+
+fake_lastyear_scaled <- scale_yoy(fake_lastyear,
+                                  yoy_vars = 'shrunk_stay_home',
+                                  by = c('state_fips','county_fips'))
+
+# Notice the "2019" data has no growth since we din't give it 2018 data to grow from
+fake_lastyear_scaled[,c('date','state_fips','county_fips','shrunk_stay_home','shrunk_stay_home_lag','shrunk_stay_home_YOY')]
+```
+
+## 3. Make the data presentable!
+
+Let's bring in the state and county names for nice labeling
+
+```{r}
+data("fips_to_names")
+
+# We have to do a little class conversions
+distancing[,state_fips := as.numeric(state_fips)]
+distancing[,county_fips := as.numeric(county_fips)]
+
+# And merge in
+distancing <- merge(distancing, fips_to_names)
+```
+
+Let's take a look at the five boroughs of New York!
+
+```{r}
+distancing[statename == 'New York' & 
+             countyname %in% paste(c('New York', 
+                              'Kings', 
+                              'Queens',
+                              'Bronx', 
+                              'Richmond'),'County')] %>%
+  ggplot2::ggplot(ggplot2::aes(x = date, y = shrunk_stay_home, color = countyname, label = countyname)) + 
+  ggplot2::geom_line(size = 1.5) + 
+  directlabels::geom_dl(ggplot2::aes(x = date + .25), method = list('last.bumpup', cex = 1.1)) + 
+  ggplot2::scale_y_continuous(labels = scales::percent) + 
+  ggplot2::scale_x_date(limits = c(min(distancing$date),max(distancing$date) + 4)) +
+  ggplot2::guides(color = FALSE) +
+  ggplot2::theme_minimal() + 
+  ggplot2::labs(x = "Date", y = "Proportion Staying Home", 
+                title = "SafeGraph: Stay-at-Home Rates in New York City") +
+  ggplot2::theme(panel.grid.major.x = ggplot2::element_blank(),
+                 panel.grid.minor.x = ggplot2::element_blank(),
+                 text = ggplot2::element_text(size = 14))
+
+```

@@ -6,7 +6,7 @@
 \usage{
 safegraph_aws(
   path = ".",
-  patterns,
+  dataset,
   bucket_only = FALSE,
   base_url = "s3.wasabisys.com",
   key,
@@ -19,7 +19,7 @@ safegraph_aws(
 \arguments{
 \item{path}{The local directory to synchronize.}
 
-\item{patterns}{The SafeGraph bucket to get from. Can be "weekly", "weekly-new" (new method since June 2020), "monthly", "monthly backfill", "distancing", "transactions", "core", "geo-supplement" or, to get the baseline bucket, "none". v2 versions always selected.}
+\item{dataset}{The SafeGraph bucket to get from. Can be "weekly", "weekly-new" (new method since June 2020), "monthly", "monthly backfill", "distancing", "transactions", "core", "geo-supplement" or, to get the baseline bucket, "none". v2 versions always selected.}
 
 \item{bucket_only}{Instead of doing an \code{aws.s3::s3sync} call, just return the correct bucket as a string. Then you can use that to do your own \code{aws.s3::s3sync} call, or work with the AWS CLI.}
 
@@ -36,12 +36,20 @@ safegraph_aws(
 \item{...}{Additional parameters to be sent to \code{aws.s3::s3sync} and from there on to \code{aws.s3:s3HTTP}. "direction" will be ignored.}
 }
 \description{
-THIS FUNCTION CURRENTLY DOES NOT WORK. USE THE AWS CLI INSTEAD.
+This is a thin wrapper for \code{aws.s3::s3sync} that will aim you at the right directory to synchronize.
 }
 \details{
-This is a thin wrapper for \code{aws.s3::s3sync} that will aim you at the right directory to synchronize.
-
 This function doesn't add too much, but it does make the default behavior you probably want a bit easier. If you plan to specify the \code{s3sync::aws.s3} "bucket" option yourself, this function is largely useless.
 
 See catalog.safegraph.io for more description of the various buckets.
+}
+\examples{
+
+\dontrun{
+
+# Download all the recent weekly-patterns files to the working directory
+safegraph_aws(dataset = 'weekly-new', key = 'MYINFO', secret = 'MYOTHERINFO')
+
+}
+
 }
