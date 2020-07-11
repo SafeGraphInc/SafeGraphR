@@ -100,7 +100,7 @@ read_many_patterns <- function(dir = '.',recursive=FALSE, filelist=NULL,by = NUL
                                   expand_int = expand_int, expand_cat = expand_cat,
                                   expand_name = expand_name, multi = NULL, naics_link = naics_link,
                                   select = select, gen_fips = gen_fips, start_date = start_date[x], silent = silent, ...)) %>%
-      rbindlist() %>%
+      data.table::rbindlist() %>%
       return()
   }
 
