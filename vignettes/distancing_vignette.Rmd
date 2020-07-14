@@ -22,7 +22,7 @@ library(SafeGraphR)
 
 This vignette will walk you through the process of reading in, processing, and displaying SafeGraph stay-at-home data.
 
-This vignette will work with data from the *social-distancing/v2/* SafeGraph Amazon Web Services bucket (see the [SafeGraph Catalog](catalog.safegraph.io) for more information), which could also be downloaded using `safegraph_aws()`. 
+This vignette will work with data from the *social-distancing/v2/* SafeGraph Amazon Web Services bucket (see the [SafeGraph Catalog](https://catalog.safegraph.io) for more information), which could also be downloaded using `safegraph_aws()`. 
 
 Note that throughout this vignette, we will be working with data manipulation using the **data.table** package. **data.table** is used throughout **SafeGraphR** (and on the backend) because it is very fast and can handle large data sets easily. However, once the data is read in and processed, it's often no longer necessary to use **data.table** if you prefer something else. The code in this vignette could have easily used, for example, **dplyr** instead. If you are having trouble understanding the code chunks because you're familiar with **dplyr** but not **data.table**, see [this guide](https://atrebas.github.io/post/2019-03-03-datatable-dplyr/) that links the two.
 
@@ -30,7 +30,7 @@ Note that throughout this vignette, we will be working with data manipulation us
 
 # Reading in Data
 
-We will read in the distancing data using the `read_distancing()` function. This relies on the files in the `social-distancing/v2` bucket in the Amazon Web Services bucket, which you can download using `safegraph_aws()` (or using the AWS CLI). See the [SafeGraph Catalog](catalog.safegraph.io).
+We will read in the distancing data using the `read_distancing()` function. This relies on the files in the `social-distancing/v2` bucket in the Amazon Web Services bucket, which you can download using `safegraph_aws()` (or using the AWS CLI). See the [SafeGraph Catalog](https://catalog.safegraph.io).
 
 Once we've downloaded it, the files will be in a YEAR/MONTH/DAY/FILE structure. We can tell it where to begin and end reading files (we probably don't want ALL the files - that would be very large!) by specifying a `start` and `end` date. Let's get all the data from June 1 to June 14, 2020.
 
