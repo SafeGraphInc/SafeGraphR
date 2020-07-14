@@ -87,7 +87,7 @@ poi_link <- link_poi_naics('Core-USA-June2020-Release-CORE_POI-2020_05-2020-06-0
 # I probably at this point would save poi_link to disk - that took a while!
 ```
 
-Next, if we want to use the state and county FIPS codes, we want to make sure that `gen_fips = TRUE`, which it is by default, so we're good there. This uses `fips_from_cbg` internally.
+Next, if we want to use the state and county FIPS codes, we want to make sure that `gen_fips = TRUE`, which it is by default, so we're good there. This uses `fips_from_cbg()` internally.
 
 Fourth, patterns files don't tell you what the first date in them is. `read_many_patterns()` will try to guess that date by the filepath. But if you want to be sure, you can set `start_date` for each of the files being read in.
 
@@ -116,7 +116,7 @@ patterns <- read_many_patterns(recursive = TRUE,
 
 ```
 
-Internally, this calls `read_patterns` many times, followed by `rbind_by_list_pos`.
+Internally, this calls `read_patterns()` many times, followed by `rbind_by_list_pos()`.
 
 The result will be `patterns`, a list, where `patterns[[1]]` (or `patterns[['patterns_naics']]`) contains the NAICS aggregation, and `patterns[[2]]` (or `patterns[['NY_NJ']]`) contains the New York/New Jersey aggregation. Let's save those as their own objects (which will then be a part of the package so we can use real data in this vignette!).
 
@@ -161,7 +161,7 @@ data(norm)
 norm[]
 ```
 
-Finally, if we want to do `sample_size_adjust`, we will need the number of devices by region from the home panel summary files. We can also read this with `read_many_csvs()`.
+Finally, if we want to do `sample_size_adjust()`, we will need the number of devices by region from the home panel summary files. We can also read this with `read_many_csvs()`.
 
 ```{r, eval = FALSE}
 # Make sure that census_block_group is read as a character
@@ -201,11 +201,11 @@ We have a few goals at this point:
 
 ## 1. Do any further aggregation or adjustments, and normalize
 
-The aggregation we want to do at this point depends on where we want the data to go. Let's work on `pat_NY_NJ`. If we want to use state-level data to inform individual county estimates, we should consider using `hb_shrink` (and an example of that will be in the social distancing vignette). But if we want to use county-level estimates to aggregate up to the state level, we might want to use `sample_size_adjust` to account for differences in sampling rates across counties.
+The aggregation we want to do at this point depends on where we want the data to go. Let's work on `pat_NY_NJ`. If we want to use state-level data to inform individual county estimates, we should consider using `hb_shrink` (and an example of that will be in the social distancing vignette). But if we want to use county-level estimates to aggregate up to the state level, we might want to use `sample_size_adjust()` to account for differences in sampling rates across counties.
 
 You may also want to do more adjustments for changes over time in the sample size, as described in Section 2 of the [Normalization Best Practices](https://colab.research.google.com/drive/16BELpcum4TKoH-5wg8Xym_CGgIGgpu1I?usp=sharing) guide. But this is not done here (except in the normalization step).
 
-In general, `sample_size_adjust` compares the number of devices in each county (or census block group) to the population in that area, and adjusts the total counts as though every region were sampled at the same rate.
+In general, `sample_size_adjust()` compares the number of devices in each county (or census block group) to the population in that area, and adjusts the total counts as though every region were sampled at the same rate.
 
 ```{r}
 # First merge in panel, which has the number_devices_residing we need to know how big the SafeGraph sample is in that area

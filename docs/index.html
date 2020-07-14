@@ -99,28 +99,28 @@
 <div id="data-reading-functions" class="section level2">
 <h2 class="hasAnchor">
 <a href="#data-reading-functions" class="anchor"></a>Data Reading Functions</h2>
-<p><code>link_poi_naics</code>: Read in a Core Places file and use it to create a crosswalk between SafeGraph POI codes and NAICS codes.</p>
-<p><code>read_distancing</code>: Given a list of dates, reads in and aggregates SafeGraph social-distancing v2 files.</p>
-<p><code>read_many_csvs</code>: Reads a bunch of CSVs in the same folder and row-binds them all together. Useful for stuff like normalization data.</p>
-<p><code>read_many_patterns</code> and <code>read_patterns</code>: Reads a bunch of (or one, respectively) monthly or weekly patterns <code>.csv.gz</code> files all in the same folder, does appropriate processing, and row-binds the results together.</p>
-<p><code>read_many_shop</code> and <code>read_shop</code>: Reads a bunch of (or one, respectively) <code>.zip</code> files in the format they come in from the shop and combines the data sets inside the zip across zip-files appropriately.</p>
-<p><code>safegraph_aws</code>: A thin wrapper for <code><a href="https://rdrr.io/pkg/aws.s3/man/sync.html">aws.s3::s3sync</a></code> that downloads data from the SafeGraph AWS COVID response buckets.</p>
+<p><code><a href="reference/link_poi_naics.html">link_poi_naics()</a></code>: Read in a Core Places file and use it to create a crosswalk between SafeGraph POI codes and NAICS codes.</p>
+<p><code><a href="reference/read_distancing.html">read_distancing()</a></code>: Given a list of dates, reads in and aggregates SafeGraph social-distancing v2 files.</p>
+<p><code><a href="reference/read_many_csvs.html">read_many_csvs()</a></code>: Reads a bunch of CSVs in the same folder and row-binds them all together. Useful for stuff like normalization data.</p>
+<p><code><a href="reference/read_many_patterns.html">read_many_patterns()</a></code> and <code><a href="reference/read_patterns.html">read_patterns()</a></code>: Reads a bunch of (or one, respectively) monthly or weekly patterns <code>.csv.gz</code> files all in the same folder, does appropriate processing, and row-binds the results together.</p>
+<p><code><a href="reference/read_many_shop.html">read_many_shop()</a></code> and <code><a href="reference/read_shop.html">read_shop()</a></code>: Reads a bunch of (or one, respectively) <code>.zip</code> files in the format they come in from the shop and combines the data sets inside the zip across zip-files appropriately.</p>
+<p><code><a href="reference/safegraph_aws.html">safegraph_aws()</a></code>: A thin wrapper for <code><a href="https://rdrr.io/pkg/aws.s3/man/sync.html">aws.s3::s3sync()</a></code> that downloads data from the SafeGraph AWS COVID response buckets.</p>
 </div>
 <div id="data-processing-functions" class="section level2">
 <h2 class="hasAnchor">
 <a href="#data-processing-functions" class="anchor"></a>Data Processing Functions</h2>
-<p><code>expand_cat_json</code> and <code>expand_integer_json</code>: Take SafeGraph data with a column of categorical (named) or numeric (unnamed) JSON data and expand that column, pivot the data to long format, and then aggregate to the desired level.</p>
-<p><code>fips_from_cbg</code>: Take a census block group identifier and extract the state and/or county FIPS codes.</p>
-<p><code>rbind_by_list_pos</code>: Take a list of lists of <code>data.table</code>s and row-binds them by their position in the sub-list. For example, <code><a href="reference/rbind_by_list_pos.html">rbind_by_list_pos(list(A,B),list(C,D))</a></code> would return <code><a href="https://rdrr.io/r/base/list.html">list(rbind(A,C),rbind(B,D))</a></code>. Can be used after <code>read_</code> functions, which in some cases return a list of <code>data.table</code>s for each file they read.</p>
+<p><code><a href="reference/expand_cat_json.html">expand_cat_json()</a></code> and <code><a href="reference/expand_integer_json.html">expand_integer_json()</a></code>: Take SafeGraph data with a column of categorical (named) or numeric (unnamed) JSON data and expand that column, pivot the data to long format, and then aggregate to the desired level.</p>
+<p><code><a href="reference/fips_from_cbg.html">fips_from_cbg()</a></code>: Take a census block group identifier and extract the state and/or county FIPS codes.</p>
+<p><code><a href="reference/rbind_by_list_pos.html">rbind_by_list_pos()</a></code>: Take a list of lists of <code>data.table</code>s and row-binds them by their position in the sub-list. For example, <code><a href="reference/rbind_by_list_pos.html">rbind_by_list_pos(list(A,B),list(C,D))</a></code> would return <code><a href="https://rdrr.io/r/base/list.html">list(rbind(A,C),rbind(B,D))</a></code>. Can be used after <code>read_</code> functions, which in some cases return a list of <code>data.table</code>s for each file they read.</p>
 </div>
 <div id="final-stages-processing-functions" class="section level2">
 <h2 class="hasAnchor">
 <a href="#final-stages-processing-functions" class="anchor"></a>Final-Stages Processing Functions</h2>
-<p><code>hb_shrink</code>: Perform hierarchical Bayesian shrinkage on the CBG-to-county or county-to-state level.</p>
-<p><code>ma</code>: Calculates a (by default) seven day moving average on pre-sorted data with no gaps.</p>
-<p><code>sample_size_adjust</code>: Adjusts data for differences in sampling rates across geographic locations.</p>
-<p><code>scale_to_date</code>: Adjusts data to be relative to a specific date.</p>
-<p><code>scale_yoy</code>: Adjusts data to be relative to the same date the previous year.</p>
+<p><code><a href="reference/hb_shrink.html">hb_shrink()</a></code>: Perform hierarchical Bayesian shrinkage on the CBG-to-county or county-to-state level.</p>
+<p><code><a href="reference/ma.html">ma()</a></code>: Calculates a (by default) seven day moving average on pre-sorted data with no gaps.</p>
+<p><code><a href="reference/sample_size_adjust.html">sample_size_adjust()</a></code>: Adjusts data for differences in sampling rates across geographic locations.</p>
+<p><code><a href="reference/scale_to_date.html">scale_to_date()</a></code>: Adjusts data to be relative to a specific date.</p>
+<p><code><a href="reference/scale_yoy.html">scale_yoy()</a></code>: Adjusts data to be relative to the same date the previous year.</p>
 </div>
 <div id="data-sets" class="section level2">
 <h2 class="hasAnchor">

@@ -127,7 +127,7 @@
 <p>Second, if we want to aggregate (or filter) by NAICS code, which we do, we need to know the NAICS code of each POI. We can do that by processing the most recent monthly SafeGraph Core file using <code>link_poi_naics</code>. Then we can pass the resulting file to the <code>naics_link</code> option.</p>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">poi_link</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/link_poi_naics.html">link_poi_naics</a></span>(<span class="st">'Core-USA-June2020-Release-CORE_POI-2020_05-2020-06-06.zip'</span>)
 <span class="co"># I probably at this point would save poi_link to disk - that took a while!</span></pre></body></html></div>
-<p>Next, if we want to use the state and county FIPS codes, we want to make sure that <code>gen_fips = TRUE</code>, which it is by default, so we’re good there. This uses <code>fips_from_cbg</code> internally.</p>
+<p>Next, if we want to use the state and county FIPS codes, we want to make sure that <code>gen_fips = TRUE</code>, which it is by default, so we’re good there. This uses <code><a href="../reference/fips_from_cbg.html">fips_from_cbg()</a></code> internally.</p>
 <p>Fourth, patterns files don’t tell you what the first date in them is. <code><a href="../reference/read_many_patterns.html">read_many_patterns()</a></code> will try to guess that date by the filepath. But if you want to be sure, you can set <code>start_date</code> for each of the files being read in.</p>
 <p>Finally, and very important, if we are doing any sort of aggregation we probably want to specify <code>select</code>, a character vector of variables to be read in. If we don’t, then reading in the data will take <em>way</em> longer. Also, if some of those variables aren’t amenable to being aggregated with <code>fun</code>, you could get an error. We are planning to use the <code>visits_by_day</code> variable so we need that. We’ll also use <code>poi_cbg</code> (to be sent to <code><a href="../reference/fips_from_cbg.html">fips_from_cbg()</a></code> to get <code>state_fips</code> and <code>county_fips</code>), but that’s in by default whenever <code>gen_fips = TRUE</code>. We also need <code>naics_code</code>, but that isn’t read in from the file; rather it comes from the <code>poi_link</code> data we made. So we specify <code>select = 'visits_by_day'</code>.</p>
 <p>See the <a href="https://docs.safegraph.com/docs">SafeGraph docs</a> for full documentation of all the available variables.</p>
@@ -146,7 +146,7 @@
                                       <span class="kw">expand_int</span> <span class="kw">=</span> <span class="st">'visits_by_day'</span>,
                                       <span class="kw">filter</span> <span class="kw">=</span> <span class="st">'state_fips %in% c(34, 36)'</span>)
 ))</pre></body></html></div>
-<p>Internally, this calls <code>read_patterns</code> many times, followed by <code>rbind_by_list_pos</code>.</p>
+<p>Internally, this calls <code><a href="../reference/read_patterns.html">read_patterns()</a></code> many times, followed by <code><a href="../reference/rbind_by_list_pos.html">rbind_by_list_pos()</a></code>.</p>
 <p>The result will be <code>patterns</code>, a list, where <code>patterns[[1]]</code> (or <code>patterns[['patterns_naics']]</code>) contains the NAICS aggregation, and <code>patterns[[2]]</code> (or <code>patterns[['NY_NJ']]</code>) contains the New York/New Jersey aggregation. Let’s save those as their own objects (which will then be a part of the package so we can use real data in this vignette!).</p>
 <div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="co"># This data is one observation per NAICS code per day</span>
 <span class="no">pat_naics</span> <span class="kw">&lt;-</span> <span class="no">patterns</span><span class="kw">[[</span><span class="st">'patterns_naics'</span>]]
@@ -209,7 +209,7 @@
 <span class="co">#&gt; 5: 2020-06-26</span>
 <span class="co">#&gt; 6: 2020-06-27</span>
 <span class="co">#&gt; 7: 2020-06-28</span></pre></body></html></div>
-<p>Finally, if we want to do <code>sample_size_adjust</code>, we will need the number of devices by region from the home panel summary files. We can also read this with <code><a href="../reference/read_many_csvs.html">read_many_csvs()</a></code>.</p>
+<p>Finally, if we want to do <code><a href="../reference/sample_size_adjust.html">sample_size_adjust()</a></code>, we will need the number of devices by region from the home panel summary files. We can also read this with <code><a href="../reference/read_many_csvs.html">read_many_csvs()</a></code>.</p>
 <div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="co"># Make sure that census_block_group is read as a character</span>
 <span class="co"># note colClasses is a data.table::fread() argument</span>
 <span class="no">panel</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/read_many_csvs.html">read_many_csvs</a></span>(<span class="kw">dir</span> <span class="kw">=</span> <span class="st">'../home_panel_summary'</span>,
@@ -256,9 +256,9 @@
 <div id="do-any-further-aggregation-or-adjustments-and-normalize" class="section level2">
 <h2 class="hasAnchor">
 <a href="#do-any-further-aggregation-or-adjustments-and-normalize" class="anchor"></a>1. Do any further aggregation or adjustments, and normalize</h2>
-<p>The aggregation we want to do at this point depends on where we want the data to go. Let’s work on <code>pat_NY_NJ</code>. If we want to use state-level data to inform individual county estimates, we should consider using <code>hb_shrink</code> (and an example of that will be in the social distancing vignette). But if we want to use county-level estimates to aggregate up to the state level, we might want to use <code>sample_size_adjust</code> to account for differences in sampling rates across counties.</p>
+<p>The aggregation we want to do at this point depends on where we want the data to go. Let’s work on <code>pat_NY_NJ</code>. If we want to use state-level data to inform individual county estimates, we should consider using <code>hb_shrink</code> (and an example of that will be in the social distancing vignette). But if we want to use county-level estimates to aggregate up to the state level, we might want to use <code><a href="../reference/sample_size_adjust.html">sample_size_adjust()</a></code> to account for differences in sampling rates across counties.</p>
 <p>You may also want to do more adjustments for changes over time in the sample size, as described in Section 2 of the <a href="https://colab.research.google.com/drive/16BELpcum4TKoH-5wg8Xym_CGgIGgpu1I?usp=sharing">Normalization Best Practices</a> guide. But this is not done here (except in the normalization step).</p>
-<p>In general, <code>sample_size_adjust</code> compares the number of devices in each county (or census block group) to the population in that area, and adjusts the total counts as though every region were sampled at the same rate.</p>
+<p>In general, <code><a href="../reference/sample_size_adjust.html">sample_size_adjust()</a></code> compares the number of devices in each county (or census block group) to the population in that area, and adjusts the total counts as though every region were sampled at the same rate.</p>
 <div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="co"># First merge in panel, which has the number_devices_residing we need to know how big the SafeGraph sample is in that area</span>
 <span class="no">pat_NY_NJ</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html">merge</a></span>(<span class="no">pat_NY_NJ</span>, <span class="no">panel</span>)
 
