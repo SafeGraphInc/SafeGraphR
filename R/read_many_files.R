@@ -95,13 +95,12 @@ read_many_patterns <- function(dir = '.',recursive=FALSE, filelist=NULL,by = NUL
   # If there's only one type specified, we'll get back a
   # data table that can be bound right away
   if (is.null(multi)) {
-    1:length(filelist) %>%
+    patlist <- 1:length(filelist) %>%
       purrr::map(function(x) read_patterns(filelist[x], dir = dir, by = by, fun = fun, na.rm = na.rm, filter = filter,
                                   expand_int = expand_int, expand_cat = expand_cat,
                                   expand_name = expand_name, multi = NULL, naics_link = naics_link,
                                   select = select, gen_fips = gen_fips, start_date = start_date[x], silent = silent, ...)) %>%
-      data.table::rbindlist() %>%
-      return()
+    return(data.table::rbindlist(patlist))
   }
 
   # Otherwise we'll get back a list that we need to unpack before binding
