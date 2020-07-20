@@ -28,7 +28,7 @@ read_patterns(
 
 \item{dir}{The directory in which the file sits.}
 
-\item{by}{A character vector giving the variable names of the level to be collapsed to using \code{sum(na.rm=TRUE)}. The resulting data will have X rows per unique combination of \code{by}, where X is 1 if no expand variables are specified, or the length of the expand variable if specified. Set to \code{NULL} to aggregate across all initial rows, or set to \code{FALSE} to not aggregate at all (this will also add an \code{initial_rowno} column showing the original row number).}
+\item{by}{A character vector giving the variable names of the level to be collapsed to using \code{sum(na.rm=TRUE)}. The resulting data will have X rows per unique combination of \code{by}, where X is 1 if no expand variables are specified, or the length of the expand variable if specified. Set to \code{NULL} to aggregate across all initial rows, or set to \code{FALSE} to not aggregate at all (this will also add an \code{initial_rowno} column showing the original row number). You can also avoid aggregating by doing \code{by = 'safegraph_place_id'} which might play more nicely with some of the other features..}
 
 \item{fun}{Function to use to aggregate the expanded variable to the \code{by} level.}
 

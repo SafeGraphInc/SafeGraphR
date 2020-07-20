@@ -90,13 +90,13 @@
     
 <div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">SafeGraphR</span>)</pre></body></html></div>
 <p>This vignette will walk you through the process of reading in, processing, and displaying SafeGraph stay-at-home data.</p>
-<p>This vignette will work with data from the <em>social-distancing/v2/</em> SafeGraph Amazon Web Services bucket (see the <a href="catalog.safegraph.io">SafeGraph Catalog</a> for more information), which could also be downloaded using <code><a href="../reference/safegraph_aws.html">safegraph_aws()</a></code>.</p>
+<p>This vignette will work with data from the <em>social-distancing/v2/</em> SafeGraph Amazon Web Services bucket (see the <a href="https://catalog.safegraph.io">SafeGraph Catalog</a> for more information), which could also be downloaded using <code><a href="../reference/safegraph_aws.html">safegraph_aws()</a></code>.</p>
 <p>Note that throughout this vignette, we will be working with data manipulation using the <strong>data.table</strong> package. <strong>data.table</strong> is used throughout <strong>SafeGraphR</strong> (and on the backend) because it is very fast and can handle large data sets easily. However, once the data is read in and processed, it’s often no longer necessary to use <strong>data.table</strong> if you prefer something else. The code in this vignette could have easily used, for example, <strong>dplyr</strong> instead. If you are having trouble understanding the code chunks because you’re familiar with <strong>dplyr</strong> but not <strong>data.table</strong>, see <a href="https://atrebas.github.io/post/2019-03-03-datatable-dplyr/">this guide</a> that links the two.</p>
 <hr>
 <div id="reading-in-data" class="section level1">
 <h1 class="hasAnchor">
 <a href="#reading-in-data" class="anchor"></a>Reading in Data</h1>
-<p>We will read in the distancing data using the <code><a href="../reference/read_distancing.html">read_distancing()</a></code> function. This relies on the files in the <code>social-distancing/v2</code> bucket in the Amazon Web Services bucket, which you can download using <code><a href="../reference/safegraph_aws.html">safegraph_aws()</a></code> (or using the AWS CLI). See the <a href="catalog.safegraph.io">SafeGraph Catalog</a>.</p>
+<p>We will read in the distancing data using the <code><a href="../reference/read_distancing.html">read_distancing()</a></code> function. This relies on the files in the <code>social-distancing/v2</code> bucket in the Amazon Web Services bucket, which you can download using <code><a href="../reference/safegraph_aws.html">safegraph_aws()</a></code> (or using the AWS CLI). See the <a href="https://catalog.safegraph.io">SafeGraph Catalog</a>.</p>
 <p>Once we’ve downloaded it, the files will be in a YEAR/MONTH/DAY/FILE structure. We can tell it where to begin and end reading files (we probably don’t want ALL the files - that would be very large!) by specifying a <code>start</code> and <code>end</code> date. Let’s get all the data from June 1 to June 14, 2020.</p>
 <p><strong>IMPORTANT</strong>: by default, <code><a href="../reference/read_distancing.html">read_distancing()</a></code> will only <code>select</code> the variables necessary to get stay-at-home percentages, and will aggregate <code>by</code> the state and county level. If you want more variables from the data, change <code>select</code>. And if you want the original raw census block group-level data (<code>origin_census_block_group</code>), change <code>by</code>. There is also an option to <code>filter</code> the data.</p>
 <div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="co"># Our working directory is in the same folder as the "2020" folder</span>
@@ -216,17 +216,17 @@
 <span class="co"># Notice the "2019" data has no growth since we din't give it 2018 data to grow from</span>
 <span class="no">fake_lastyear_scaled</span>[,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'date'</span>,<span class="st">'state_fips'</span>,<span class="st">'county_fips'</span>,<span class="st">'shrunk_stay_home'</span>,<span class="st">'shrunk_stay_home_lag'</span>,<span class="st">'shrunk_stay_home_YOY'</span>)]
 <span class="co">#&gt;              date state_fips county_fips shrunk_stay_home shrunk_stay_home_lag</span>
-<span class="co">#&gt;     1: 2019-06-01          1         001        0.2186101                   NA</span>
-<span class="co">#&gt;     2: 2019-06-02          1         001        0.2080124                   NA</span>
-<span class="co">#&gt;     3: 2019-06-03          1         001        0.1892261                   NA</span>
-<span class="co">#&gt;     4: 2019-06-04          1         001        0.2071107                   NA</span>
-<span class="co">#&gt;     5: 2019-06-05          1         001        0.1989555                   NA</span>
+<span class="co">#&gt;     1: 2019-06-01          1         001        0.2156581                   NA</span>
+<span class="co">#&gt;     2: 2019-06-02          1         001        0.2144922                   NA</span>
+<span class="co">#&gt;     3: 2019-06-03          1         001        0.1932271                   NA</span>
+<span class="co">#&gt;     4: 2019-06-04          1         001        0.2016880                   NA</span>
+<span class="co">#&gt;     5: 2019-06-05          1         001        0.1893073                   NA</span>
 <span class="co">#&gt;    ---                                                                        </span>
-<span class="co">#&gt; 90312: 2020-06-10          9         015        0.3387217            0.3221489</span>
-<span class="co">#&gt; 90313: 2020-06-11          9         015        0.3652986            0.3643582</span>
-<span class="co">#&gt; 90314: 2020-06-12          9         015        0.3314067            0.3237166</span>
-<span class="co">#&gt; 90315: 2020-06-13          9         015        0.3072171            0.3064014</span>
-<span class="co">#&gt; 90316: 2020-06-14          9         015        0.3535491            0.3428130</span>
+<span class="co">#&gt; 90312: 2020-06-10          9         015        0.3387217            0.3270671</span>
+<span class="co">#&gt; 90313: 2020-06-11          9         015        0.3652986            0.3455353</span>
+<span class="co">#&gt; 90314: 2020-06-12          9         015        0.3314067            0.3168303</span>
+<span class="co">#&gt; 90315: 2020-06-13          9         015        0.3072171            0.3068648</span>
+<span class="co">#&gt; 90316: 2020-06-14          9         015        0.3535491            0.3503809</span>
 <span class="co">#&gt;        shrunk_stay_home_YOY</span>
 <span class="co">#&gt;     1:                   NA</span>
 <span class="co">#&gt;     2:                   NA</span>
@@ -234,11 +234,11 @@
 <span class="co">#&gt;     4:                   NA</span>
 <span class="co">#&gt;     5:                   NA</span>
 <span class="co">#&gt;    ---                     </span>
-<span class="co">#&gt; 90312:          0.051444483</span>
-<span class="co">#&gt; 90313:          0.002580881</span>
-<span class="co">#&gt; 90314:          0.023755499</span>
-<span class="co">#&gt; 90315:          0.002661901</span>
-<span class="co">#&gt; 90316:          0.031317770</span></pre></body></html></div>
+<span class="co">#&gt; 90312:          0.035633437</span>
+<span class="co">#&gt; 90313:          0.057195947</span>
+<span class="co">#&gt; 90314:          0.046006884</span>
+<span class="co">#&gt; 90315:          0.001147926</span>
+<span class="co">#&gt; 90316:          0.009042157</span></pre></body></html></div>
 </div>
 <div id="make-the-data-presentable" class="section level2">
 <h2 class="hasAnchor">

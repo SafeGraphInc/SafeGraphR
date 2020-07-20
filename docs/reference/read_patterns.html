@@ -162,7 +162,7 @@
     </tr>
     <tr>
       <th>by</th>
-      <td><p>A character vector giving the variable names of the level to be collapsed to using <code><a href='https://rdrr.io/r/base/sum.html'>sum(na.rm=TRUE)</a></code>. The resulting data will have X rows per unique combination of <code>by</code>, where X is 1 if no expand variables are specified, or the length of the expand variable if specified. Set to <code>NULL</code> to aggregate across all initial rows, or set to <code>FALSE</code> to not aggregate at all (this will also add an <code>initial_rowno</code> column showing the original row number).</p></td>
+      <td><p>A character vector giving the variable names of the level to be collapsed to using <code><a href='https://rdrr.io/r/base/sum.html'>sum(na.rm=TRUE)</a></code>. The resulting data will have X rows per unique combination of <code>by</code>, where X is 1 if no expand variables are specified, or the length of the expand variable if specified. Set to <code>NULL</code> to aggregate across all initial rows, or set to <code>FALSE</code> to not aggregate at all (this will also add an <code>initial_rowno</code> column showing the original row number). You can also avoid aggregating by doing <code>by = 'safegraph_place_id'</code> which might play more nicely with some of the other features..</p></td>
     </tr>
     <tr>
       <th>fun</th>
