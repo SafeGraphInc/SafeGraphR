@@ -9,6 +9,7 @@ expand_cat_json(
   expand,
   index = "index",
   by = NULL,
+  fast = FALSE,
   fun = sum,
   na.rm = TRUE,
   set_key = TRUE
@@ -23,7 +24,9 @@ expand_cat_json(
 
 \item{by}{Character vector indicating the variables to group by after expanding. Set to \code{NULL} to aggregate across all initial rows, or set to \code{FALSE} to not aggregate at all (this will also add an \code{initial_rowno} column showing the original row number).}
 
-\item{fun}{Function that takes a vector and returns a single value to use when collapsing to the \code{by} level.}
+\item{fast}{Assumes that all the JSON vectors are of the exact same categories, and adds the values together rather than using whatever is in \code{fun}.}
+
+\item{fun}{Function that takes a vector and returns a single value to use when collapsing to the \code{by} level. Requires \code{fast = FALSE}.}
 
 \item{na.rm}{Ignore missing values of \code{expand}}
 
@@ -33,8 +36,6 @@ expand_cat_json(
 This function accepts a \code{data.table} along with a set of grouping variables and a character-format category-style JSON column (i.e. starts with curly brackets, not square).
 }
 \details{
-WARNING: currently does not work properly if different rows have different categories.
-
 It expands that JSON column into long format, with one row per observation per value of the JSON column, and then collapses everything according to the set of grouping variables.
 }
 \examples{
