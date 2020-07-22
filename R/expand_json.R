@@ -4,8 +4,6 @@
 #'
 #' It expands that JSON column into long format, with one row per observation per value of the JSON column, and then collapses everything according to the set of grouping variables.
 #'
-#' IMPORTANT: This function may throw an error if any aggregation is being done and the JSON vectors are not of equal length. However, that shouldn't be a problem for any SafeGraph file.
-#'
 #' @param dt data.table object (or something that can be coerced to data.table)
 #' @param expand String indicating the JSON column to be expanded.
 #' @param index String indicating the name of the new index column
