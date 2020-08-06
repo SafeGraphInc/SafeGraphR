@@ -65,7 +65,7 @@ expand_integer_json <- function(dt, expand,
 
     dt[,eval(parse(text=indextext)),by=by]
   } else {
-    if (by == 'initial_rowno') {
+    if (setequal(by, 'initial_rowno')) {
       exptext <- paste0(".(",expand," = jsonlite::fromJSON(",expand,"), ", index, " = seq_len(.N))")
 
       dt <- dt[,
@@ -141,7 +141,7 @@ expand_cat_json <- function(dt, expand,
   }
 
   if (na.rm) {
-    nmstatement <- paste0('!is.na(',expand,') & ',expand,' != ""')
+    nmstatement <- paste0('!is.na(',expand,') & !(',expand,' %in% c("","{}"))')
     dt <- dt[eval(parse(text=nmstatement))]
   }
 
@@ -169,7 +169,7 @@ expand_cat_json <- function(dt, expand,
     dt[,index := catnames, by = by]
     data.table::setnames(dt,'index',index)
   } else {
-    if (by == 'initial_rowno') {
+    if (setequal(by, 'initial_rowno')) {
       exptext <- paste0(".(",expand," = unlist(jsonlite::fromJSON(",expand,")), ",
                         index, " = names(unlist(jsonlite::fromJSON(",expand,"))))")
 
