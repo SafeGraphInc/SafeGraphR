@@ -5,7 +5,7 @@
 #' @format A \code{data.table} with 220333 rows and 2 variables:
 #' \describe{
 #'   \item{poi_cbg}{Census Block Group ID, named for easy merging with the patterns data.}
-#'   \item{unweighted_pop}{Unweighted population from the 2016 American Community Survey}
+#'   \item{unweighted_pop}{Population from the 2016 American Community Survey (the "unweighted" part is outdated but kept for consistency with old code).}
 #' }
 #' @source \url{https://docs.safegraph.com/docs/open-census-data}
 "cbg_pop"
@@ -16,7 +16,7 @@
 #'
 #' @format A \code{data.table} with 3220 rows and 3 variables:
 #' \describe{
-#'   \item{unweighted_pop}{Unweighted population from the 2016 American Community Survey}
+#'   \item{unweighted_pop}{Population from the 2016 American Community Survey (the "unweighted" part is outdated but kept for consistency with old code).}
 #'   \item{state_fips}{State FIPS code for the census block group}
 #'   \item{county_fips}{County FIPS code for the census block group}
 #' }

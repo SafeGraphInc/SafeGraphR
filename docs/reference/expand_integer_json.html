@@ -131,14 +131,14 @@
     </div>
 
     <pre class="usage"><span class='fu'>expand_integer_json</span>(
-  <span class='no'>dt</span>,
-  <span class='no'>expand</span>,
-  <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"index"</span>,
-  <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>fast</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>fun</span> <span class='kw'>=</span> <span class='no'>sum</span>,
-  <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>set_key</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+  <span class='kw'>dt</span>,
+  <span class='kw'>expand</span>,
+  index = <span class='st'>"index"</span>,
+  by = <span class='kw'>NULL</span>,
+  fast = <span class='fl'>TRUE</span>,
+  fun = <span class='kw'>sum</span>,
+  na.rm = <span class='fl'>TRUE</span>,
+  set_key = <span class='fl'>TRUE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -181,18 +181,18 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>It expands that JSON column into long format, with one row per observation per value of the JSON column, and then collapses everything according to the set of grouping variables.</p>
-<p>IMPORTANT: This function may throw an error if any aggregation is being done and the JSON vectors are not of equal length. However, that shouldn't be a problem for any SafeGraph file.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='co'># Example data</span>
-<span class='no'>patterns</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>data.table</span><span class='kw ns'>::</span><span class='fu'><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table</a></span>(<span class='kw'>state_fips</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>2</span>),
-                                     <span class='kw'>int_origin</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'[2,3]'</span>,
+<span class='kw'>patterns</span> <span class='op'>&lt;-</span> <span class='kw'>data.table</span>::<span class='fu'><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table</a></span>(state_fips = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>2</span>),
+                                     int_origin = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'[2,3]'</span>,
                                                     <span class='st'>'[3,4]'</span>,
                                                     <span class='st'>'[4,5]'</span>,
                                                     <span class='st'>'[5,6]'</span>))
 
-<span class='fu'>expand_integer_json</span>(<span class='no'>patterns</span>, <span class='st'>'int_origin'</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='st'>'state_fips'</span>)[]</div><div class='output co'>#&gt;    state_fips int_origin index
+<span class='fu'>expand_integer_json</span>(<span class='kw'>patterns</span>, <span class='st'>'int_origin'</span>, by = <span class='st'>'state_fips'</span>)[]
+</div><div class='output co'>#&gt;    state_fips int_origin index
 #&gt; 1:          1          5     1
 #&gt; 2:          1          7     2
 #&gt; 3:          2          9     1
@@ -213,7 +213,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

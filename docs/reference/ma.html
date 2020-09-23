@@ -130,7 +130,7 @@
     <p>This function returns a (by default) seven-day moving average of the variable passed in. Make sure the data is pre-sorted by date, and grouped by the appropriate grouping. The data should have no gaps in time.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ma</span>(<span class='no'>x</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>7</span>)</pre>
+    <pre class="usage"><span class='fu'>ma</span>(<span class='kw'>x</span>, n = <span class='fl'>7</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -148,7 +148,8 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'>ma</span>(<span class='fl'>1</span>:<span class='fl'>9</span>)</div><div class='output co'>#&gt; [1] NA NA NA NA NA NA  4  5  6</div><div class='input'>
+<span class='fu'>ma</span>(<span class='fl'>1</span><span class='op'>:</span><span class='fl'>9</span>)
+</div><div class='output co'>#&gt; [1] NA NA NA NA NA NA  4  5  6</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -165,7 +166,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

@@ -131,23 +131,23 @@
     </div>
 
     <pre class="usage"><span class='fu'>read_many_patterns</span>(
-  <span class='kw'>dir</span> <span class='kw'>=</span> <span class='st'>"."</span>,
-  <span class='kw'>recursive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>filelist</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>fun</span> <span class='kw'>=</span> <span class='no'>sum</span>,
-  <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>filter</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>expand_int</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>expand_cat</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>expand_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>multi</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>naics_link</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>select</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>gen_fips</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>start_date</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>silent</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='no'>...</span>
+  dir = <span class='st'>"."</span>,
+  recursive = <span class='fl'>FALSE</span>,
+  filelist = <span class='kw'>NULL</span>,
+  by = <span class='kw'>NULL</span>,
+  fun = <span class='kw'>sum</span>,
+  na.rm = <span class='fl'>TRUE</span>,
+  filter = <span class='kw'>NULL</span>,
+  expand_int = <span class='kw'>NULL</span>,
+  expand_cat = <span class='kw'>NULL</span>,
+  expand_name = <span class='kw'>NULL</span>,
+  multi = <span class='kw'>NULL</span>,
+  naics_link = <span class='kw'>NULL</span>,
+  select = <span class='kw'>NULL</span>,
+  gen_fips = <span class='fl'>TRUE</span>,
+  start_date = <span class='kw'>NULL</span>,
+  silent = <span class='fl'>FALSE</span>,
+  <span class='kw'>...</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -180,20 +180,21 @@
     <p>Note that after reading in data, if <code>gen_fips = TRUE</code>, state and county names can be merged in using <code><a href='https://rdrr.io/r/utils/data.html'>data(fips_to_names)</a></code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='co'># Our current working directory is full of .csv.gz files!</span>
 <span class='co'># Too many... we will probably run out of memory if we try to read them all in at once, so let's chunk it</span>
-<span class='no'>files</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.files.html'>list.files</a></span>(<span class='kw'>pattern</span> <span class='kw'>=</span> <span class='st'>'.gz'</span>)
-<span class='no'>patterns</span> <span class='kw'>&lt;-</span> <span class='fu'>read_many_patterns</span>(<span class='kw'>filelist</span> <span class='kw'>=</span> <span class='no'>files</span>[<span class='fl'>1</span>:<span class='fl'>10</span>],
+<span class='kw'>files</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.files.html'>list.files</a></span>(pattern = <span class='st'>'.gz'</span>)
+<span class='kw'>patterns</span> <span class='op'>&lt;-</span> <span class='fu'>read_many_patterns</span>(filelist = <span class='kw'>files</span>[<span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span>],
     <span class='co'># We only need these variables (and poi_cbg which is auto-added with gen_fips = TRUE)</span>
-    <span class='kw'>select</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'brands'</span>,<span class='st'>'visits_by_day'</span>),
+    select = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'brands'</span>,<span class='st'>'visits_by_day'</span>),
     <span class='co'># We want two formatted files to come out. The first aggregates to the state-brand-day level, getting visits by day</span>
-    <span class='kw'>multi</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>'by_brands'</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'state_fips'</span>,<span class='st'>'brands'</span>), <span class='kw'>expand_int</span> <span class='kw'>=</span> <span class='st'>'visits_by_day'</span>),
+    multi = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(name = <span class='st'>'by_brands'</span>, by = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'state_fips'</span>,<span class='st'>'brands'</span>), expand_int = <span class='st'>'visits_by_day'</span>),
     <span class='co'># The second aggregates to the state-county-day level but only for Colorado and COnnecticut (see the filter)</span>
-    <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>'co_and_ct'</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'state_fips'</span>,<span class='st'>'county_fips'</span>), <span class='kw'>filter</span> <span class='kw'>=</span> <span class='st'>'state_fips %in% 8:9'</span>, <span class='kw'>expand_int</span> <span class='kw'>=</span> <span class='st'>'visits_by_day'</span>)))
-<span class='no'>patterns_brands</span> <span class='kw'>&lt;-</span> <span class='no'>patterns</span><span class='kw'>[[</span><span class='fl'>1</span>]]
-<span class='no'>patterns_co_and_ct</span> <span class='kw'>&lt;-</span> <span class='no'>patterns</span><span class='kw'>[[</span><span class='fl'>2</span>]]
-}</div></pre>
+    <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(name = <span class='st'>'co_and_ct'</span>, by = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'state_fips'</span>,<span class='st'>'county_fips'</span>), filter = <span class='st'>'state_fips %in% 8:9'</span>, expand_int = <span class='st'>'visits_by_day'</span>)))
+<span class='kw'>patterns_brands</span> <span class='op'>&lt;-</span> <span class='kw'>patterns</span>[[<span class='fl'>1</span>]]
+<span class='kw'>patterns_co_and_ct</span> <span class='op'>&lt;-</span> <span class='kw'>patterns</span>[[<span class='fl'>2</span>]]
+}
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -209,7 +210,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

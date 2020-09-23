@@ -131,13 +131,13 @@
     </div>
 
     <pre class="usage"><span class='fu'>sample_size_adjust</span>(
-  <span class='no'>data</span>,
-  <span class='kw'>from_id</span> <span class='kw'>=</span> <span class='st'>"census_block_group"</span>,
-  <span class='kw'>sample_id</span> <span class='kw'>=</span> <span class='st'>"number_devices_residing"</span>,
-  <span class='kw'>from_level</span> <span class='kw'>=</span> <span class='st'>"cbg"</span>,
-  <span class='kw'>to_level</span> <span class='kw'>=</span> <span class='st'>"county"</span>,
-  <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>pop_data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
+  <span class='kw'>data</span>,
+  from_id = <span class='st'>"census_block_group"</span>,
+  sample_id = <span class='st'>"number_devices_residing"</span>,
+  from_level = <span class='st'>"cbg"</span>,
+  to_level = <span class='st'>"county"</span>,
+  by = <span class='kw'>NULL</span>,
+  pop_data = <span class='kw'>NULL</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -175,26 +175,27 @@
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='co'># The current working directory has many home_panel_summary files</span>
 <span class='co'># Do some futzing with the census_block_group variable to</span>
 <span class='co'># Get it in the same format as how it is in cbg_pop</span>
-<span class='no'>home_panel</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_many_csvs.html'>read_many_csvs</a></span>(<span class='kw'>colClasses</span><span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>census_block_group</span><span class='kw'>=</span><span class='st'>'character'</span>))
-<span class='no'>home_panel</span>[,<span class='no'>census_block_group</span> <span class='kw'>:=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span>(<span class='no'>census_block_group</span>))]
+<span class='kw'>home_panel</span> <span class='op'>&lt;-</span> <span class='fu'><a href='read_many_csvs.html'>read_many_csvs</a></span>(colClasses= <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(census_block_group=<span class='st'>'character'</span>))
+<span class='kw'>home_panel</span>[,<span class='kw'>census_block_group</span> <span class='op'>:=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span>(<span class='kw'>census_block_group</span>))]
 
 <span class='co'># Create the data set with the adjust_factor variable</span>
 <span class='co'># This will adjust CBG populations to county ones, by default</span>
-<span class='no'>adj_factor</span> <span class='kw'>&lt;-</span> <span class='fu'>sample_size_adjust</span>(<span class='no'>home_panel</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='st'>'date_range_start'</span>)
+<span class='kw'>adj_factor</span> <span class='op'>&lt;-</span> <span class='fu'>sample_size_adjust</span>(<span class='kw'>home_panel</span>, by = <span class='st'>'date_range_start'</span>)
 
 <span class='co'># Now take some distancing data I have</span>
 <span class='co'># (where census_block_group is stored as origin_census_block_group)</span>
-<span class='kw pkg'>data.table</span><span class='kw ns'>::</span><span class='fu'><a href='https://Rdatatable.gitlab.io/data.table/reference/setattr.html'>setnames</a></span>(<span class='no'>adj_factor</span>, <span class='no'>census_block_group</span>, <span class='no'>origin_census_block_group</span>)
+<span class='kw'>data.table</span>::<span class='fu'><a href='https://Rdatatable.gitlab.io/data.table/reference/setattr.html'>setnames</a></span>(<span class='kw'>adj_factor</span>, <span class='kw'>census_block_group</span>, <span class='kw'>origin_census_block_group</span>)
 <span class='co'># and merge in the adjustment factor</span>
-<span class='no'>distancing</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/merge.html'>merge</a></span>(<span class='no'>distancing</span>, <span class='no'>adj_factor</span>, <span class='kw'>all.x</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='st'>'origin_census_block_group'</span>)
+<span class='kw'>distancing</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/merge.html'>merge</a></span>(<span class='kw'>distancing</span>, <span class='kw'>adj_factor</span>, all.x = <span class='fl'>TRUE</span>, by = <span class='st'>'origin_census_block_group'</span>)
 <span class='co'># And use that adjustment factor to adjust!</span>
-<span class='no'>distancing</span>[,<span class='no'>adj_device_count</span> <span class='kw'>:=</span> <span class='no'>device_count</span>*<span class='no'>adj_factor</span>]
+<span class='kw'>distancing</span>[,<span class='kw'>adj_device_count</span> <span class='op'>:=</span> <span class='kw'>device_count</span><span class='op'>*</span><span class='kw'>adj_factor</span>]
 
-}</div></pre>
+}
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -210,7 +211,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

@@ -131,11 +131,11 @@
     </div>
 
     <pre class="usage"><span class='fu'>read_many_csvs</span>(
-  <span class='kw'>dir</span> <span class='kw'>=</span> <span class='st'>"."</span>,
-  <span class='kw'>recursive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>filelist</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>makedate</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='no'>...</span>
+  dir = <span class='st'>"."</span>,
+  recursive = <span class='fl'>FALSE</span>,
+  filelist = <span class='kw'>NULL</span>,
+  makedate = <span class='fl'>FALSE</span>,
+  <span class='kw'>...</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -165,12 +165,13 @@
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
 
 <span class='co'># The current working directory contains all the normalization .csv files</span>
-<span class='no'>normalization</span> <span class='kw'>&lt;-</span> <span class='fu'>read_many_csvs</span>(<span class='kw'>makedate</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='kw'>normalization</span> <span class='op'>&lt;-</span> <span class='fu'>read_many_csvs</span>(makedate = <span class='fl'>TRUE</span>)
 
-}</div></pre>
+}
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -186,7 +187,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

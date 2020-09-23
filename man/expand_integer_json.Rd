@@ -37,8 +37,6 @@ This function accepts a \code{data.table} along with a set of grouping variables
 }
 \details{
 It expands that JSON column into long format, with one row per observation per value of the JSON column, and then collapses everything according to the set of grouping variables.
-
-IMPORTANT: This function may throw an error if any aggregation is being done and the JSON vectors are not of equal length. However, that shouldn't be a problem for any SafeGraph file.
 }
 \examples{
 

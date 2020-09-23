@@ -130,7 +130,7 @@
     <p>This is a function that takes a "success" and a "total" variable (often something like "number of devices staying home" and "total number of devices") and shrinks them to the full data set using shrinkage methods for proportions.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>hb_shrink</span>(<span class='no'>success</span>, <span class='no'>total</span>)</pre>
+    <pre class="usage"><span class='fu'>hb_shrink</span>(<span class='kw'>success</span>, <span class='kw'>total</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -150,22 +150,23 @@
     <p>This is usually called by group, either with <code><a href='https://dplyr.tidyverse.org/reference/group_by.html'>dplyr::group_by</a></code> or with the <code>by</code> argument in a <code>data.table</code>, so that individual observations can be shrunk to the group level.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='co'># The directory distdat is the folder we have downloaded the distancing data to from AWS.</span>
 <span class='co'># Read and compile all distancing data from May 1 to May 7</span>
-<span class='no'>distancing</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_distancing.html'>read_distancing</a></span>(
-    <span class='kw'>start</span> <span class='kw'>=</span> <span class='kw pkg'>lubridate</span><span class='kw ns'>::</span><span class='fu'><a href='http://lubridate.tidyverse.org/reference/ymd.html'>ymd</a></span>(<span class='st'>'2020-05-01'</span>),
-    <span class='kw'>end</span> <span class='kw'>=</span> <span class='kw pkg'>lubridate</span><span class='kw ns'>::</span><span class='fu'><a href='http://lubridate.tidyverse.org/reference/ymd.html'>ymd</a></span>(<span class='st'>'2020-05-07'</span>),
-    <span class='kw'>dir</span> <span class='kw'>=</span> <span class='no'>distdat</span>
+<span class='kw'>distancing</span> <span class='op'>&lt;-</span> <span class='fu'><a href='read_distancing.html'>read_distancing</a></span>(
+    start = <span class='kw'>lubridate</span>::<span class='fu'><a href='http://lubridate.tidyverse.org/reference/ymd.html'>ymd</a></span>(<span class='st'>'2020-05-01'</span>),
+    end = <span class='kw'>lubridate</span>::<span class='fu'><a href='http://lubridate.tidyverse.org/reference/ymd.html'>ymd</a></span>(<span class='st'>'2020-05-07'</span>),
+    dir = <span class='kw'>distdat</span>
 )
 
 <span class='co'># Shrink county to state</span>
-<span class='no'>distancing</span> <span class='kw'>&lt;-</span> <span class='no'>distancing</span>[,<span class='fu'>.</span>(<span class='kw'>county_fips</span> <span class='kw'>=</span> <span class='no'>county_fips</span>,
-                           <span class='kw'>unshrunk_stay_home</span> <span class='kw'>=</span> <span class='no'>completely_home_device_count</span>/<span class='no'>device_count</span>,
-                           <span class='kw'>shrunk_stay_home</span> <span class='kw'>=</span> <span class='fu'>hb_shrink</span>(<span class='no'>completely_home_device_count</span>, <span class='no'>device_count</span>)),
-                           <span class='kw'>by</span> <span class='kw'>=</span> <span class='fu'>.</span>(<span class='no'>state_fips</span>, <span class='no'>date</span>)]
+<span class='kw'>distancing</span> <span class='op'>&lt;-</span> <span class='kw'>distancing</span>[,<span class='fu'>.</span>(county_fips = <span class='kw'>county_fips</span>,
+                           unshrunk_stay_home = <span class='kw'>completely_home_device_count</span><span class='op'>/</span><span class='kw'>device_count</span>,
+                           shrunk_stay_home = <span class='fu'>hb_shrink</span>(<span class='kw'>completely_home_device_count</span>, <span class='kw'>device_count</span>)),
+                           by = <span class='fu'>.</span>(<span class='kw'>state_fips</span>, <span class='kw'>date</span>)]
 
-}</div></pre>
+}
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -181,7 +182,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

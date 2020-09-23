@@ -135,27 +135,27 @@ Note that after reading in data, if <code>gen_fips = TRUE</code>, state and coun
     </div>
 
     <pre class="usage"><span class='fu'>read_many_shop</span>(
-  <span class='kw'>dir</span> <span class='kw'>=</span> <span class='st'>"."</span>,
-  <span class='kw'>recursive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>filelist</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>start_date</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>keeplist</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"patterns"</span>, <span class='st'>"normalization_stats.csv"</span>, <span class='st'>"home_panel_summary.csv"</span>,
+  dir = <span class='st'>"."</span>,
+  recursive = <span class='fl'>FALSE</span>,
+  filelist = <span class='kw'>NULL</span>,
+  start_date = <span class='kw'>NULL</span>,
+  keeplist = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"patterns"</span>, <span class='st'>"normalization_stats.csv"</span>, <span class='st'>"home_panel_summary.csv"</span>,
     <span class='st'>"visit_panel_summary.csv"</span>, <span class='st'>"brand_info.csv"</span>),
-  <span class='kw'>exdir</span> <span class='kw'>=</span> <span class='no'>dir</span>,
-  <span class='kw'>cleanup</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>fun</span> <span class='kw'>=</span> <span class='no'>sum</span>,
-  <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>filter</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>expand_int</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>expand_cat</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>expand_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>multi</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>naics_link</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>select</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>gen_fips</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>silent</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='no'>...</span>
+  exdir = <span class='kw'>dir</span>,
+  cleanup = <span class='fl'>TRUE</span>,
+  by = <span class='kw'>NULL</span>,
+  fun = <span class='kw'>sum</span>,
+  na.rm = <span class='fl'>TRUE</span>,
+  filter = <span class='kw'>NULL</span>,
+  expand_int = <span class='kw'>NULL</span>,
+  expand_cat = <span class='kw'>NULL</span>,
+  expand_name = <span class='kw'>NULL</span>,
+  multi = <span class='kw'>NULL</span>,
+  naics_link = <span class='kw'>NULL</span>,
+  select = <span class='kw'>NULL</span>,
+  gen_fips = <span class='fl'>FALSE</span>,
+  silent = <span class='fl'>FALSE</span>,
+  <span class='kw'>...</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -190,30 +190,32 @@ Note that after reading in data, if <code>gen_fips = TRUE</code>, state and coun
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='co'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='co'># In the working directory we have two shop ZIP files, one for March and one for April.</span>
-<span class='no'>mydata</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_shop.html'>read_shop</a></span>(<span class='co'># I only want some of the sub-files</span>
-                    <span class='kw'>keeplist</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'patterns'</span>,<span class='st'>'home_panel_summary.csv'</span>),
+<span class='kw'>mydata</span> <span class='op'>&lt;-</span> <span class='fu'><a href='read_shop.html'>read_shop</a></span>(<span class='co'># I only want some of the sub-files</span>
+                    keeplist = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'patterns'</span>,<span class='st'>'home_panel_summary.csv'</span>),
                     <span class='co'># For patterns, only keep these variables</span>
-                    <span class='kw'>select</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'raw_visit_counts'</span>, <span class='st'>'region'</span>, <span class='st'>'bucketed_dwell_times'</span>, <span class='st'>'location_name'</span>),
+                    select = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'raw_visit_counts'</span>, <span class='st'>'region'</span>, <span class='st'>'bucketed_dwell_times'</span>, <span class='st'>'location_name'</span>),
                     <span class='co'># I want two aggregations of patterns - one of total visits by state ('region')</span>
                     <span class='co'># and another by location_name that has the dwell times for each brand</span>
-                    <span class='kw'>multi</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(
-                      <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>'all'</span>,
-                           <span class='kw'>by</span> <span class='kw'>=</span> <span class='st'>'region'</span>),
-                      <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>'location_dwells'</span>,
-                           <span class='kw'>by</span> <span class='kw'>=</span> <span class='st'>'location_name'</span>,
-                           <span class='kw'>expand_cat</span> <span class='kw'>=</span> <span class='st'>'bucketed_dwell_times'</span>,
-                           <span class='kw'>expand_name</span> <span class='kw'>=</span> <span class='st'>'bucketed_times'</span>)
+                    multi = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(
+                      <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(name = <span class='st'>'all'</span>,
+                           by = <span class='st'>'region'</span>),
+                      <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(name = <span class='st'>'location_dwells'</span>,
+                           by = <span class='st'>'location_name'</span>,
+                           expand_cat = <span class='st'>'bucketed_dwell_times'</span>,
+                           expand_name = <span class='st'>'bucketed_times'</span>)
                       ),
                     <span class='co'># Be sure to specify start_date for read_shop</span>
-                    <span class='kw'>start_date</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw pkg'>lubridate</span><span class='kw ns'>::</span><span class='fu'><a href='http://lubridate.tidyverse.org/reference/ymd.html'>ymd</a></span>(<span class='st'>'2020-03-01'</span>),<span class='kw pkg'>lubridate</span><span class='kw ns'>::</span><span class='fu'><a href='http://lubridate.tidyverse.org/reference/ymd.html'>ymd</a></span>(<span class='st'>'2020-04-01'</span>)))
+                    start_date = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>lubridate</span>::<span class='fu'><a href='http://lubridate.tidyverse.org/reference/ymd.html'>ymd</a></span>(<span class='st'>'2020-03-01'</span>),<span class='kw'>lubridate</span>::<span class='fu'><a href='http://lubridate.tidyverse.org/reference/ymd.html'>ymd</a></span>(<span class='st'>'2020-04-01'</span>)))
 
 <span class='co'># The result is a list with two items- patterns and home_panel_summary.csv</span>
 <span class='co'># patterns itself is a list with two data.tables inside - 'all' and 'location_name',</span>
 <span class='co'># aggregated as given.</span>
 
-}</div></pre>
+}
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -229,7 +231,7 @@ Note that after reading in data, if <code>gen_fips = TRUE</code>, state and coun
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

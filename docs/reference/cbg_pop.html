@@ -130,14 +130,14 @@
     <p>A dataset containing the unweighted population by Census Block Group from the Open Census file. Use with <code>fips_from_cbg</code> to get state and county FIPS codes from the CBG ID.</p>
     </div>
 
-    <pre class="usage"><span class='no'>cbg_pop</span></pre>
+    <pre class="usage"><span class='kw'>cbg_pop</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A <code>data.table</code> with 220333 rows and 2 variables:</p><dl'>
+    <p>A <code>data.table</code> with 220333 rows and 2 variables:</p><dl>
   <dt>poi_cbg</dt><dd><p>Census Block Group ID, named for easy merging with the patterns data.</p></dd>
-  <dt>unweighted_pop</dt><dd><p>Unweighted population from the 2016 American Community Survey</p></dd>
+  <dt>unweighted_pop</dt><dd><p>Population from the 2016 American Community Survey (the "unweighted" part is outdated but kept for consistency with old code).</p></dd>
 
 </dl>
 
@@ -160,7 +160,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

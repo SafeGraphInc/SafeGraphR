@@ -131,11 +131,11 @@
     </div>
 
     <pre class="usage"><span class='fu'>link_poi_naics</span>(
-  <span class='no'>filename</span>,
-  <span class='kw'>dir</span> <span class='kw'>=</span> <span class='st'>"."</span>,
-  <span class='kw'>exdir</span> <span class='kw'>=</span> <span class='no'>dir</span>,
-  <span class='kw'>cleanup</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>silent</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+  <span class='kw'>filename</span>,
+  dir = <span class='st'>"."</span>,
+  exdir = <span class='kw'>dir</span>,
+  cleanup = <span class='fl'>TRUE</span>,
+  silent = <span class='fl'>FALSE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -166,10 +166,11 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='co'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='co'># Core-USA-June2020-Release-CORE_POI-2020_05-2020-06-06.zip is a Core places file in the working directory</span>
-<span class='no'>poi_link</span> <span class='kw'>&lt;-</span> <span class='fu'>link_poi_naics</span>(<span class='st'>'Core-USA-June2020-Release-CORE_POI-2020_05-2020-06-06.zip'</span>)
-}</div></pre>
+<span class='kw'>poi_link</span> <span class='op'>&lt;-</span> <span class='fu'>link_poi_naics</span>(<span class='st'>'Core-USA-June2020-Release-CORE_POI-2020_05-2020-06-06.zip'</span>)
+}
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -185,7 +186,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

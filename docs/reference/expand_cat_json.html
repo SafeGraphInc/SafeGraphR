@@ -131,14 +131,14 @@
     </div>
 
     <pre class="usage"><span class='fu'>expand_cat_json</span>(
-  <span class='no'>dt</span>,
-  <span class='no'>expand</span>,
-  <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"index"</span>,
-  <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>fast</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>fun</span> <span class='kw'>=</span> <span class='no'>sum</span>,
-  <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>set_key</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+  <span class='kw'>dt</span>,
+  <span class='kw'>expand</span>,
+  index = <span class='st'>"index"</span>,
+  by = <span class='kw'>NULL</span>,
+  fast = <span class='fl'>FALSE</span>,
+  fun = <span class='kw'>sum</span>,
+  na.rm = <span class='fl'>TRUE</span>,
+  set_key = <span class='fl'>TRUE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -185,13 +185,14 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='co'># Raw example data for expanding/collapsing</span>
-<span class='no'>patterns</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>data.table</span><span class='kw ns'>::</span><span class='fu'><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table</a></span>(<span class='kw'>state_fips</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>2</span>),
-                                   <span class='kw'>cat_origin</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'{"a": "2", "b": "3"}'</span>,
+<span class='kw'>patterns</span> <span class='op'>&lt;-</span> <span class='kw'>data.table</span>::<span class='fu'><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table</a></span>(state_fips = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>2</span>),
+                                   cat_origin = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'{"a": "2", "b": "3"}'</span>,
                                                 <span class='st'>'{"a": "3", "b": "4"}'</span>,
                                                 <span class='st'>'{"a": "4", "b": "5"}'</span>,
                                                 <span class='st'>'{"a": "5", "b": "6"}'</span>))
 
-<span class='fu'>expand_cat_json</span>(<span class='no'>patterns</span>, <span class='st'>'cat_origin'</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='st'>'state_fips'</span>)[]</div><div class='output co'>#&gt;    index state_fips cat_origin
+<span class='fu'>expand_cat_json</span>(<span class='kw'>patterns</span>, <span class='st'>'cat_origin'</span>, by = <span class='st'>'state_fips'</span>)[]
+</div><div class='output co'>#&gt;    index state_fips cat_origin
 #&gt; 1:     a          1          5
 #&gt; 2:     b          1          7
 #&gt; 3:     a          2          9
@@ -211,7 +212,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

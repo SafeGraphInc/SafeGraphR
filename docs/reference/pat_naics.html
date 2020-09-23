@@ -132,14 +132,14 @@ The patterns file from the July 1 weekly patterns pull, aggregated to the county
 <p>The patterns file from the July 1 weekly patterns pull, aggregated to the county level for the vignette, for New York and New Jersey only. See [SafeGraph Docs](https://docs.safegraph.com/docs) for full documentation.</p>
     </div>
 
-    <pre class="usage"><span class='no'>pat_naics</span>
+    <pre class="usage"><span class='kw'>pat_naics</span>
 
-<span class='no'>pat_naics</span></pre>
+<span class='kw'>pat_naics</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A <code>data.table</code> with 9247 rows and 7 variables:</p><dl'>
+    <p>A <code>data.table</code> with 9247 rows and 7 variables:</p><dl>
   <dt>date</dt><dd><p>The date</p></dd>
   <dt>start_date,day</dt><dd><p>The first date present in the patterns file, and whether this observation is from that first date (1), the second (2), etc.</p></dd>
   <dt>state_fips,county_fips</dt><dd><p>Originally would have been the state and county identifiers, but since things were aggregated to the NAICS level (rather than NAICS/state/county), they have been summed up and now mean nothing.</p></dd>
@@ -148,7 +148,7 @@ The patterns file from the July 1 weekly patterns pull, aggregated to the county
 
 </dl>
 
-<p>A <code>data.table</code> with 2324 rows and 7 variables:</p><dl'>
+<p>A <code>data.table</code> with 2324 rows and 7 variables:</p><dl>
   <dt>date</dt><dd><p>The date</p></dd>
   <dt>start_date,day</dt><dd><p>The first date present in the patterns file, and whether this observation is from that first date (1), the second (2), etc.</p></dd>
   <dt>state_fips,county_fips</dt><dd><p>The state and county identifiers</p></dd>
@@ -177,7 +177,7 @@ The patterns file from the July 1 weekly patterns pull, aggregated to the county
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

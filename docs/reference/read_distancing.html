@@ -131,16 +131,16 @@
     </div>
 
     <pre class="usage"><span class='fu'>read_distancing</span>(
-  <span class='no'>start</span>,
-  <span class='no'>end</span>,
-  <span class='kw'>dir</span> <span class='kw'>=</span> <span class='st'>"."</span>,
-  <span class='kw'>gen_fips</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>by</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"state_fips"</span>, <span class='st'>"county_fips"</span>),
-  <span class='kw'>filter</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>select</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"origin_census_block_group"</span>, <span class='st'>"device_count"</span>,
+  <span class='kw'>start</span>,
+  <span class='kw'>end</span>,
+  dir = <span class='st'>"."</span>,
+  gen_fips = <span class='fl'>TRUE</span>,
+  by = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"state_fips"</span>, <span class='st'>"county_fips"</span>),
+  filter = <span class='kw'>NULL</span>,
+  select = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"origin_census_block_group"</span>, <span class='st'>"device_count"</span>,
     <span class='st'>"completely_home_device_count"</span>, <span class='st'>"part_time_work_behavior_devices"</span>,
     <span class='st'>"full_time_work_behavior_devices"</span>),
-  <span class='no'>...</span>
+  <span class='kw'>...</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -186,17 +186,18 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='co'>if</span> (<span class='fl'>FALSE</span>) {
 
 <span class='co'># The directory distdat is the folder we have downloaded the distancing data to from AWS.</span>
 <span class='co'># Read and compile all distancing data from May 1 to May 7</span>
-<span class='no'>distancing</span> <span class='kw'>&lt;-</span> <span class='fu'>read_distancing</span>(
-    <span class='kw'>start</span> <span class='kw'>=</span> <span class='kw pkg'>lubridate</span><span class='kw ns'>::</span><span class='fu'><a href='http://lubridate.tidyverse.org/reference/ymd.html'>ymd</a></span>(<span class='st'>'2020-05-01'</span>),
-    <span class='kw'>end</span> <span class='kw'>=</span> <span class='kw pkg'>lubridate</span><span class='kw ns'>::</span><span class='fu'><a href='http://lubridate.tidyverse.org/reference/ymd.html'>ymd</a></span>(<span class='st'>'2020-05-07'</span>),
-    <span class='kw'>dir</span> <span class='kw'>=</span> <span class='no'>distdat</span>
+<span class='kw'>distancing</span> <span class='op'>&lt;-</span> <span class='fu'>read_distancing</span>(
+    start = <span class='kw'>lubridate</span>::<span class='fu'><a href='http://lubridate.tidyverse.org/reference/ymd.html'>ymd</a></span>(<span class='st'>'2020-05-01'</span>),
+    end = <span class='kw'>lubridate</span>::<span class='fu'><a href='http://lubridate.tidyverse.org/reference/ymd.html'>ymd</a></span>(<span class='st'>'2020-05-07'</span>),
+    dir = <span class='kw'>distdat</span>
 )
 
-}</div></pre>
+}
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -212,7 +213,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>
