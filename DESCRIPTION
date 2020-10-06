@@ -1,7 +1,7 @@
 Package: SafeGraphR
 Type: Package
 Title: Package for Processing and Analyzing SafeGraph Data
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: c(
     person(given = "Nick", family = "Huntington-Klein", role = c("aut","cre"), 
            email = "nhuntington-klein@fullerton.edu", 
@@ -23,6 +23,7 @@ Imports:
     jsonlite,
     utils,
     data.table,
+	bit64,
     aws.s3
 Suggests:
     ggplot2,
