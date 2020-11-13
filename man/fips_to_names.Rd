@@ -20,6 +20,6 @@ A \code{data.table} with 3142 rows and 4 variables:
 fips_to_names
 }
 \description{
-A dataset that linkes state and county FIPS codes (as numeric values) to the names of those states and counties
+A dataset that links state and county FIPS codes (as numeric values) to the names of those states and counties
 }
 \keyword{datasets}

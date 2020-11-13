@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>State and county names by FIPS codes — fips_to_names • SafeGraphR</title>
+<title>State Information — state_info • SafeGraphR</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="State and county names by FIPS codes — fips_to_names" />
-<meta property="og:description" content="A dataset that links state and county FIPS codes (as numeric values) to the names of those states and counties" />
+<meta property="og:title" content="State Information — state_info" />
+<meta property="og:description" content="A dataset that links state (and Washington DC) names, FIPs codes, two-letter abbreviations (called &quot;region&quot; because this is what it is called in SafeGraph files that use it), and Census regions. Can be merged with fips_to_names using state_fips and statename." />
 
 
 
@@ -121,31 +121,34 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>State and county names by FIPS codes</h1>
+    <h1>State Information</h1>
     
-    <div class="hidden name"><code>fips_to_names.Rd</code></div>
+    <div class="hidden name"><code>state_info.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A dataset that links state and county FIPS codes (as numeric values) to the names of those states and counties</p>
+    <p>A dataset that links state (and Washington DC) names, FIPs codes, two-letter abbreviations (called "region" because this is what it is called in SafeGraph files that use it), and Census regions. Can be merged with <code>fips_to_names</code> using <code>state_fips</code> and <code>statename</code>.</p>
     </div>
 
-    <pre class="usage"><span class='va'>fips_to_names</span></pre>
+    <pre class="usage"><span class='va'>state_info</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A <code>data.table</code> with 3142 rows and 4 variables:</p><dl>
-  <dt>state_fips</dt><dd><p>State FIPS code</p></dd>
-  <dt>county_fips</dt><dd><p>County FIPS code</p></dd>
+    <p>A <code>data.table</code> with 51 rows and 4 variables:</p><dl>
   <dt>statename</dt><dd><p>The full name of the state</p></dd>
-  <dt>countyname</dt><dd><p>The full name of the county, including "County"</p></dd>
+  <dt>CensusRegion</dt><dd><p>The four broad Census regions</p></dd>
+  <dt>region</dt><dd><p>The state's two-digit abbreviation</p></dd>
+  <dt>state_fips</dt><dd><p>State FIPS code</p></dd>
 
 </dl>
 
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
 
     <p><a href='US Census'>US Census</a></p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Note that this is a data set purely of *states* and DC. Some SafeGraph files contain information on <code>region</code> values of <code>GU</code> (Guam), <code>PR</code> (Puerto Rico), etc., but those will be lost if merging with <code>state_info</code>.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

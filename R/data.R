@@ -25,7 +25,7 @@
 
 #' State and county names by FIPS codes
 #'
-#' A dataset that linkes state and county FIPS codes (as numeric values) to the names of those states and counties
+#' A dataset that links state and county FIPS codes (as numeric values) to the names of those states and counties
 #'
 #' @format A \code{data.table} with 3142 rows and 4 variables:
 #' \describe{
@@ -36,6 +36,22 @@
 #' }
 #' @source \url{US Census}
 "fips_to_names"
+
+#' State Information
+#'
+#' A dataset that links state (and Washington DC) names, FIPs codes, two-letter abbreviations (called "region" because this is what it is called in SafeGraph files that use it), and Census regions. Can be merged with \code{fips_to_names} using \code{state_fips} and \code{statename}.
+#'
+#' Note that this is a data set purely of *states* and DC. Some SafeGraph files contain information on \code{region} values of \code{GU} (Guam), \code{PR} (Puerto Rico), etc., but those will be lost if merging with \code{state_info}.
+#'
+#' @format A \code{data.table} with 51 rows and 4 variables:
+#' \describe{
+#'   \item{statename}{The full name of the state}
+#'   \item{CensusRegion}{The four broad Census regions}
+#'   \item{region}{The state's two-digit abbreviation}
+#'   \item{state_fips}{State FIPS code}
+#' }
+#' @source \url{US Census}
+"state_info"
 
 #' NAICS Code Titles
 #'
