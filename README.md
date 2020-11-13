@@ -25,7 +25,7 @@ Below is a list of what's in the package with a brief description.
 
 ## Data Reading Functions
 
-`link_poi_naics()`: Read in a Core Places file and use it to create a crosswalk between SafeGraph POI codes and NAICS codes.
+`read_core()`: Read in a Core Places file, which you can then merge with patterns or other data to add information about each location. There is also the older `link_poi_naics()` which does the same thing but can only be used to create a link between POIs and NAICS codes.
 
 `read_distancing()`: Given a list of dates, reads in and aggregates SafeGraph social-distancing v2 files.
 

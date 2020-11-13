@@ -6,10 +6,10 @@
 #'
 #' @param filename The filename of the \code{.csv.gz} file or the path to the file. Note that if \code{start_date} is not specified, \code{read_patterns} will attempt to get the start date from the first ten characters of the path. In "new format" filepaths ("2020/01/09/core-patterns-part-1.csv.gz"), nine days will be subtracted from the date found.
 #' @param dir The directory in which the file sits.
-#' @param by A character vector giving the variable names of the level to be collapsed to using \code{sum(na.rm=TRUE)}. The resulting data will have X rows per unique combination of \code{by}, where X is 1 if no expand variables are specified, or the length of the expand variable if specified. Set to \code{NULL} to aggregate across all initial rows, or set to \code{FALSE} to not aggregate at all (this will also add an \code{initial_rowno} column showing the original row number). You can also avoid aggregating by doing \code{by = 'safegraph_place_id'} which might play more nicely with some of the other features..
+#' @param by A character vector giving the variable names of the level to be collapsed to using \code{fun}. The resulting data will have X rows per unique combination of \code{by}, where X is 1 if no expand variables are specified, or the length of the expand variable if specified. Set to \code{NULL} to aggregate across all initial rows, or set to \code{FALSE} to not aggregate at all (this will also add an \code{initial_rowno} column showing the original row number). You can also avoid aggregating by doing \code{by = 'safegraph_place_id'} which might play more nicely with some of the other features..
 #' @param fun Function to use to aggregate the expanded variable to the \code{by} level.
 #' @param filter A character string describing a logical statement for filtering the data, for example \code{filter = 'state_fips == 6'} would give you only data from California. Will be used as an \code{i} argument in a \code{data.table}, see \code{help(data.table)}. Filtering here instead of afterwards can cut down on time and memory demands.
-#' @param na.rm Whether to remove any missing values of the expanded before aggregating.
+#' @param na.rm Whether to remove any missing values of the expanded before aggregating. May not be necessary if \code{fun} handles \code{NA}s on its own.
 #' @param expand_int A character variable with the name of The first e JSON variable in integer format ([1,2,3,...]) to be expanded into rows. Cannot be specified along with \code{expand_cat}.
 #' @param expand_cat A JSON variable in categorical format ({A: 2, B: 3, etc.}) to be expanded into rows.  Ignored if \code{expand_int} is specified.
 #' @param expand_name The name of the new variable to be created with the category index for the expanded variable.
@@ -36,7 +36,7 @@
 #' }
 #' @export
 
-read_patterns <- function(filename,dir = '.',by = NULL, fun = sum, na.rm = TRUE, filter = NULL,
+read_patterns <- function(filename,dir = '.',by = NULL, fun = function(x) sum(x, na.rm = TRUE), na.rm = TRUE, filter = NULL,
                         expand_int = NULL, expand_cat = NULL,
                         expand_name = NULL, multi = NULL, naics_link = NULL,
                         select=NULL, gen_fips = TRUE, start_date = NULL, silent = FALSE, ...) {

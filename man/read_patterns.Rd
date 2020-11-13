@@ -8,7 +8,7 @@ read_patterns(
   filename,
   dir = ".",
   by = NULL,
-  fun = sum,
+  fun = function(x) sum(x, na.rm = TRUE),
   na.rm = TRUE,
   filter = NULL,
   expand_int = NULL,
@@ -28,11 +28,11 @@ read_patterns(
 
 \item{dir}{The directory in which the file sits.}
 
-\item{by}{A character vector giving the variable names of the level to be collapsed to using \code{sum(na.rm=TRUE)}. The resulting data will have X rows per unique combination of \code{by}, where X is 1 if no expand variables are specified, or the length of the expand variable if specified. Set to \code{NULL} to aggregate across all initial rows, or set to \code{FALSE} to not aggregate at all (this will also add an \code{initial_rowno} column showing the original row number). You can also avoid aggregating by doing \code{by = 'safegraph_place_id'} which might play more nicely with some of the other features..}
+\item{by}{A character vector giving the variable names of the level to be collapsed to using \code{fun}. The resulting data will have X rows per unique combination of \code{by}, where X is 1 if no expand variables are specified, or the length of the expand variable if specified. Set to \code{NULL} to aggregate across all initial rows, or set to \code{FALSE} to not aggregate at all (this will also add an \code{initial_rowno} column showing the original row number). You can also avoid aggregating by doing \code{by = 'safegraph_place_id'} which might play more nicely with some of the other features..}
 
 \item{fun}{Function to use to aggregate the expanded variable to the \code{by} level.}
 
-\item{na.rm}{Whether to remove any missing values of the expanded before aggregating.}
+\item{na.rm}{Whether to remove any missing values of the expanded before aggregating. May not be necessary if \code{fun} handles \code{NA}s on its own.}
 
 \item{filter}{A character string describing a logical statement for filtering the data, for example \code{filter = 'state_fips == 6'} would give you only data from California. Will be used as an \code{i} argument in a \code{data.table}, see \code{help(data.table)}. Filtering here instead of afterwards can cut down on time and memory demands.}
 

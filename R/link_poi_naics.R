@@ -2,6 +2,8 @@
 #'
 #' Feed this function the most recent Core Places file, and it will give you back a \code{data.table} with two columns: \code{safegraph_place_id} and \code{naics_code}. Saving this file is recommended. Then, provide this object to \code{read_shop} or \code{read_many_shop} so that you can use \code{'naics_code'} in the \code{by} argument.
 #'
+#' This function is superseded by the more flexible \code{read_core()} function.
+#'
 #' @param filename The filename of the \code{ZIP} Core Places file.
 #' @param dir The directory that the file is in.
 #' @param exdir Name of the directory to unzip to.

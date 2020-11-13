@@ -18,6 +18,6 @@ A \code{data.table} with 1069 rows and 2 variables:
 naics_codes
 }
 \description{
-A dataset that linkes NAICS codes to their descriptive titles.
+A dataset that links six-digit NAICS codes to their descriptive titles using 2017 NAICS codes.
 }
 \keyword{datasets}

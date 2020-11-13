@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SafeGraphR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
       </span>
     </div>
 
@@ -130,18 +130,18 @@
     <p>Takes a folder of stay-at-home Safegraph data structured how it comes from AWS (i.e. folders 2020/04/03 for April 3 2020) and reads them in.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>read_distancing</span>(
-  <span class='kw'>start</span>,
-  <span class='kw'>end</span>,
-  dir = <span class='st'>"."</span>,
-  gen_fips = <span class='fl'>TRUE</span>,
-  by = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"state_fips"</span>, <span class='st'>"county_fips"</span>),
-  filter = <span class='kw'>NULL</span>,
-  select = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"origin_census_block_group"</span>, <span class='st'>"device_count"</span>,
+    <pre class="usage"><span class='fu'>read_distancing</span><span class='op'>(</span>
+  <span class='va'>start</span>,
+  <span class='va'>end</span>,
+  dir <span class='op'>=</span> <span class='st'>"."</span>,
+  gen_fips <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  by <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"state_fips"</span>, <span class='st'>"county_fips"</span><span class='op'>)</span>,
+  filter <span class='op'>=</span> <span class='cn'>NULL</span>,
+  select <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"origin_census_block_group"</span>, <span class='st'>"device_count"</span>,
     <span class='st'>"completely_home_device_count"</span>, <span class='st'>"part_time_work_behavior_devices"</span>,
-    <span class='st'>"full_time_work_behavior_devices"</span>),
-  <span class='kw'>...</span>
-)</pre>
+    <span class='st'>"full_time_work_behavior_devices"</span><span class='op'>)</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -186,17 +186,17 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='co'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 
 <span class='co'># The directory distdat is the folder we have downloaded the distancing data to from AWS.</span>
 <span class='co'># Read and compile all distancing data from May 1 to May 7</span>
-<span class='kw'>distancing</span> <span class='op'>&lt;-</span> <span class='fu'>read_distancing</span>(
-    start = <span class='kw'>lubridate</span>::<span class='fu'><a href='http://lubridate.tidyverse.org/reference/ymd.html'>ymd</a></span>(<span class='st'>'2020-05-01'</span>),
-    end = <span class='kw'>lubridate</span>::<span class='fu'><a href='http://lubridate.tidyverse.org/reference/ymd.html'>ymd</a></span>(<span class='st'>'2020-05-07'</span>),
-    dir = <span class='kw'>distdat</span>
-)
+<span class='va'>distancing</span> <span class='op'>&lt;-</span> <span class='fu'>read_distancing</span><span class='op'>(</span>
+    start <span class='op'>=</span> <span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='http://lubridate.tidyverse.org/reference/ymd.html'>ymd</a></span><span class='op'>(</span><span class='st'>'2020-05-01'</span><span class='op'>)</span>,
+    end <span class='op'>=</span> <span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='http://lubridate.tidyverse.org/reference/ymd.html'>ymd</a></span><span class='op'>(</span><span class='st'>'2020-05-07'</span><span class='op'>)</span>,
+    dir <span class='op'>=</span> <span class='va'>distdat</span>
+<span class='op'>)</span>
 
-}
+<span class='op'>}</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -213,7 +213,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

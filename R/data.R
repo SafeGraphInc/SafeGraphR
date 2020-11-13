@@ -39,7 +39,7 @@
 
 #' NAICS Code Titles
 #'
-#' A dataset that linkes NAICS codes to their descriptive titles.
+#' A dataset that links six-digit NAICS codes to their descriptive titles using 2017 NAICS codes.
 #'
 #' @format A \code{data.table} with 1069 rows and 2 variables:
 #' \describe{
@@ -48,6 +48,33 @@
 #' }
 #' @source \url{US Census NAICS page}
 "naics_codes"
+
+#' NAICS 4-Digit Code Titles
+#'
+#' A dataset that links four-digit NAICS codes to their descriptive titles using 2017 NAICS codes.
+#'
+#' @format A \code{data.table} with 311 rows and 2 variables:
+#' \describe{
+#'   \item{naics_code}{The NAICS code}
+#'   \item{naics_title}{The title of the NAICS code}
+#' }
+#' @source \url{US Census NAICS page}
+"naics_4"
+
+
+#' NAICS 4-Digit Code Titles
+#'
+#' A dataset that links two-digit NAICS codes to their descriptive titles using 2017 NAICS codes.
+#'
+#' Notice that some \code{naics_title} values are repeated because they cross several two-digit codes.
+#'
+#' @format A \code{data.table} with 24 rows and 2 variables:
+#' \describe{
+#'   \item{naics_code}{The NAICS code}
+#'   \item{naics_title}{The title of the NAICS code}
+#' }
+#' @source \url{US Census NAICS page}
+"naics_2"
 
 #' Example Normalization Data
 #'

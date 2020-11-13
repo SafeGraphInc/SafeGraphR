@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SafeGraphR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
       </span>
     </div>
 
@@ -130,16 +130,16 @@
     <p>This function accepts a <code>data.table</code> along with a set of grouping variables and a character-format integer-style JSON column (i.e. starts with square brackets, not curly).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>expand_integer_json</span>(
-  <span class='kw'>dt</span>,
-  <span class='kw'>expand</span>,
-  index = <span class='st'>"index"</span>,
-  by = <span class='kw'>NULL</span>,
-  fast = <span class='fl'>TRUE</span>,
-  fun = <span class='kw'>sum</span>,
-  na.rm = <span class='fl'>TRUE</span>,
-  set_key = <span class='fl'>TRUE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>expand_integer_json</span><span class='op'>(</span>
+  <span class='va'>dt</span>,
+  <span class='va'>expand</span>,
+  index <span class='op'>=</span> <span class='st'>"index"</span>,
+  by <span class='op'>=</span> <span class='cn'>NULL</span>,
+  fast <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  fun <span class='op'>=</span> <span class='va'>sum</span>,
+  na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  set_key <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -185,13 +185,13 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='co'># Example data</span>
-<span class='kw'>patterns</span> <span class='op'>&lt;-</span> <span class='kw'>data.table</span>::<span class='fu'><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table</a></span>(state_fips = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>2</span>),
-                                     int_origin = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'[2,3]'</span>,
+<span class='va'>patterns</span> <span class='op'>&lt;-</span> <span class='fu'>data.table</span><span class='fu'>::</span><span class='fu'><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table</a></span><span class='op'>(</span>state_fips <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>2</span><span class='op'>)</span>,
+                                     int_origin <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'[2,3]'</span>,
                                                     <span class='st'>'[3,4]'</span>,
                                                     <span class='st'>'[4,5]'</span>,
-                                                    <span class='st'>'[5,6]'</span>))
+                                                    <span class='st'>'[5,6]'</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='fu'>expand_integer_json</span>(<span class='kw'>patterns</span>, <span class='st'>'int_origin'</span>, by = <span class='st'>'state_fips'</span>)[]
+<span class='fu'>expand_integer_json</span><span class='op'>(</span><span class='va'>patterns</span>, <span class='st'>'int_origin'</span>, by <span class='op'>=</span> <span class='st'>'state_fips'</span><span class='op'>)</span><span class='op'>[</span><span class='op'>]</span>
 </div><div class='output co'>#&gt;    state_fips int_origin index
 #&gt; 1:          1          5     1
 #&gt; 2:          1          7     2
@@ -213,7 +213,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

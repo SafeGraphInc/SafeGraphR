@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SafeGraphR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
       </span>
     </div>
 
@@ -130,25 +130,25 @@
     <p>This accepts a directory. It will use <code>read_patterns</code> to load every <code>csv.gz</code> in that folder, assuming they are all patterns files. It will then row-bind together each of the produced processed files.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>read_many_patterns</span>(
-  dir = <span class='st'>"."</span>,
-  recursive = <span class='fl'>FALSE</span>,
-  filelist = <span class='kw'>NULL</span>,
-  by = <span class='kw'>NULL</span>,
-  fun = <span class='kw'>sum</span>,
-  na.rm = <span class='fl'>TRUE</span>,
-  filter = <span class='kw'>NULL</span>,
-  expand_int = <span class='kw'>NULL</span>,
-  expand_cat = <span class='kw'>NULL</span>,
-  expand_name = <span class='kw'>NULL</span>,
-  multi = <span class='kw'>NULL</span>,
-  naics_link = <span class='kw'>NULL</span>,
-  select = <span class='kw'>NULL</span>,
-  gen_fips = <span class='fl'>TRUE</span>,
-  start_date = <span class='kw'>NULL</span>,
-  silent = <span class='fl'>FALSE</span>,
-  <span class='kw'>...</span>
-)</pre>
+    <pre class="usage"><span class='fu'>read_many_patterns</span><span class='op'>(</span>
+  dir <span class='op'>=</span> <span class='st'>"."</span>,
+  recursive <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  filelist <span class='op'>=</span> <span class='cn'>NULL</span>,
+  by <span class='op'>=</span> <span class='cn'>NULL</span>,
+  fun <span class='op'>=</span> <span class='va'>sum</span>,
+  na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  filter <span class='op'>=</span> <span class='cn'>NULL</span>,
+  expand_int <span class='op'>=</span> <span class='cn'>NULL</span>,
+  expand_cat <span class='op'>=</span> <span class='cn'>NULL</span>,
+  expand_name <span class='op'>=</span> <span class='cn'>NULL</span>,
+  multi <span class='op'>=</span> <span class='cn'>NULL</span>,
+  naics_link <span class='op'>=</span> <span class='cn'>NULL</span>,
+  select <span class='op'>=</span> <span class='cn'>NULL</span>,
+  gen_fips <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  start_date <span class='op'>=</span> <span class='cn'>NULL</span>,
+  silent <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -180,20 +180,20 @@
     <p>Note that after reading in data, if <code>gen_fips = TRUE</code>, state and county names can be merged in using <code><a href='https://rdrr.io/r/utils/data.html'>data(fips_to_names)</a></code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='co'># Our current working directory is full of .csv.gz files!</span>
 <span class='co'># Too many... we will probably run out of memory if we try to read them all in at once, so let's chunk it</span>
-<span class='kw'>files</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.files.html'>list.files</a></span>(pattern = <span class='st'>'.gz'</span>)
-<span class='kw'>patterns</span> <span class='op'>&lt;-</span> <span class='fu'>read_many_patterns</span>(filelist = <span class='kw'>files</span>[<span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span>],
+<span class='va'>files</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.files.html'>list.files</a></span><span class='op'>(</span>pattern <span class='op'>=</span> <span class='st'>'.gz'</span><span class='op'>)</span>
+<span class='va'>patterns</span> <span class='op'>&lt;-</span> <span class='fu'>read_many_patterns</span><span class='op'>(</span>filelist <span class='op'>=</span> <span class='va'>files</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>]</span>,
     <span class='co'># We only need these variables (and poi_cbg which is auto-added with gen_fips = TRUE)</span>
-    select = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'brands'</span>,<span class='st'>'visits_by_day'</span>),
+    select <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'brands'</span>,<span class='st'>'visits_by_day'</span><span class='op'>)</span>,
     <span class='co'># We want two formatted files to come out. The first aggregates to the state-brand-day level, getting visits by day</span>
-    multi = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(name = <span class='st'>'by_brands'</span>, by = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'state_fips'</span>,<span class='st'>'brands'</span>), expand_int = <span class='st'>'visits_by_day'</span>),
+    multi <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>name <span class='op'>=</span> <span class='st'>'by_brands'</span>, by <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'state_fips'</span>,<span class='st'>'brands'</span><span class='op'>)</span>, expand_int <span class='op'>=</span> <span class='st'>'visits_by_day'</span><span class='op'>)</span>,
     <span class='co'># The second aggregates to the state-county-day level but only for Colorado and COnnecticut (see the filter)</span>
-    <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(name = <span class='st'>'co_and_ct'</span>, by = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'state_fips'</span>,<span class='st'>'county_fips'</span>), filter = <span class='st'>'state_fips %in% 8:9'</span>, expand_int = <span class='st'>'visits_by_day'</span>)))
-<span class='kw'>patterns_brands</span> <span class='op'>&lt;-</span> <span class='kw'>patterns</span>[[<span class='fl'>1</span>]]
-<span class='kw'>patterns_co_and_ct</span> <span class='op'>&lt;-</span> <span class='kw'>patterns</span>[[<span class='fl'>2</span>]]
-}
+    <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>name <span class='op'>=</span> <span class='st'>'co_and_ct'</span>, by <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'state_fips'</span>,<span class='st'>'county_fips'</span><span class='op'>)</span>, filter <span class='op'>=</span> <span class='st'>'state_fips %in% 8:9'</span>, expand_int <span class='op'>=</span> <span class='st'>'visits_by_day'</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>patterns_brands</span> <span class='op'>&lt;-</span> <span class='va'>patterns</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>
+<span class='va'>patterns_co_and_ct</span> <span class='op'>&lt;-</span> <span class='va'>patterns</span><span class='op'>[[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>]</span>
+<span class='op'>}</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -210,7 +210,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
