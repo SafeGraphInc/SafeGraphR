@@ -42,6 +42,8 @@ Below is a list of what's in the package with a brief description.
 
 `expand_cat_json()` and `expand_integer_json()`: Take SafeGraph data with a column of categorical (named) or numeric (unnamed) JSON data and expand that column, pivot the data to long format, and then aggregate to the desired level.
 
+`expand_open_hours()`: Expand the `open_hours` variable into something easy to use!
+
 `fips_from_cbg()`: Take a census block group identifier and extract the state and/or county FIPS codes.
 
 `rbind_by_list_pos()`: Take a list of lists of `data.table`s and row-binds them by their position in the sub-list. For example, `rbind_by_list_pos(list(A,B),list(C,D))` would return `list(rbind(A,C),rbind(B,D))`. Can be used after `read_` functions, which in some cases return a list of `data.table`s for each file they read.
