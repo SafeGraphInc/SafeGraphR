@@ -52,6 +52,7 @@ fips_from_cbg <- function(cbg,return='both') {
 #' @param drop_missing Drop any rows with a missing \code{open_hours} observation.
 #' @param convert_hour Convert hour strings like \code{'15:30'} to numbers like \code{15.5}. This does slow down the function.
 #' @param days A character vector of the days to keep. Cutting down here can save some time/memory especially if you are not going \code{format = 'wide'}.
+#' @export
 
 expand_open_hours <- function(dt,
                               format = c('wide','long','long-expand','long_expand'),
@@ -107,6 +108,16 @@ expand_open_hours <- function(dt,
     }
   }
 
+  # raw data often has double quotes that fromJSON doesn't like
+  var_fix_quotes <- paste0(open_hours, ' := stringr::str_replace_all(',
+                           open_hours, ', \'\\"\\"\',\'\\"\')')
+  dt[, eval(parse(text = var_fix_quotes))]
+
+  # Fill in nothing
+  dt[eval(parse(text = paste0(
+    open_hours, ' == ""'
+  ))), (open_hours) := '{ \"Mon\": [], \"Tue\": [], \"Wed\": [], \"Thu\": [], \"Fri\": [], \"Sat\": [], \"Sun\": [] }']
+
   var_create_text <- paste0('listify_open_hours(',
                             open_hours,
                             ', convert_hour)')
@@ -147,12 +158,12 @@ expand_open_hours <- function(dt,
   # What are our new names?
   exp_names <- as.vector(sapply(1:sets,function(x) paste0(colnames[2:3], x)))
 
-  fillin <- as.data.table(sapply(1:(sets*2), function(x) as.numeric(lapply(ft$list_col_for_exp, `[`,x))))
+  fillin <- as.data.table(sapply(1:(sets*2), function(x) as.numeric(lapply(dt$list_col_for_exp, `[`,x))))
 
-  ft[, (exp_names) := fillin]
-  ft[, list_col_for_exp := NULL]
+  dt[, (exp_names) := fillin]
+  dt[, list_col_for_exp := NULL]
 
-  return(ft)
+  return(dt)
 }
 
 

@@ -3,6 +3,7 @@
 export("%>%")
 export(expand_cat_json)
 export(expand_integer_json)
+export(expand_open_hours)
 export(fips_from_cbg)
 export(hb_shrink)
 export(link_poi_naics)

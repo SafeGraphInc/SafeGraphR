@@ -111,6 +111,7 @@
 <h2 class="hasAnchor">
 <a href="#data-processing-functions" class="anchor"></a>Data Processing Functions</h2>
 <p><code><a href="reference/expand_cat_json.html">expand_cat_json()</a></code> and <code><a href="reference/expand_integer_json.html">expand_integer_json()</a></code>: Take SafeGraph data with a column of categorical (named) or numeric (unnamed) JSON data and expand that column, pivot the data to long format, and then aggregate to the desired level.</p>
+<p><code><a href="reference/expand_open_hours.html">expand_open_hours()</a></code>: Expand the <code>open_hours</code> variable into something easy to use!</p>
 <p><code><a href="reference/fips_from_cbg.html">fips_from_cbg()</a></code>: Take a census block group identifier and extract the state and/or county FIPS codes.</p>
 <p><code><a href="reference/rbind_by_list_pos.html">rbind_by_list_pos()</a></code>: Take a list of lists of <code>data.table</code>s and row-binds them by their position in the sub-list. For example, <code><a href="reference/rbind_by_list_pos.html">rbind_by_list_pos(list(A,B),list(C,D))</a></code> would return <code><a href="https://rdrr.io/r/base/list.html">list(rbind(A,C),rbind(B,D))</a></code>. Can be used after <code>read_</code> functions, which in some cases return a list of <code>data.table</code>s for each file they read.</p>
 </div>
