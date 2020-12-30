@@ -9,7 +9,7 @@
 #' @param by A character vector giving the variable names of the level to be collapsed to using \code{fun}. The resulting data will have X rows per unique combination of \code{by}, where X is 1 if no expand variables are specified, or the length of the expand variable if specified. Set to \code{NULL} to aggregate across all initial rows, or set to \code{FALSE} to not aggregate at all (this will also add an \code{initial_rowno} column showing the original row number). You can also avoid aggregating by doing \code{by = 'safegraph_place_id'} which might play more nicely with some of the other features..
 #' @param fun Function to use to aggregate the expanded variable to the \code{by} level.
 #' @param filter A character string describing a logical statement for filtering the data, for example \code{filter = 'state_fips == 6'} would give you only data from California. Will be used as an \code{i} argument in a \code{data.table}, see \code{help(data.table)}. Filtering here instead of afterwards can cut down on time and memory demands.
-#' @param na.rm Whether to remove any missing values of the expanded before aggregating. May not be necessary if \code{fun} handles \code{NA}s on its own.
+#' @param na.rm Whether to remove any missing values of the expanded variable before aggregating. Does not remove missing values of the \code{by} variables. May not be necessary if \code{fun} handles \code{NA}s on its own.
 #' @param expand_int A character variable with the name of The first e JSON variable in integer format ([1,2,3,...]) to be expanded into rows. Cannot be specified along with \code{expand_cat}.
 #' @param expand_cat A JSON variable in categorical format ({A: 2, B: 3, etc.}) to be expanded into rows.  Ignored if \code{expand_int} is specified.
 #' @param expand_name The name of the new variable to be created with the category index for the expanded variable.
@@ -23,8 +23,8 @@
 #' @examples
 #'
 #' \dontrun{
-#' # '2020-04-06-weekly-patterns.csv.gz' is a weekly patterns file in the main-file folder, which is the working directory
-#' patterns <- read_patterns('2020-04-06-weekly-patterns.csv.gz',
+#' # 'patterns-part-1.csv.gz' is a weekly patterns file in the main-file folder, which is the working directory
+#' patterns <- read_patterns('patterns-part-1.csv.gz',
 #'     # We only need these variables (and poi_cbg which is auto-added with gen_fips = TRUE)
 #'     select = c('brands','visits_by_day'),
 #'     # We want two formatted files to come out. The first aggregates to the state-brand-day level, getting visits by day
@@ -76,16 +76,17 @@ read_patterns <- function(filename,dir = '.',by = NULL, fun = function(x) sum(x,
   if (gen_fips) {
     patterns[,poi_cbg := as.character(poi_cbg)]
     patterns[,c('state_fips','county_fips') := fips_from_cbg(poi_cbg)]
+
+    if (!('county_fips' %in% by)) {
+      patterns[, county_fips := NULL]
+    }
   }
 
   if (is.null(start_date)) {
-    start_date <- lubridate::ymd(paste(
-      stringr::str_sub(filename,1,4),
-      stringr::str_sub(filename,6,7),
-      stringr::str_sub(filename,9,10),
-      sep = '-'
-    ))
-    if (stringr::str_sub(filename,5,5) == '/' & stringr::str_sub(filename,8,8) == '/') {
+    datefromfile <- find_date(filename)
+
+    start_date <- lubridate::ymd(datefromfile)
+    if (stringr::str_detect(filename, 'patterns/')) {
       start_date <- start_date - lubridate::days(9)
     }
     if (is.na(start_date)) {
@@ -100,6 +101,12 @@ read_patterns <- function(filename,dir = '.',by = NULL, fun = function(x) sum(x,
   if (is.null(multi) & is.null(by) & is.null(expand_int) & is.null(expand_cat)) {
     if (!is.null(filter)) {
       patterns <- patterns[eval(parse(text=filter))]
+
+      # If we've dropped everything, return a blank data.table
+      if (nrow(patterns) == 0) {
+        warning(paste0('After applying filter, no observations left in ',filename))
+        return(data.table::data.table())
+      }
     }
 
     return(patterns)
@@ -190,6 +197,13 @@ read_patterns <- function(filename,dir = '.',by = NULL, fun = function(x) sum(x,
 
       # And collapse
       if (ncol(patternsb) > length(by)) {
+        # Avoid type conflicts
+        numcols <- names(patternsb)[sapply(patternsb, is.numeric)]
+        for (nc in numcols) {
+          nctext <- paste0(nc, ' := as.double(', nc, ')')
+          patternsb[, eval(parse(text = nctext))]
+        }
+
         patternsb <- patternsb[, lapply(.SD, fun),
                                by = by]
       } else {
@@ -228,3 +242,40 @@ read_patterns <- function(filename,dir = '.',by = NULL, fun = function(x) sum(x,
   return(retDT)
 }
 
+
+# Function to pick the date out of a filepath
+#' Find the date in a SafeGraph AWS-formatted filepath
+#'
+#' Given a filepath \code{s}, this function will look for the last correctly-parsed date in that string. Given how SafeGraph AWS file structures are, this will give you the date of those files, for example \code{patterns_backfill/2020/12/14/21/2018/01/01} will give you "2018/01/01".
+#'
+#' This function returns a string, not a date. You may want to send it to \code{as.Date()} or \code{lubridate::ymd}.
+#'
+#' For backfill data, the date returned will generally be the \code{start_date} for the files. However, for new data, you will want to do \code{as.Date(find_date(s)) - lubridate::days(9)} to get the \code{start_date}.
+#'
+#' @param s The filepath to look for a date in.
+#' @examples
+#'
+#' start_date <- find_date('patterns_backfill/2020/12/14/21/2018/01/01') %>% as.Date()
+#'
+#' @export
+find_date <- function(s) {
+  # Go through the string and keep the last correctly-parsed date
+  # requiring it start with a full four-digit year
+
+  # First, purge any // blank directories, as this can lead to only the first digit of the day being picked up
+  s <- stringr::str_replace_all(s,'//','/')
+
+  thepos <- NA
+  for (c in 1:(nchar(s)-9)) {
+    check <- suppressWarnings(lubridate::ymd(
+      stringr::str_sub(s, c, c+9)
+    ))
+    check4 <- suppressWarnings(as.numeric(
+      stringr::str_sub(s, c, c+3)
+    ))
+    if (!is.na(check) & isTRUE(check4 > 1000)) {
+      thepos <- c
+    }
+  }
+  return(stringr::str_sub(s,thepos,thepos+9))
+}

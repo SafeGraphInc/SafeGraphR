@@ -32,7 +32,7 @@ read_patterns(
 
 \item{fun}{Function to use to aggregate the expanded variable to the \code{by} level.}
 
-\item{na.rm}{Whether to remove any missing values of the expanded before aggregating. May not be necessary if \code{fun} handles \code{NA}s on its own.}
+\item{na.rm}{Whether to remove any missing values of the expanded variable before aggregating. Does not remove missing values of the \code{by} variables. May not be necessary if \code{fun} handles \code{NA}s on its own.}
 
 \item{filter}{A character string describing a logical statement for filtering the data, for example \code{filter = 'state_fips == 6'} would give you only data from California. Will be used as an \code{i} argument in a \code{data.table}, see \code{help(data.table)}. Filtering here instead of afterwards can cut down on time and memory demands.}
 
@@ -65,8 +65,8 @@ Note that after reading in data, if \code{gen_fips = TRUE}, state and county nam
 \examples{
 
 \dontrun{
-# '2020-04-06-weekly-patterns.csv.gz' is a weekly patterns file in the main-file folder, which is the working directory
-patterns <- read_patterns('2020-04-06-weekly-patterns.csv.gz',
+# 'patterns-part-1.csv.gz' is a weekly patterns file in the main-file folder, which is the working directory
+patterns <- read_patterns('patterns-part-1.csv.gz',
     # We only need these variables (and poi_cbg which is auto-added with gen_fips = TRUE)
     select = c('brands','visits_by_day'),
     # We want two formatted files to come out. The first aggregates to the state-brand-day level, getting visits by day

@@ -46,6 +46,11 @@ read_distancing <- function(start,end,dir = '.',gen_fips = TRUE, by = c('state_f
     options("distancing.warning" = FALSE)
   }
 
+  # Make sure dir ends with /
+  if (stringr::str_sub(dir,-1) != '/') {
+    dir <- paste0(dir, '/')
+  }
+
   # List of dates that I want
   dates <- start + lubridate::days(0:(end - start))
 
@@ -68,14 +73,15 @@ read_distancing <- function(start,end,dir = '.',gen_fips = TRUE, by = c('state_f
       dt <- data.table::fread(file = target,select = select,...)
     }
 
-    if (!is.null(filter)) {
-      dt <- dt[eval(parse(text=filter))]
-    }
-
     # Convert CBG to string so we can easily extract state and county indicators
     if (gen_fips) {
       dt[,origin_census_block_group := as.character(origin_census_block_group)]
       dt[,c('state_fips','county_fips') := fips_from_cbg(origin_census_block_group)]
+    }
+
+    # Do filter after gen_fips so you can filter on fips
+    if (!is.null(filter)) {
+      dt <- dt[eval(parse(text=filter))]
     }
 
     # Collapse

@@ -6,7 +6,7 @@
 \usage{
 read_many_csvs(
   dir = ".",
-  recursive = FALSE,
+  recursive = TRUE,
   filelist = NULL,
   makedate = FALSE,
   ...

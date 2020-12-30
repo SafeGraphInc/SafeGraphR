@@ -271,7 +271,10 @@ tell_me_a_joke <- function() {
 #'
 #' @export
 ma <- function(x,n=7){
-  if(length(x) >= 7) {
+  if (n == 0) {
+    return(x)
+  }
+  if(length(x) >= n) {
     return(as.numeric(stats::filter(as.ts(x),rep(1/n,n), sides=1)))
   }
   return(NA_real_)

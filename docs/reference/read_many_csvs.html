@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SafeGraphR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -98,12 +98,18 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/Automatic_Traffic-over-Time_Processing.html">Automatic Traffic-over-Time Processing</a>
+    </li>
+    <li>
       <a href="../articles/distancing_vignette.html">Processing and Using SafeGraph Stay-at-Home Data</a>
     </li>
     <li>
       <a href="../articles/patterns_vignette.html">Processing and Using SafeGraph Patterns Data</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -132,7 +138,7 @@
 
     <pre class="usage"><span class='fu'>read_many_csvs</span><span class='op'>(</span>
   dir <span class='op'>=</span> <span class='st'>"."</span>,
-  recursive <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  recursive <span class='op'>=</span> <span class='cn'>TRUE</span>,
   filelist <span class='op'>=</span> <span class='cn'>NULL</span>,
   makedate <span class='op'>=</span> <span class='cn'>FALSE</span>,
   <span class='va'>...</span>

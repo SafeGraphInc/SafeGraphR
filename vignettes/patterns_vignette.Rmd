@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 library(SafeGraphR)
 ```
 
-This vignette will walk you through the process of reading in, processing, and displaying SafeGraph patterns data.
+This vignette will walk you through the process of reading in, processing, and displaying SafeGraph patterns data. This will look at the use of patterns data *generally*. For a more automated look at processing `visits_by_day` data for foot traffic over time, see the "Automatic Traffic-over-Time Processing" vignette.
 
 This vignette will work with weekly data from the *weekly-patterns-delivery/weekly* SafeGraph Amazon Web Services bucket (see the [SafeGraph Catalog](https://catalog.safegraph.io) for more information), which could also be downloaded using `safegraph_aws()`. However, with only minor variation in the first section, the same processes could be applied to data downloaded from the SafeGraph shop, or to monthly patterns, or to *weekly-patterns/v2* data under the old format.
 
@@ -38,11 +38,11 @@ If you truly want the raw data, you are probably best off skipping `read_many_pa
 
 `read_many_patterns()` can perform multiple different aggregations in a single go, aggregating each of them across multiple files.
 
-So how can we build a `read_many_patterns()` call? The tricky part will be in filling in the aggregation information in the `by, fun, na.rm, filter, expand_int, expand_cat,` and `expand_name` options. 
+So how can we build a `read_many_patterns()` call? There are two main elements here: finding the files to read in, and then filling in the aggregation information in the `by, fun, na.rm, filter, expand_int, expand_cat,` and `expand_name` options. 
 
-These options are expanded further upon in `read_patterns()`. Effectively, they determine the level to aggregate the data to (data will be aggregated to the `by`-and-expanded-JSON-column-index level), the function to use for aggregation (`fun`), whether to only pull a subset of the data (`filter`), and which of the JSON columns in the data to expand before aggregating (`expand_int` OR `expand_cat`, with `expand_name` giving the name of the index variable to be created).
+For finding the files to fill in, you can use `read_many_patterns()` itself, if what you want is *all* the files you have downloaded. Just specify the `dir` and it will load all the `.csv.gz` files in the subfolders of that directory. Or, you can be more choosy about it! Use `patterns_lookup()` to generate a list of files (and, potentially, with a `key` and `secret`, download those files) that contain patterns information for a given set of dates (plus extra for moving-average purposes!). Then pass that filelist to the `filelist` option.
 
-**Importantly, you will get one row per `by`-per-JSON-column-index-PER-FILE**. The **PER FILE** is important especially with the new patterns files where the same date data is broken up over several files. **You may have to re-aggregate after reading in when using this new data.**
+For aggregating, the `by, fun, na.rm, filter, expand_int, expand_cat,` and `expand_name` options are expanded further upon in `read_patterns()`. Effectively, they determine the level to aggregate the data to (data will be aggregated to the `by`-and-expanded-JSON-column-index level), the function to use for aggregation (`fun`), whether to only pull a subset of the data (`filter`), and which of the JSON columns in the data to expand before aggregating (`expand_int` OR `expand_cat`, with `expand_name` giving the name of the index variable to be created).
 
 So for example, if we want to get the number of *visits* by day by NAICS code, we would want to set `by = 'naics_code'`. The visits-by-day variable is `visits_by_day` and is stored in the format `[1,2,3,4,5,6,7]` which can be extracted internally by `expand_integer_json()`, i.e. it's a numeric JSON column (as opposed to a categorical JSON column like visits by CBG in the format `{category: number, category: number}` which can be extracted intenally by `expand_cat_json()`). So we set `expand_int = 'visits_by_day'`. When we do `expand_int = 'visits_by_day'`, then `expand_name` will default to "day" so we don't need to do anything there. We do want it to add up the visits by day across all the different POIs in that NAICS code, so `fun = sum` as default is fine. This gives us in total `by = 'naics_code', expand_int = 'visits_by_day'`.
 
@@ -80,16 +80,16 @@ What else do we need?
 
 First, of course, we need to tell it where the patterns files are. We can specify `dir` (or it will just go to the working directory). Or if we want to do our own `list.files()` command and pick a subset, we can give it to `filelist`. Since we are working with new-format data that sits inside nested folders, we want to be sure to specify `recursive = TRUE` so as to look in those folders.
 
-Second, if we want to aggregate (or filter) by NAICS code, which we do, we need to know the NAICS code of each POI. We can do that by processing the most recent monthly SafeGraph Core file using `link_poi_naics`. Then we can pass the resulting file to the `naics_link` option.
+Second, if we want to aggregate (or filter) by NAICS code, which we do, we need to know the NAICS code of each POI. We can do that by processing the most recent monthly SafeGraph Core file using `read_core`. `read_core` will use the most recent Core file in the `core_poi/` directory of the working directory - it will download the most recent one too if you give it an AWS `key` and `secret`! Then we can pass the resulting file to the `naics_link` option.
 
 ```{r, eval = FALSE}
-poi_link <- link_poi_naics('Core-USA-June2020-Release-CORE_POI-2020_05-2020-06-06.zip')
+poi_link <- read_core(select = c('safegraph_place_id','naics_code'))
 # I probably at this point would save poi_link to disk - that took a while!
 ```
 
 Next, if we want to use the state and county FIPS codes, we want to make sure that `gen_fips = TRUE`, which it is by default, so we're good there. This uses `fips_from_cbg()` internally.
 
-Fourth, patterns files don't tell you what the first date in them is. `read_many_patterns()` will try to guess that date by the filepath. But if you want to be sure, you can set `start_date` for each of the files being read in.
+Fourth, patterns files don't tell you what the first date in them is. `read_many_patterns()` will try to guess that date by the filepath. But if you want to be sure, you can set `start_date` for each of the files being read in. You can more easily find the starting dates using the `find_date()` function (which is what `read_patterns()` uses internally. Don't forget to subtract `lubridate::days(9)` to get the starting date for non-backfill data!
 
 Finally, and very important, if we are doing any sort of aggregation we probably want to specify `select`, a character vector of variables to be read in. If we don't, then reading in the data will take *way* longer. Also, if some of those variables aren't amenable to being aggregated with `fun`, you could get an error. We are planning to use the `visits_by_day` variable so we need that. We'll also use `poi_cbg` (to be sent to `fips_from_cbg()` to get `state_fips` and `county_fips`), but that's in by default whenever `gen_fips = TRUE`. We also need `naics_code`, but that isn't read in from the file; rather it comes from the `poi_link` data we made. So we specify `select = 'visits_by_day'`.
 
@@ -116,7 +116,7 @@ patterns <- read_many_patterns(recursive = TRUE,
 
 ```
 
-Internally, this calls `read_patterns()` many times, followed by `rbind_by_list_pos()`.
+Internally, this calls `read_patterns()` many times, followed by `rbind_by_list_pos()`. Then it re-aggregates across the multiple files it just read in (unless you set \code{post_by = FALSE}).
 
 The result will be `patterns`, a list, where `patterns[[1]]` (or `patterns[['patterns_naics']]`) contains the NAICS aggregation, and `patterns[[2]]` (or `patterns[['NY_NJ']]`) contains the New York/New Jersey aggregation. Let's save those as their own objects (which will then be a part of the package so we can use real data in this vignette!).
 
@@ -148,12 +148,13 @@ pat_naics[,county_fips := NULL]
 pat_NY_NJ[,naics_code := NULL]
 ```
 
-We will also need the normalization data to properly work with what we have. Normalization data is just in regular ol' CSV files, so we can read everything in with `read_many_csvs()`, using `recursive = TRUE` to look for all the files. Since normalization files have `year`, `month`, and `day` columns, we can also set `makedate = TRUE` to get a `date` variable in there.
+We will also need the normalization data to properly work with what we have. Normalization data is just in regular ol' CSV files, so we can read everything in with `read_many_csvs()`. Since normalization files have `year`, `month`, and `day` columns, we can also set `makedate = TRUE` to get a `date` variable in there. If we only want to normalize at the national level, pick the `ALL_STATES` rows.
 
 ```{r, eval = FALSE}
 norm <- read_many_csvs(dir = "../normalization_stats/",
                        recursive = TRUE,
-                       makedate = TRUE)
+                       makedate = TRUE)[region == 'ALL_STATES']
+norm[, region := NULL]
 ```
 
 ```{r}
@@ -167,7 +168,6 @@ Finally, if we want to do `sample_size_adjust()`, we will need the number of dev
 # Make sure that census_block_group is read as a character
 # note colClasses is a data.table::fread() argument
 panel <- read_many_csvs(dir = '../home_panel_summary', 
-                        recursive = TRUE,
                         colClasses = c(census_block_group = 'character'))
 # We only need the start date, census block group, and number of devices
 panel <- subset(panel, select = c('date_range_start', 'census_block_group', 'number_devices_residing'))
@@ -269,7 +269,7 @@ pat_naics[, norm_visits := ma(norm_visits), by = 'naics_code']
 
 SafeGraph does a much better job showing *growth* or *change* in visits, rather than the absolute number of visits, since it's hard to pin down exactly how much of the population we're looking at.
 
-So for most analyses we want to scale visits relative to a given date. We can do this with `scale_to_date()` (with multiple years of data we could do `scale_yoy()`).
+So for most analyses we want to scale visits relative to a given date. We can do this with `scale_to_date()` (with multiple years of data we could do `scale_yoy()`). This process could be automated for `visits_by_day` data with the `processing_template()` function.
 
 Let's just scale to the first date in the data, June 22, 2020.
 
@@ -304,7 +304,7 @@ pat_NY_NJ <- merge(pat_NY_NJ, fips_to_names)
 pat_NY_NJ[,c('state_fips','statename','date','norm_visits')]
 ```
 
-The `naics_codes` data set links NAICS codes to their titles. These can sometimes still be a little longer than we need, but at least now we'll know what they mean!
+The `naics_codes` data set links NAICS codes to their titles. These can sometimes still be a little longer than we need, but at least now we'll know what they mean! If we had aggregated to the four-digit or two-digit NAICS code level using `floor(naics_code/100)` or `floor(naics_code/10000)`, we could instead label them using the `naics_4` or `naics_2` data sets. 
 
 ```{r}
 data("naics_codes")
@@ -315,7 +315,7 @@ data.table::setorder(pat_naics, naics_code, naics_title, date)
 pat_naics[,c('naics_code','naics_title','date','norm_visits')]
 ```
 
-Now we can finally make some pretty graphs (why so much movement over the space of only one week? Becuase we skipped the seven-day-moving-average step!)
+Now we can finally make some pretty graphs (why so much movement over the space of only one week? Becuase we skipped the seven-day-moving-average step!). This makes a graph by hand using **ggplot2** directly, but you can often also make a nice-looking graph automatically with `graph_template()`, which also uses **ggplot2**.
 
 ```{r}
 ggplot2::ggplot(pat_NY_NJ,
@@ -340,7 +340,7 @@ rests <- pat_naics %>%
   # Restaurant codes
   subset(floor(naics_code/1000) == 722)
 
-# The NAICS titles can be too long for graphs
+# The NAICS titles can be too long for graphs, so we won't use naics_codes
 short_names <- data.frame(naics_title = unique(rests$naics_title),
                           naics_short = c('Caterer',
                                           'Bar',

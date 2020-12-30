@@ -16,7 +16,7 @@
 #' }
 #' @export
 
-read_many_csvs <- function(dir = '.', recursive = FALSE, filelist = NULL, makedate = FALSE, ...) {
+read_many_csvs <- function(dir = '.', recursive = TRUE, filelist = NULL, makedate = FALSE, ...) {
 
   if (is.null(filelist)) {
     filelist <- union(list.files(path=dir,pattern = '\\.csv', recursive = recursive),
@@ -39,32 +39,33 @@ read_many_csvs <- function(dir = '.', recursive = FALSE, filelist = NULL, makeda
         dt[,day := NULL]
         return(dt)
         }) %>%
-      data.table::rbindlist() %>%
+      data.table::rbindlist(fill = TRUE) %>%
       return()
   } else {
     filelist %>%
       purrr::map(function(x) data.table::fread(x,...)) %>%
-      data.table::rbindlist() %>%
+      data.table::rbindlist(fill = TRUE) %>%
       return()
   }
 }
 
 #' Read and row-bind many patterns files
 #'
-#' This accepts a directory. It will use \code{read_patterns} to load every \code{csv.gz} in that folder, assuming they are all patterns files. It will then row-bind together each of the produced processed files.
+#' This accepts a directory. It will use \code{read_patterns} to load every \code{csv.gz} in that folder, assuming they are all patterns files. It will then row-bind together each of the produced processed files. Finally, if \code{post_by} is specified, it will re-perform the aggregation, handy for new-format patterns files that split the same week's data across multiple files.
 #'
 #' Note that after reading in data, if \code{gen_fips = TRUE}, state and county names can be merged in using \code{data(fips_to_names)}.
 #'
 #' @param dir Name of the directory the files are in.
 #' @param recursive Search in all subdirectories as well, as with the since-June-24-2020 format of the AWS downloads. There is not currently a way to include only a subset of these subdirectory files. Perhaps run \code{list.files(recursive=TRUE)} on your own and pass a subset of the results to the \code{filelist} option.
-#' @param filelist Optionally specify only a subset of the files to read in.
-#' @param start_date A vector of dates giving the first date present in each zip file, to be passed to \code{read_patterns} giving the first date present in the file, as a date object.
+#' @param filelist A vector of filenames to read in, OR a named list of options to send to \code{patterns_lookup()}. This list must include \code{dates} for the dates of data you want, and \code{list_files} will be set to \code{TRUE}. If you like, add \code{key} and \code{secret} to this list to also download the files you need.
+#' @param start_date A vector of dates giving the first date present in each zip file, to be passed to \code{read_patterns} giving the first date present in the file, as a date object. Unlike in \code{read_patterns}, this value will be added to the data as a variable called \code{start_date} so you can use it in \code{post_by}.
+#' @param post_by After reading in all the files, re-perform aggregation to this level. Use a character vector of variable names (or a list of vectors if using \code{multi}). Or just set to \code{TRUE} to have \code{post_by = by} plus, if present, \code{expand_name} or \code{'date'}. Set to \code{FALSE} to skip re-aggregation. Including \code{'start_date'} in both \code{by} and \code{post_by} is a good idea if you aren't using an approach that creates a \code{date} variable.
 #' @param by,fun,na.rm,filter,expand_int,expand_cat,expand_name,multi,naics_link,select,gen_fips,silent,... Arguments to be passed to \code{read_patterns}, specified as in \code{help(read_patterns)}.
 #' @examples
 #' \dontrun{
 #' # Our current working directory is full of .csv.gz files!
 #' # Too many... we will probably run out of memory if we try to read them all in at once, so let's chunk it
-#' files <- list.files(pattern = '.gz')
+#' files <- list.files(pattern = '.gz', recursive = TRUE)
 #' patterns <- read_many_patterns(filelist = files[1:10],
 #'     # We only need these variables (and poi_cbg which is auto-added with gen_fips = TRUE)
 #'     select = c('brands','visits_by_day'),
@@ -74,16 +75,46 @@ read_many_csvs <- function(dir = '.', recursive = FALSE, filelist = NULL, makeda
 #'     list(name = 'co_and_ct', by = c('state_fips','county_fips'), filter = 'state_fips %in% 8:9', expand_int = 'visits_by_day')))
 #' patterns_brands <- patterns[[1]]
 #' patterns_co_and_ct <- patterns[[2]]
+#'
+#' # Alternately, find the files we need for the seven days starting December 7, 2020,
+#' # read them all in (and if we'd given key and secret too, download them first),
+#' # and then aggregate to the state-date level
+#' dt <- read_many_patterns(filelist = list(dates = lubridate::ymd("2020-12-07") + lubridate::days(0:6)),
+#'                          by = "state_fips", expand_int = 'visits_by_day',
+#'                          select = 'visits_by_day')
+#'
+#'
+#' # don't forget that if you want weekly data but AREN'T using visits_by_day
+#' # (for example if you're using visitors_home_cbg)
+#' # you want start_date in your by option, as in the second list in multi here
+#' dt <- read_many_patterns(filelist = list(dates = lubridate::ymd("2020-12-07") + lubridate::days(0:6)),
+#'                          select = c('visits_by_day','visitor_home_cbgs'),
+#'                          multi = list(list(name = 'visits',by = 'state_fips',
+#'                          expand_int = 'visits_by_day',filter = 'state_fips == 6'),
+#'                          list(name = 'cbg',by = c('start_date','state_fips'),
+#'                          expand_cat = 'visitor_home_cbgs', filter = 'state_fips == 6')))
 #' }
 #' @export
 
-read_many_patterns <- function(dir = '.',recursive=FALSE, filelist=NULL,by = NULL, fun = sum, na.rm = TRUE, filter = NULL,
+read_many_patterns <- function(dir = '.',recursive=TRUE, filelist=NULL, start_date = NULL, post_by = TRUE, by = NULL, fun = sum, na.rm = TRUE, filter = NULL,
                         expand_int = NULL, expand_cat = NULL,
                         expand_name = NULL, multi = NULL, naics_link = NULL,
-                        select=NULL, gen_fips = TRUE, start_date = NULL, silent = FALSE, ...) {
+                        select=NULL, gen_fips = TRUE, silent = FALSE, ...) {
+
+  # Figure out our files
   if (is.null(filelist)) {
     filelist <- list.files(path=dir,pattern = '\\.csv\\.gz', recursive = recursive)
   }
+  # If it's a list, that's a patterns_lookup call
+  if (is.list(filelist)) {
+    filelist[['list_files']] <- TRUE
+    if (is.null(filelist[['dates']])) {
+      stop('If specifying filelist as a list for patterns_lookup, the dates option must be specified in that list.')
+    }
+    filelist <- do.call(patterns_lookup, filelist)
+  }
+
+
   if (!is.null(start_date)) {
     if (length(start_date) != length(filelist)) {
       stop(paste0('Number of files (',length(filelist),
@@ -91,16 +122,31 @@ read_many_patterns <- function(dir = '.',recursive=FALSE, filelist=NULL,by = NUL
                   length(start_date),') to go along with them.'))
     }
   }
+  # post_by expanded if only entered once but we need one for each multi
+  if (!isFALSE(post_by) & class(post_by) != 'list' & !is.null(multi)) {
+    post_by <- 1:length(multi) %>%
+      purrr::map(function(x) post_by)
+  }
 
   # If there's only one type specified, we'll get back a
   # data table that can be bound right away
   if (is.null(multi)) {
     patlist <- 1:length(filelist) %>%
-      purrr::map(function(x) read_patterns(filelist[x], dir = dir, by = by, fun = fun, na.rm = na.rm, filter = filter,
-                                  expand_int = expand_int, expand_cat = expand_cat,
-                                  expand_name = expand_name, multi = NULL, naics_link = naics_link,
-                                  select = select, gen_fips = gen_fips, start_date = start_date[x], silent = silent, ...))
-    return(data.table::rbindlist(patlist))
+      purrr::map(function(x) {
+        read_patterns(filelist[x], dir = dir, by = by, fun = fun, na.rm = na.rm, filter = filter,
+                      expand_int = expand_int, expand_cat = expand_cat,
+                      expand_name = expand_name, multi = NULL, naics_link = naics_link,
+                      select = select, gen_fips = gen_fips, start_date = start_date[x], silent = silent, ...)
+        })
+
+    patlist <- data.table::rbindlist(patlist)
+
+    # Do our re-aggregation
+    patlist <- re_aggregate(patlist, post_by, by, fun, expand_name, expand_int, expand_cat)
+
+
+    return(patlist)
+
   }
 
   # Otherwise we'll get back a list that we need to unpack before binding
@@ -109,7 +155,65 @@ read_many_patterns <- function(dir = '.',recursive=FALSE, filelist=NULL,by = NUL
                                 select = select, gen_fips = gen_fips, start_date = start_date[x], silent = silent, ...))
 
   # Bind each of them together
-  return(rbind_by_list_pos(patterns))
+  patterns <- rbind_by_list_pos(patterns)
+
+  # And re-aggregate
+  for (i in 1:length(patterns)) {
+    func <- multi[[i]][['fun']]
+    if (is.null(func)) {
+      func <- sum
+    }
+
+    patterns[[i]] <- re_aggregate(patterns[[i]],
+                                  post_by[[i]],
+                                  multi[[i]][['by']],
+                                  func,
+                                  multi[[i]][['expand_name']],
+                                  multi[[i]][['expand_int']],
+                                  multi[[i]][['expand_cat']])
+  }
+
+  return(patterns)
+}
+
+
+re_aggregate <- function(d, post_by, by, fun, ename, eint, ecat) {
+  if (!isFALSE(post_by)) {
+    if (isTRUE(post_by)) {
+      post_by <- by
+
+      if (!is.null(d[['date']]) & !('date' %in% by)) {
+        post_by <- c(by, 'date')
+      }
+
+      if (!is.null(d[['start_date']])  & !('start_date' %in% by)) {
+        post_by <- unique(c(by, 'date', 'start_date'))
+      }
+    }
+
+    # Other expansion indices
+    if (!is.null(ename)) {
+      post_by <- unique(c(post_by, ename))
+    } else if (!is.null(eint)) {
+      if (is.null(d[['date']])) {
+        post_by <- unique(c(post_by, paste0(eint, '_index')))
+      }
+    } else if (!is.null(ecat)) {
+      post_by <- unique(c(post_by, paste0(ecat, '_index')))
+    }
+
+    # Avoid type conflicts
+    numcols <- names(d)[sapply(d, is.numeric)]
+    for (nc in numcols) {
+      nctext <- paste0(nc, ' := as.double(', nc, ')')
+      d[, eval(parse(text = nctext))]
+    }
+
+    d <- d[, lapply(.SD, fun),
+                       by = post_by]
+  }
+
+  return(d)
 }
 
 

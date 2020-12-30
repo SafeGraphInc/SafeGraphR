@@ -1,0 +1,117 @@
+---
+title: "Automatic Traffic-over-Time Processing"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Automatic Traffic-over-Time Processing}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.width = 7,
+  fig.height = 5,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(SafeGraphR)
+```
+
+This vignette will walk through the process of using the Traffic-Over-Time functions, introduced in **SafeGraphR** version 0.3.0, which completely automate the process of downloading, reading, processing, and outputting SafeGraph data in the `visits_by_day` column. This process is optimized for use with `visits_by_day`, although you might be able to get at least some of it to work for other variables.
+
+The idea is that you can do basically everything you need with a single `growth_over_time()` call. This vignette will discuss how to make that call, and also talk about some of the internal functions it uses, so you can know how to use them yourself if you'd like to be a little more hands-on.
+
+---
+
+# growth_over_time
+
+The `growth_over_time()` function is intended to produce a data set and (optionally) graph showing how a certain *subset* of traffic data from the weekly patterns files changes over *a set of dates*, possibly doing *different groups separately*.
+
+The first thing we need to do is determine the set of dates that we want to track traffic over, for the `dates` argument. This is a vector of dates. If you want a range of dates, one good way to do it is `lubridate::ymd('year-month-day') + lubridate::days(0:numberofdaystotrack)`. The date range you give will be expanded based on `ma` to ensure that when you take a moving average with `ma()`, your entire date range survives. 
+
+This expanded date range will be passed to `patterns_lookup()` to determine the set of folders that the data you need are in. If you also give an AWS `key` and `secret`, it will download all those files for you, along with the appropriate normalization data.
+
+If you want to get more precise, you can instead use the `filelist` and `filelist_norm` arguments to specify which files exactly you want being read in for patterns and normalization data. Note that `growth_over_time` uses the national-level `total_devices_seen` column for normalization.
+
+```{r, eval = FALSE}
+# Not yet working code
+gr <- growth_over_time(lubridate::ymd('2020-07-01') + lubridate::days(0:6),
+                       key = 'mykey',
+                       secret = 'mysecret')
+```
+
+We also must specify a `by` argument, which is a character vector giving the variables to do calculations by. Visits data will be aggregated to this level before growth calculations are made. So for example, `by = c('brands','state_fips')` would calculate visits in each state for each brand. 
+
+Any variable in `by` other than the actual variables in the patterns files, or `state_fips` or `county fips`, must be brought in by merging the patterns files with the `data.table` provided in the `naics_link` argument. Variables other than `naics_code` may be brought in this way and used.
+
+Many of the other options here, like `filter`, `start_dates`, and `dir` are fairly straightforward and are shared with `read_patterns()`. Some others will generally not be touched, for example the `backfill_date` arguments, which will only need to be updated if you are using a version of the patterns backfill other than the one available the last time this package was updated. It's also unlikely that you'll want to do anything with `read_opts()`, which just passes options along to `read_many_patterns`()`, or `processing_opts()`, which passes options to `processing_template()`.
+
+One argument to be aware of is `test_run`. Set this to `FALSE` to actually run your command. Because this function takes so long, and downloads so much data, you want to be real sure it runs right before doing it! `test_run = TRUE`, which is the default, will use only one week of data, limiting the impact it has while you check if things work.
+
+Setting your options appropriately will use `patterns_lookup()` to figure out which patterns and normalization files to read in, `read_many_patterns()` and `read_many_csvs()` to read them, respectively, and then `processing_template()` to prepare them.
+
+The `processing_template()` function will take patterns data fresh off of `read_many_patterns()` and normalization data fresh off of `read_many_csvs()` and process them appropriately, resulting in a sample-size adjusted visits value and a measurement of growth in traffic since the first day in the sample.
+
+```{r}
+# Example data, imagine these came from read_many_patterns(expand_int = 'visits_by_day')
+# and read_many_csvs(), respectively
+data("pat_NY_NJ")
+data("norm")
+
+pat_NY_NJ[, .(visits_by_day = sum(visits_by_day)), by = .(date, state_fips, county_fips)]
+```
+
+```{r}
+norm[, .(date, total_devices_seen)]
+```
+
+We can pass these two to `processing_templtae()` and it will do the sample normalization, the moving average, and the growth-since-first-day. Note that the normalization variable we want should be the last column of `norm`.
+
+```{r}
+growth_data <- processing_template(pat_NY_NJ[, .(visits_by_day = sum(visits_by_day)), by = .(date, state_fips, county_fips)],
+                    norm = norm[, .(date, total_devices_seen)],
+                    by = c('state_fips','county_fips'),
+                    ma = 2)[] # since we only have one week of data, use a very short moving average, just to demonstrate
+
+growth_data
+```
+
+This output from `processing_template()` is then the output from `growth_over_time()`.
+
+Or, if `make_graph = TRUE`, instead you get a list where the `processing_template()` output is the first element of that list! The second would then be a graph or list of graphs. The other arguments in `growth_over_time()` have to do with the creation of graphs.
+
+---
+
+# Graphing with growth_over_time
+
+If you want control over the graphing process, it's probably just a good idea to take the `processing_template()`/`growth_over_time()` output and graph it yourself.
+
+However, setting `make_graph = TRUE` will get you a pretty nice-looking graph without any further work! Probably not completely publication-ready (but it *does* look nice - you'd have to fiddle with titles, etc., though), but definitely good enough for your own information.
+
+Setting `make_graph = TRUE` with nothing else will simply take the output discussed in the last section and send it to `graph_template()`, which produces a **ggplot2** line graph with labels at the end of the lines, and a separate line for each combination of `by`. It will also combine the elements of `by` into a single variable, if there's more than one element.
+
+```{r}
+# (this won't work since I'm going straight to graph_template, but I could have
+# loaded data(fips_to_names) and used that as a line_labels argument in growth_over_time
+# to label the lines with their county names rather than just the numbers)
+
+# This example uses only a few counties
+graph_template(growth_data[state_fips == 34 & county_fips %in% c(1,3,5)],
+               by = c('county_fips')) + 
+  # This is a regular ggplot2 object, so we can further modify it as one
+  ggplot2::theme(text = ggplot2::element_text(family = 'serif'))
+```
+
+
+And that's the basic idea! You can change the optios of `graph_template()` by passing them to the `graph_opts` argument of `growth_over_time()` as a list, but dang that sounds like a lot of work to me! `growth_over_time()` gives you back a list. The first element of that list is the `processing_template()` output, and the second is the `graph_template()` output.
+
+Unless!
+
+One thing that is likely to be common in `growth_over_time()` is that there will be a *lot* of combinations of the `by` variables. Too many to track if you put each of their lines on the same graph. So the `graph_by` option will let you specify a vector of character variables, which must be a subset of `by`. Then, it will produce *separate* graphs for each combination of `graph_by` variables.
+
+So, want to track two brands separately in each state? Use `filter` to pick those two brands, then use `by = c('state_fips','brands')`, and then finally `graph_by = 'state_fips'`. Now, `growth_over_time()` will still return a two-element list, the first of which is the `processing_template()` output.
+
+But the second element will now be its own list, with one element for each combination of `graph_by`. Each element of *that* list will be a separate `graph_template()` call, using only data from that combination of `graph_by` variables, and graphing lines separately by the *remaining non-`graph_by` elements of `by`*. So with `by = c('state_fips','brands')` and `graph_by = 'state_fips'` we'd get one graph per state, and one line per brand on each of those graphs.

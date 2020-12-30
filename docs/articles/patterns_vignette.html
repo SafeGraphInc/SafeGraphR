@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SafeGraphR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -39,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -57,12 +57,18 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/Automatic_Traffic-over-Time_Processing.html">Automatic Traffic-over-Time Processing</a>
+    </li>
+    <li>
       <a href="../articles/distancing_vignette.html">Processing and Using SafeGraph Stay-at-Home Data</a>
     </li>
     <li>
       <a href="../articles/patterns_vignette.html">Processing and Using SafeGraph Patterns Data</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right"></ul>
@@ -75,8 +81,7 @@
 
       
 
-      </header><script src="patterns_vignette_files/header-attrs-2.5/header-attrs.js"></script><link href="patterns_vignette_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
-<script src="patterns_vignette_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
+      </header><script src="patterns_vignette_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Processing and Using SafeGraph Patterns Data</h1>
@@ -91,7 +96,7 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">SafeGraphR</span><span class="op">)</span></code></pre></div>
-<p>This vignette will walk you through the process of reading in, processing, and displaying SafeGraph patterns data.</p>
+<p>This vignette will walk you through the process of reading in, processing, and displaying SafeGraph patterns data. This will look at the use of patterns data <em>generally</em>. For a more automated look at processing <code>visits_by_day</code> data for foot traffic over time, see the “Automatic Traffic-over-Time Processing” vignette.</p>
 <p>This vignette will work with weekly data from the <em>weekly-patterns-delivery/weekly</em> SafeGraph Amazon Web Services bucket (see the <a href="https://catalog.safegraph.io">SafeGraph Catalog</a> for more information), which could also be downloaded using <code><a href="../reference/safegraph_aws.html">safegraph_aws()</a></code>. However, with only minor variation in the first section, the same processes could be applied to data downloaded from the SafeGraph shop, or to monthly patterns, or to <em>weekly-patterns/v2</em> data under the old format.</p>
 <p>Note that throughout this vignette, we will be working with data manipulation using the <strong>data.table</strong> package. <strong>data.table</strong> is used throughout <strong>SafeGraphR</strong> (and on the backend) because it is very fast and can handle large data sets easily. However, once the data is read in and processed, it’s often no longer necessary to use <strong>data.table</strong> if you prefer something else. The code in this vignette could have easily used, for example, <strong>dplyr</strong> instead. If you are having trouble understanding the code chunks because you’re familiar with <strong>dplyr</strong> but not <strong>data.table</strong>, see <a href="https://atrebas.github.io/post/2019-03-03-datatable-dplyr/">this guide</a> that links the two.</p>
 <hr>
@@ -102,9 +107,9 @@
 <p>The <code><a href="../reference/read_patterns.html">read_patterns()</a></code> function can read in a single patterns file. But most of the time you will probably be using <code><a href="../reference/read_many_patterns.html">read_many_patterns()</a></code>, which reads multiple patterns files, processes them, and row-binds them together.</p>
 <p>If you truly want the raw data, you are probably best off skipping <code><a href="../reference/read_many_patterns.html">read_many_patterns()</a></code> and instead just doing <code>list.files() %&gt;% purrr::map(data.table::fread) %&gt;% data.table::rbindlist()</code>. However, this would return an enormous result, and you probably just want a subset of the data, or some aggregated data.</p>
 <p><code><a href="../reference/read_many_patterns.html">read_many_patterns()</a></code> can perform multiple different aggregations in a single go, aggregating each of them across multiple files.</p>
-<p>So how can we build a <code><a href="../reference/read_many_patterns.html">read_many_patterns()</a></code> call? The tricky part will be in filling in the aggregation information in the <code>by, fun, na.rm, filter, expand_int, expand_cat,</code> and <code>expand_name</code> options.</p>
-<p>These options are expanded further upon in <code><a href="../reference/read_patterns.html">read_patterns()</a></code>. Effectively, they determine the level to aggregate the data to (data will be aggregated to the <code>by</code>-and-expanded-JSON-column-index level), the function to use for aggregation (<code>fun</code>), whether to only pull a subset of the data (<code>filter</code>), and which of the JSON columns in the data to expand before aggregating (<code>expand_int</code> OR <code>expand_cat</code>, with <code>expand_name</code> giving the name of the index variable to be created).</p>
-<p><strong>Importantly, you will get one row per <code>by</code>-per-JSON-column-index-PER-FILE</strong>. The <strong>PER FILE</strong> is important especially with the new patterns files where the same date data is broken up over several files. <strong>You may have to re-aggregate after reading in when using this new data.</strong></p>
+<p>So how can we build a <code><a href="../reference/read_many_patterns.html">read_many_patterns()</a></code> call? There are two main elements here: finding the files to read in, and then filling in the aggregation information in the <code>by, fun, na.rm, filter, expand_int, expand_cat,</code> and <code>expand_name</code> options.</p>
+<p>For finding the files to fill in, you can use <code><a href="../reference/read_many_patterns.html">read_many_patterns()</a></code> itself, if what you want is <em>all</em> the files you have downloaded. Just specify the <code>dir</code> and it will load all the <code>.csv.gz</code> files in the subfolders of that directory. Or, you can be more choosy about it! Use <code><a href="../reference/patterns_lookup.html">patterns_lookup()</a></code> to generate a list of files (and, potentially, with a <code>key</code> and <code>secret</code>, download those files) that contain patterns information for a given set of dates (plus extra for moving-average purposes!). Then pass that filelist to the <code>filelist</code> option.</p>
+<p>For aggregating, the <code>by, fun, na.rm, filter, expand_int, expand_cat,</code> and <code>expand_name</code> options are expanded further upon in <code><a href="../reference/read_patterns.html">read_patterns()</a></code>. Effectively, they determine the level to aggregate the data to (data will be aggregated to the <code>by</code>-and-expanded-JSON-column-index level), the function to use for aggregation (<code>fun</code>), whether to only pull a subset of the data (<code>filter</code>), and which of the JSON columns in the data to expand before aggregating (<code>expand_int</code> OR <code>expand_cat</code>, with <code>expand_name</code> giving the name of the index variable to be created).</p>
 <p>So for example, if we want to get the number of <em>visits</em> by day by NAICS code, we would want to set <code>by = 'naics_code'</code>. The visits-by-day variable is <code>visits_by_day</code> and is stored in the format <code>[1,2,3,4,5,6,7]</code> which can be extracted internally by <code><a href="../reference/expand_integer_json.html">expand_integer_json()</a></code>, i.e. it’s a numeric JSON column (as opposed to a categorical JSON column like visits by CBG in the format <code>{category: number, category: number}</code> which can be extracted intenally by <code><a href="../reference/expand_cat_json.html">expand_cat_json()</a></code>). So we set <code>expand_int = 'visits_by_day'</code>. When we do <code>expand_int = 'visits_by_day'</code>, then <code>expand_name</code> will default to “day” so we don’t need to do anything there. We do want it to add up the visits by day across all the different POIs in that NAICS code, so <code>fun = sum</code> as default is fine. This gives us in total <code>by = 'naics_code', expand_int = 'visits_by_day'</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Not yet working code</span>
@@ -129,12 +134,12 @@
 <span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>What else do we need?</p>
 <p>First, of course, we need to tell it where the patterns files are. We can specify <code>dir</code> (or it will just go to the working directory). Or if we want to do our own <code><a href="https://rdrr.io/r/base/list.files.html">list.files()</a></code> command and pick a subset, we can give it to <code>filelist</code>. Since we are working with new-format data that sits inside nested folders, we want to be sure to specify <code>recursive = TRUE</code> so as to look in those folders.</p>
-<p>Second, if we want to aggregate (or filter) by NAICS code, which we do, we need to know the NAICS code of each POI. We can do that by processing the most recent monthly SafeGraph Core file using <code>link_poi_naics</code>. Then we can pass the resulting file to the <code>naics_link</code> option.</p>
+<p>Second, if we want to aggregate (or filter) by NAICS code, which we do, we need to know the NAICS code of each POI. We can do that by processing the most recent monthly SafeGraph Core file using <code>read_core</code>. <code>read_core</code> will use the most recent Core file in the <code>core_poi/</code> directory of the working directory - it will download the most recent one too if you give it an AWS <code>key</code> and <code>secret</code>! Then we can pass the resulting file to the <code>naics_link</code> option.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">poi_link</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/link_poi_naics.html">link_poi_naics</a></span><span class="op">(</span><span class="st">'Core-USA-June2020-Release-CORE_POI-2020_05-2020-06-06.zip'</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">poi_link</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_core.html">read_core</a></span><span class="op">(</span>select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'safegraph_place_id'</span>,<span class="st">'naics_code'</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># I probably at this point would save poi_link to disk - that took a while!</span></code></pre></div>
 <p>Next, if we want to use the state and county FIPS codes, we want to make sure that <code>gen_fips = TRUE</code>, which it is by default, so we’re good there. This uses <code><a href="../reference/fips_from_cbg.html">fips_from_cbg()</a></code> internally.</p>
-<p>Fourth, patterns files don’t tell you what the first date in them is. <code><a href="../reference/read_many_patterns.html">read_many_patterns()</a></code> will try to guess that date by the filepath. But if you want to be sure, you can set <code>start_date</code> for each of the files being read in.</p>
+<p>Fourth, patterns files don’t tell you what the first date in them is. <code><a href="../reference/read_many_patterns.html">read_many_patterns()</a></code> will try to guess that date by the filepath. But if you want to be sure, you can set <code>start_date</code> for each of the files being read in. You can more easily find the starting dates using the <code><a href="../reference/find_date.html">find_date()</a></code> function (which is what <code><a href="../reference/read_patterns.html">read_patterns()</a></code> uses internally. Don’t forget to subtract <code><a href="http://lubridate.tidyverse.org/reference/period.html">lubridate::days(9)</a></code> to get the starting date for non-backfill data!</p>
 <p>Finally, and very important, if we are doing any sort of aggregation we probably want to specify <code>select</code>, a character vector of variables to be read in. If we don’t, then reading in the data will take <em>way</em> longer. Also, if some of those variables aren’t amenable to being aggregated with <code>fun</code>, you could get an error. We are planning to use the <code>visits_by_day</code> variable so we need that. We’ll also use <code>poi_cbg</code> (to be sent to <code><a href="../reference/fips_from_cbg.html">fips_from_cbg()</a></code> to get <code>state_fips</code> and <code>county_fips</code>), but that’s in by default whenever <code>gen_fips = TRUE</code>. We also need <code>naics_code</code>, but that isn’t read in from the file; rather it comes from the <code>poi_link</code> data we made. So we specify <code>select = 'visits_by_day'</code>.</p>
 <p>See the <a href="https://docs.safegraph.com/docs">SafeGraph docs</a> for full documentation of all the available variables.</p>
 <p>Note that <code>select</code> applies to the file as it’s read in before any aggregation, so it goes in <code>read_many_patterns</code> directly, not inside of <code>multi</code>.</p>
@@ -153,7 +158,7 @@
                                       expand_int <span class="op">=</span> <span class="st">'visits_by_day'</span>, 
                                       filter <span class="op">=</span> <span class="st">'state_fips %in% c(34, 36)'</span><span class="op">)</span>
 <span class="op">)</span><span class="op">)</span></code></pre></div>
-<p>Internally, this calls <code><a href="../reference/read_patterns.html">read_patterns()</a></code> many times, followed by <code><a href="../reference/rbind_by_list_pos.html">rbind_by_list_pos()</a></code>.</p>
+<p>Internally, this calls <code><a href="../reference/read_patterns.html">read_patterns()</a></code> many times, followed by <code><a href="../reference/rbind_by_list_pos.html">rbind_by_list_pos()</a></code>. Then it re-aggregates across the multiple files it just read in (unless you set ).</p>
 <p>The result will be <code>patterns</code>, a list, where <code>patterns[[1]]</code> (or <code>patterns[['patterns_naics']]</code>) contains the NAICS aggregation, and <code>patterns[[2]]</code> (or <code>patterns[['NY_NJ']]</code>) contains the New York/New Jersey aggregation. Let’s save those as their own objects (which will then be a part of the package so we can use real data in this vignette!).</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># This data is one observation per NAICS code per day</span>
@@ -198,11 +203,12 @@
 <code class="sourceCode R"><span class="va">pat_naics</span><span class="op">[</span>,<span class="va">state_fips</span> <span class="op">:=</span> <span class="cn">NULL</span><span class="op">]</span>
 <span class="va">pat_naics</span><span class="op">[</span>,<span class="va">county_fips</span> <span class="op">:=</span> <span class="cn">NULL</span><span class="op">]</span>
 <span class="va">pat_NY_NJ</span><span class="op">[</span>,<span class="va">naics_code</span> <span class="op">:=</span> <span class="cn">NULL</span><span class="op">]</span></code></pre></div>
-<p>We will also need the normalization data to properly work with what we have. Normalization data is just in regular ol’ CSV files, so we can read everything in with <code><a href="../reference/read_many_csvs.html">read_many_csvs()</a></code>, using <code>recursive = TRUE</code> to look for all the files. Since normalization files have <code>year</code>, <code>month</code>, and <code>day</code> columns, we can also set <code>makedate = TRUE</code> to get a <code>date</code> variable in there.</p>
+<p>We will also need the normalization data to properly work with what we have. Normalization data is just in regular ol’ CSV files, so we can read everything in with <code><a href="../reference/read_many_csvs.html">read_many_csvs()</a></code>. Since normalization files have <code>year</code>, <code>month</code>, and <code>day</code> columns, we can also set <code>makedate = TRUE</code> to get a <code>date</code> variable in there. If we only want to normalize at the national level, pick the <code>ALL_STATES</code> rows.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">norm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_many_csvs.html">read_many_csvs</a></span><span class="op">(</span>dir <span class="op">=</span> <span class="st">"../normalization_stats/"</span>,
                        recursive <span class="op">=</span> <span class="cn">TRUE</span>,
-                       makedate <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+                       makedate <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">[</span><span class="va">region</span> <span class="op">==</span> <span class="st">'ALL_STATES'</span><span class="op">]</span>
+<span class="va">norm</span><span class="op">[</span>, <span class="va">region</span> <span class="op">:=</span> <span class="cn">NULL</span><span class="op">]</span></code></pre></div>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">norm</span><span class="op">)</span>
 <span class="va">norm</span><span class="op">[</span><span class="op">]</span>
@@ -227,7 +233,6 @@
 <code class="sourceCode R"><span class="co"># Make sure that census_block_group is read as a character</span>
 <span class="co"># note colClasses is a data.table::fread() argument</span>
 <span class="va">panel</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_many_csvs.html">read_many_csvs</a></span><span class="op">(</span>dir <span class="op">=</span> <span class="st">'../home_panel_summary'</span>, 
-                        recursive <span class="op">=</span> <span class="cn">TRUE</span>,
                         colClasses <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>census_block_group <span class="op">=</span> <span class="st">'character'</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># We only need the start date, census block group, and number of devices</span>
 <span class="va">panel</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">panel</span>, select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'date_range_start'</span>, <span class="st">'census_block_group'</span>, <span class="st">'number_devices_residing'</span><span class="op">)</span><span class="op">)</span>
@@ -325,7 +330,7 @@
 <h2 class="hasAnchor">
 <a href="#scale-visit-data-relative-to-a-date" class="anchor"></a>3. Scale visit data relative to a date</h2>
 <p>SafeGraph does a much better job showing <em>growth</em> or <em>change</em> in visits, rather than the absolute number of visits, since it’s hard to pin down exactly how much of the population we’re looking at.</p>
-<p>So for most analyses we want to scale visits relative to a given date. We can do this with <code><a href="../reference/scale_to_date.html">scale_to_date()</a></code> (with multiple years of data we could do <code><a href="../reference/scale_yoy.html">scale_yoy()</a></code>).</p>
+<p>So for most analyses we want to scale visits relative to a given date. We can do this with <code><a href="../reference/scale_to_date.html">scale_to_date()</a></code> (with multiple years of data we could do <code><a href="../reference/scale_yoy.html">scale_yoy()</a></code>). This process could be automated for <code>visits_by_day</code> data with the <code><a href="../reference/processing_template.html">processing_template()</a></code> function.</p>
 <p>Let’s just scale to the first date in the data, June 22, 2020.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Careful with by! The data really should be uniquely identified by the combination of date_var and by.</span>
@@ -369,7 +374,7 @@
 <span class="co">#&gt; 12:         36   New York 2020-06-26  0.14681163</span>
 <span class="co">#&gt; 13:         36   New York 2020-06-27 -0.03903597</span>
 <span class="co">#&gt; 14:         36   New York 2020-06-28 -0.13794200</span></code></pre></div>
-<p>The <code>naics_codes</code> data set links NAICS codes to their titles. These can sometimes still be a little longer than we need, but at least now we’ll know what they mean!</p>
+<p>The <code>naics_codes</code> data set links NAICS codes to their titles. These can sometimes still be a little longer than we need, but at least now we’ll know what they mean! If we had aggregated to the four-digit or two-digit NAICS code level using <code><a href="https://rdrr.io/r/base/Round.html">floor(naics_code/100)</a></code> or <code><a href="https://rdrr.io/r/base/Round.html">floor(naics_code/10000)</a></code>, we could instead label them using the <code>naics_4</code> or <code>naics_2</code> data sets.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"naics_codes"</span><span class="op">)</span>
 
@@ -389,7 +394,7 @@
 <span class="co">#&gt; 2385:     928120       International Affairs 2020-06-26  0.02247280</span>
 <span class="co">#&gt; 2386:     928120       International Affairs 2020-06-27 -0.41057716</span>
 <span class="co">#&gt; 2387:     928120       International Affairs 2020-06-28 -0.61628256</span></code></pre></div>
-<p>Now we can finally make some pretty graphs (why so much movement over the space of only one week? Becuase we skipped the seven-day-moving-average step!)</p>
+<p>Now we can finally make some pretty graphs (why so much movement over the space of only one week? Becuase we skipped the seven-day-moving-average step!). This makes a graph by hand using <strong>ggplot2</strong> directly, but you can often also make a nice-looking graph automatically with <code><a href="../reference/graph_template.html">graph_template()</a></code>, which also uses <strong>ggplot2</strong>.</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">pat_NY_NJ</span>,
                 <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">norm_visits</span>, color <span class="op">=</span> <span class="va">statename</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
@@ -412,7 +417,7 @@
   <span class="co"># Restaurant codes</span>
   <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">floor</a></span><span class="op">(</span><span class="va">naics_code</span><span class="op">/</span><span class="fl">1000</span><span class="op">)</span> <span class="op">==</span> <span class="fl">722</span><span class="op">)</span>
 
-<span class="co"># The NAICS titles can be too long for graphs</span>
+<span class="co"># The NAICS titles can be too long for graphs, so we won't use naics_codes</span>
 <span class="va">short_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>naics_title <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">rests</span><span class="op">$</span><span class="va">naics_title</span><span class="op">)</span>,
                           naics_short <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Caterer'</span>,
                                           <span class="st">'Bar'</span>,

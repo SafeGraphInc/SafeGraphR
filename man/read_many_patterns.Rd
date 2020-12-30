@@ -6,8 +6,10 @@
 \usage{
 read_many_patterns(
   dir = ".",
-  recursive = FALSE,
+  recursive = TRUE,
   filelist = NULL,
+  start_date = NULL,
+  post_by = TRUE,
   by = NULL,
   fun = sum,
   na.rm = TRUE,
@@ -19,7 +21,6 @@ read_many_patterns(
   naics_link = NULL,
   select = NULL,
   gen_fips = TRUE,
-  start_date = NULL,
   silent = FALSE,
   ...
 )
@@ -29,14 +30,16 @@ read_many_patterns(
 
 \item{recursive}{Search in all subdirectories as well, as with the since-June-24-2020 format of the AWS downloads. There is not currently a way to include only a subset of these subdirectory files. Perhaps run \code{list.files(recursive=TRUE)} on your own and pass a subset of the results to the \code{filelist} option.}
 
-\item{filelist}{Optionally specify only a subset of the files to read in.}
+\item{filelist}{A vector of filenames to read in, OR a named list of options to send to \code{patterns_lookup()}. This list must include \code{dates} for the dates of data you want, and \code{list_files} will be set to \code{TRUE}. If you like, add \code{key} and \code{secret} to this list to also download the files you need.}
+
+\item{start_date}{A vector of dates giving the first date present in each zip file, to be passed to \code{read_patterns} giving the first date present in the file, as a date object. Unlike in \code{read_patterns}, this value will be added to the data as a variable called \code{start_date} so you can use it in \code{post_by}.}
+
+\item{post_by}{After reading in all the files, re-perform aggregation to this level. Use a character vector of variable names (or a list of vectors if using \code{multi}). Or just set to \code{TRUE} to have \code{post_by = by} plus, if present, \code{expand_name} or \code{'date'}. Set to \code{FALSE} to skip re-aggregation. Including \code{'start_date'} in both \code{by} and \code{post_by} is a good idea if you aren't using an approach that creates a \code{date} variable.}
 
 \item{by, fun, na.rm, filter, expand_int, expand_cat, expand_name, multi, naics_link, select, gen_fips, silent, ...}{Arguments to be passed to \code{read_patterns}, specified as in \code{help(read_patterns)}.}
-
-\item{start_date}{A vector of dates giving the first date present in each zip file, to be passed to \code{read_patterns} giving the first date present in the file, as a date object.}
 }
 \description{
-This accepts a directory. It will use \code{read_patterns} to load every \code{csv.gz} in that folder, assuming they are all patterns files. It will then row-bind together each of the produced processed files.
+This accepts a directory. It will use \code{read_patterns} to load every \code{csv.gz} in that folder, assuming they are all patterns files. It will then row-bind together each of the produced processed files. Finally, if \code{post_by} is specified, it will re-perform the aggregation, handy for new-format patterns files that split the same week's data across multiple files.
 }
 \details{
 Note that after reading in data, if \code{gen_fips = TRUE}, state and county names can be merged in using \code{data(fips_to_names)}.
@@ -45,7 +48,7 @@ Note that after reading in data, if \code{gen_fips = TRUE}, state and county nam
 \dontrun{
 # Our current working directory is full of .csv.gz files!
 # Too many... we will probably run out of memory if we try to read them all in at once, so let's chunk it
-files <- list.files(pattern = '.gz')
+files <- list.files(pattern = '.gz', recursive = TRUE)
 patterns <- read_many_patterns(filelist = files[1:10],
     # We only need these variables (and poi_cbg which is auto-added with gen_fips = TRUE)
     select = c('brands','visits_by_day'),
@@ -55,5 +58,23 @@ patterns <- read_many_patterns(filelist = files[1:10],
     list(name = 'co_and_ct', by = c('state_fips','county_fips'), filter = 'state_fips \%in\% 8:9', expand_int = 'visits_by_day')))
 patterns_brands <- patterns[[1]]
 patterns_co_and_ct <- patterns[[2]]
+
+# Alternately, find the files we need for the seven days starting December 7, 2020,
+# read them all in (and if we'd given key and secret too, download them first),
+# and then aggregate to the state-date level
+dt <- read_many_patterns(filelist = list(dates = lubridate::ymd("2020-12-07") + lubridate::days(0:6)),
+                         by = "state_fips", expand_int = 'visits_by_day',
+                         select = 'visits_by_day')
+
+
+# don't forget that if you want weekly data but AREN'T using visits_by_day
+# (for example if you're using visitors_home_cbg)
+# you want start_date in your by option, as in the second list in multi here
+dt <- read_many_patterns(filelist = list(dates = lubridate::ymd("2020-12-07") + lubridate::days(0:6)),
+                         select = c('visits_by_day','visitor_home_cbgs'),
+                         multi = list(list(name = 'visits',by = 'state_fips',
+                         expand_int = 'visits_by_day',filter = 'state_fips == 6'),
+                         list(name = 'cbg',by = c('start_date','state_fips'),
+                         expand_cat = 'visitor_home_cbgs', filter = 'state_fips == 6')))
 }
 }
