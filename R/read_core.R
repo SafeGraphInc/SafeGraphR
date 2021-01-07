@@ -97,7 +97,7 @@ read_core <- function(dir = 'core_poi/',
 
     # Use only the recent month
     corefiles <- corefiles[stringr::str_detect(corefiles,
-      paste0(lubridate::year(coredates),'/',lubridate::month(coredates),'/',lubridate::day(coredates))
+                                               paste0(lubridate::year(coredates),'/',stringr::str_pad(lubridate::month(coredates),2,'left','0'),'/',stringr::str_pad(lubridate::day(coredates),2,'left','0'))
     )]
   }
 
