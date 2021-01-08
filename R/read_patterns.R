@@ -77,7 +77,7 @@ read_patterns <- function(filename,dir = '.',by = NULL, fun = function(x) sum(x,
     patterns[,poi_cbg := as.character(poi_cbg)]
     patterns[,c('state_fips','county_fips') := fips_from_cbg(poi_cbg)]
 
-    if (!('county_fips' %in% by)) {
+    if (!('county_fips' %in% by) & (!is.null(by))) {
       patterns[, county_fips := NULL]
     }
   }
