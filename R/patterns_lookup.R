@@ -119,7 +119,7 @@ patterns_lookup <- function(dates,
     if (!is.null(key) & !is.null(secret)) {
       for (fn in filelist) {
         safegraph_aws(old_dir,
-                      dataset = 'weekly-new',
+                      dataset = 'weekly-backfill',
                       key = key,
                       secret = secret,
                       prefix = stringr::str_sub(fn, nchar(old_dir)+1),
