@@ -81,7 +81,7 @@ read_shop <- function(filename,dir = '.',keeplist = c('patterns','normalization_
   for (k in keeplist) {
     if (k == 'patterns') {
       # Get our full list of patterns files
-      patfiles <- files_in_zip[stringr::str_detect(files_in_zip,'\\.csv\\.gz')]
+      patfiles <- files_in_zip[stringr::str_detect(files_in_zip,'patterns')]
 
       retDT[['patterns']] <- read_many_patterns(filelist = patfiles, dir = exdir, recursive = FALSE, by = by, fun = fun, na.rm = na.rm, filter = filter,
                                            expand_int = expand_int, expand_cat = expand_cat,
