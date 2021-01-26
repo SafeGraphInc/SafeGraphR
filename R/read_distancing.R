@@ -47,6 +47,9 @@ read_distancing <- function(start,end,dir = '.',gen_fips = TRUE, by = c('state_f
   }
 
   # Make sure dir ends with /
+  if (dir == '') {
+    dir <- '.'
+  }
   if (stringr::str_sub(dir,-1) != '/') {
     dir <- paste0(dir, '/')
   }
