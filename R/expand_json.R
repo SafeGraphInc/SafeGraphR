@@ -74,7 +74,11 @@ expand_integer_json <- function(dt, expand,
     } else {
       dt[,initial_rowno := 1:nrow(dt)]
 
-      exptext <- paste0(".(",expand," = jsonlite::fromJSON(",expand,")", paste(paste0(",",by,"=",by),collapse=''),")")
+      exptext <- paste0(".(",expand," = jsonlite::fromJSON(",expand,")")
+      if (!is.null(by)) {
+        exptext <- paste0(exptext, paste(paste0(",",by,"=",by),collapse=''))
+      }
+      exptext <- paste0(exptext, ')')
 
       dt <- dt[,
                eval(parse(text=exptext)),
@@ -180,8 +184,12 @@ expand_cat_json <- function(dt, expand,
       dt[,initial_rowno := 1:nrow(dt)]
 
       exptext <- paste0(".(",expand," = as.numeric(unlist(jsonlite::fromJSON(",expand,"))), ",
-                        index, " = names(unlist(jsonlite::fromJSON(",expand,")))",
-                        paste(paste0(",",by,"=",by),collapse=''),")")
+                        index, " = names(unlist(jsonlite::fromJSON(",expand,")))")
+      if (!is.null(by)) {
+        exptext <- paste0(exptext, paste(paste0(",",by,"=",by),collapse=''))
+      }
+      exptext <- paste0(exptext, ")")
+
 
       dt <- dt[,
                eval(parse(text=exptext)),
