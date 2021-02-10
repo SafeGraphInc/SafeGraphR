@@ -54,6 +54,9 @@ read_shop <- function(filename,dir = '.',keeplist = c('patterns','normalization_
   } else {
     f <- paste(dir,filename,sep='/')
   }
+  if (dir == '.') {
+    f <- filename
+  }
 
   # Get the list of files
   files_in_zip <- utils::unzip(f,list=TRUE)$Name

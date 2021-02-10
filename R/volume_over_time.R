@@ -548,7 +548,7 @@ growth_over_time <- function(dates, by,
           if (!dir.exists(dirpath)) { dir.create(dirpath, recursive = TRUE) }
 
           safegraph_aws(dirpath,
-                        'weekly-new',
+                        'weekly-backfill',
                         key = key,
                         secret = secret,
                         prefix = f)

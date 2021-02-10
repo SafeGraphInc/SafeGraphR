@@ -50,6 +50,9 @@ read_patterns <- function(filename,dir = '.',by = NULL, fun = function(x) sum(x,
   } else {
     f <- paste(dir,filename,sep='/')
   }
+  if (dir == '.') {
+    f <- filename
+  }
 
   # To do gen_fips you need poi_cbg
   if (gen_fips & !is.null(select)) {

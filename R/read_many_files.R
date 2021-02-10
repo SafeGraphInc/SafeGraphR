@@ -23,10 +23,12 @@ read_many_csvs <- function(dir = '.', recursive = TRUE, filelist = NULL, makedat
                       list.files(path=dir,pattern = '\\.csv\\.gz', recursive = recursive))
   }
 
-  if (stringr::str_sub(dir,nchar(dir)) == '/') {
-    filelist <- paste0(dir,filelist)
-  } else {
-    filelist <- paste(dir,filelist,sep='/')
+  if (dir != '.') {
+    if (stringr::str_sub(dir,nchar(dir)) == '/') {
+      filelist <- paste0(dir,filelist)
+    } else {
+      filelist <- paste(dir,filelist,sep='/')
+    }
   }
 
   if (makedate) {
