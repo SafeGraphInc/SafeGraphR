@@ -130,8 +130,8 @@ patterns_lookup <- function(dates,
 
     if (list_files) {
       filelist <- filelist %>%
-        purrr::map_chr(function(x) {
-          fls <- list.files(paste0(old_dir, x), pattern = '.csv',
+        purrr::map(function(x) {
+          fls <- list.files(x, pattern = '.csv',
                             recursive = TRUE, full.names = TRUE)
 
           if (length(fls) == 0) {
@@ -140,7 +140,7 @@ patterns_lookup <- function(dates,
           } else {
             return(fls)
           }
-        })
+        }) %>% unlist()
     }
   }
   if (length(new) > 0) {
@@ -178,7 +178,7 @@ patterns_lookup <- function(dates,
       filelist <- c(filelist,
                     unique(new_dt$filename) %>%
                       purrr::map(function(x) {
-                        fls <- list.files(paste0(new_dir, x), pattern = '.csv',
+                        fls <- list.files(x, pattern = '.csv',
                                           recursive = TRUE, full.names = TRUE)
 
                         if (length(fls) == 0) {
