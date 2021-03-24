@@ -180,7 +180,7 @@ patterns_lookup <- function(dates,
                       purrr::map(function(x) {
                         fls <- list.files(x, pattern = '.csv',
                                           recursive = TRUE, full.names = TRUE)
-
+                        fls <- fls[!grepl('home_panel_summary',fls)]
                         if (length(fls) == 0) {
                           warning(paste0('Found no files in ',x,'. list_files requires files be downloaded first.'))
                           return(NULL)
