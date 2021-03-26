@@ -91,6 +91,10 @@ read_patterns <- function(filename,dir = '.',by = NULL, fun = function(x) sum(x,
     start_date <- lubridate::ymd(datefromfile)
     if (stringr::str_detect(filename, 'patterns/')) {
       start_date <- start_date - lubridate::days(9)
+      # Was late this one week!
+      if (start_date == lubridate::ymd('2021-03-02')) {
+        start_date <- start_date - lubridate::days(1)
+      }
     }
     if (is.na(start_date)) {
       message(paste0('Attempted to find start_date from filename but failed. Start of filename is ',

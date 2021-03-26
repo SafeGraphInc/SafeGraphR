@@ -75,8 +75,8 @@ patterns_lookup <- function(dates,
 
   # Warn about new dates
   if (!silent) {
-    if (max(dates) > lubridate::ymd('2020-12-16')) {
-      warning('This function has been tested to match the SafeGraph file structure as of Dec 16, 2020. Any file structure changes since then could make your result wrong.')
+    if (max(dates) > lubridate::ymd('2021-03-21')) {
+      warning('This function has been tested to match the SafeGraph file structure as of March 26, 2021. Any file structure changes since then could make your result wrong.')
     }
   }
 
@@ -149,6 +149,8 @@ patterns_lookup <- function(dates,
     # Find the most recent wday = 2, which is the first day in the file
     # Then add 9 days to get to release date
     new_dt[, recent := date + lubridate::days(2 - lubridate::wday(date)) + lubridate::days(9)  - lubridate::days(7*(lubridate::wday(date) == 1))]
+    # This file was late
+    new_dt[recent == lubridate::ymd('2021-03-10'), recent := lubridate::ymd('2021-03-11')]
 
     # And filename
     new_dt[, filename := paste0(
