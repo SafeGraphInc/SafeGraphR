@@ -160,19 +160,21 @@ read_many_patterns <- function(dir = '.',recursive=TRUE, filelist=NULL, start_da
   patterns <- rbind_by_list_pos(patterns)
 
   # And re-aggregate
-  for (i in 1:length(patterns)) {
-    func <- multi[[i]][['fun']]
-    if (is.null(func)) {
-      func <- sum
-    }
+  if (length(filelist) > 1) {
+    for (i in 1:length(patterns)) {
+      func <- multi[[i]][['fun']]
+      if (is.null(func)) {
+        func <- sum
+      }
 
-    patterns[[i]] <- re_aggregate(patterns[[i]],
-                                  post_by[[i]],
-                                  multi[[i]][['by']],
-                                  func,
-                                  multi[[i]][['expand_name']],
-                                  multi[[i]][['expand_int']],
-                                  multi[[i]][['expand_cat']])
+      patterns[[i]] <- re_aggregate(patterns[[i]],
+                                    post_by[[i]],
+                                    multi[[i]][['by']],
+                                    func,
+                                    multi[[i]][['expand_name']],
+                                    multi[[i]][['expand_int']],
+                                    multi[[i]][['expand_cat']])
+    }
   }
 
   return(patterns)
