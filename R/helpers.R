@@ -235,13 +235,13 @@ rbind_by_list_pos <- function(dtl,ignore_names=FALSE) {
     for (i in 1:ntabs) {
       retDT[[i]] <- dtl %>%
         purrr::map(function(x) x[[i]]) %>%
-        data.table::rbindlist()
+        data.table::rbindlist(fill = TRUE)
     }
   } else {
     for (n in names(dtl[[1]])) {
       retDT[[n]] <- dtl %>%
         purrr::map(function(x) x[[n]]) %>%
-        data.table::rbindlist()
+        data.table::rbindlist(fill = TRUE)
     }
   }
 
