@@ -141,7 +141,7 @@ read_many_patterns <- function(dir = '.',recursive=TRUE, filelist=NULL, start_da
                       select = select, gen_fips = gen_fips, start_date = start_date[x], silent = silent, ...)
         })
 
-    patlist <- data.table::rbindlist(patlist)
+    patlist <- data.table::rbindlist(patlist, fill = TRUE)
 
     # Do our re-aggregation
     patlist <- re_aggregate(patlist, post_by, by, fun, expand_name, expand_int, expand_cat)
