@@ -83,7 +83,7 @@ First, of course, we need to tell it where the patterns files are. We can specif
 Second, if we want to aggregate (or filter) by NAICS code, which we do, we need to know the NAICS code of each POI. We can do that by processing the most recent monthly SafeGraph Core file using `read_core`. `read_core` will use the most recent Core file in the `core_poi/` directory of the working directory - it will download the most recent one too if you give it an AWS `key` and `secret`! Then we can pass the resulting file to the `naics_link` option.
 
 ```{r, eval = FALSE}
-poi_link <- read_core(select = c('safegraph_place_id','naics_code'))
+poi_link <- read_core(select = c('placekey','naics_code'))
 # I probably at this point would save poi_link to disk - that took a while!
 ```
 

@@ -6,7 +6,7 @@
 #'
 #' @param dir The directory that the CORE files are in. If this folder contains multiple months of Core files, it will use the most recent (this only works if you are using the standard AWS file structure).
 #' @param filter A character string describing a logical statement for filtering the data, for example \code{filter = 'naics_code == 512131'} would give you only movie theater POIs. Will be used as an \code{i} argument in a \code{data.table}, see \code{help(data.table)}. Filtering here instead of afterwards can cut down on time and memory demands.
-#' @param select Character vector of variables to get from the file. Set to \code{NULL} to get all variables. If you plan to link the results to a patterns file, you will probably want to include \code{'safegraph_place_id'} or \code{'placekey'} in this vector. Note that any variables mentioned in \code{filter} MUST be in \code{select} unless \code{select = NULL}.
+#' @param select Character vector of variables to get from the file. Set to \code{NULL} to get all variables. If you plan to link the results to a patterns file, you will probably want to include \code{'placekey'} or \code{'placekey'} in this vector. Note that any variables mentioned in \code{filter} MUST be in \code{select} unless \code{select = NULL}.
 #' @param key A character string containing an AWS Access Key ID. If \code{key} and \code{secret} are both specified, \code{read_core} will download the most recent Core files and process them. This process assumes your system date is set correctly, and will only check this month's Core and last month's Core, since one of those shold exist.
 #' @param secret A character string containing an AWS Secret Access Key.
 #' @param silent Suppress timing messages.

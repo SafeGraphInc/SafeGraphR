@@ -80,9 +80,10 @@ safegraph_aws <- function(path = '.',
 
     options('max.print' = max_print)
 
-    if (!dir.exists(path)) {
-      dir.create(path, recursive = TRUE)
-    }
+  }
+
+  if (!dir.exists(path)) {
+    dir.create(path, recursive = TRUE)
   }
 
   aws.s3::s3sync(path = path, bucket = 's3://sg-c19-response/',

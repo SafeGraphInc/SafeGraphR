@@ -75,8 +75,8 @@ patterns_lookup <- function(dates,
 
   # Warn about new dates
   if (!silent) {
-    if (max(dates) > lubridate::ymd('2021-03-21')) {
-      warning('This function has been tested to match the SafeGraph file structure as of March 26, 2021. Any file structure changes since then could make your result wrong.')
+    if (max(dates) > lubridate::ymd('2021-07-09')) {
+      warning('This function has been tested to match the SafeGraph file structure as of July 9, 2021. Any file structure changes since then could make your result wrong.')
     }
   }
 

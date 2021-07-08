@@ -6,7 +6,7 @@
 #'
 #' @param filename The filename of the \code{.csv.gz} file or the path to the file. Note that if \code{start_date} is not specified, \code{read_patterns} will attempt to get the start date from the first ten characters of the path. In "new format" filepaths ("2020/01/09/core-patterns-part-1.csv.gz"), nine days will be subtracted from the date found.
 #' @param dir The directory in which the file sits.
-#' @param by A character vector giving the variable names of the level to be collapsed to using \code{fun}. The resulting data will have X rows per unique combination of \code{by}, where X is 1 if no expand variables are specified, or the length of the expand variable if specified. Set to \code{NULL} to aggregate across all initial rows, or set to \code{FALSE} to not aggregate at all (this will also add an \code{initial_rowno} column showing the original row number). You can also avoid aggregating by doing \code{by = 'safegraph_place_id'} which might play more nicely with some of the other features..
+#' @param by A character vector giving the variable names of the level to be collapsed to using \code{fun}. The resulting data will have X rows per unique combination of \code{by}, where X is 1 if no expand variables are specified, or the length of the expand variable if specified. Set to \code{NULL} to aggregate across all initial rows, or set to \code{FALSE} to not aggregate at all (this will also add an \code{initial_rowno} column showing the original row number). You can also avoid aggregating by doing \code{by = 'placekey'} which might play more nicely with some of the other features..
 #' @param fun Function to use to aggregate the expanded variable to the \code{by} level.
 #' @param filter A character string describing a logical statement for filtering the data, for example \code{filter = 'state_fips == 6'} would give you only data from California. Will be used as an \code{i} argument in a \code{data.table}, see \code{help(data.table)}. Filtering here instead of afterwards can cut down on time and memory demands.
 #' @param na.rm Whether to remove any missing values of the expanded variable before aggregating. Does not remove missing values of the \code{by} variables. May not be necessary if \code{fun} handles \code{NA}s on its own.
@@ -14,7 +14,7 @@
 #' @param expand_cat A JSON variable in categorical format ({A: 2, B: 3, etc.}) to be expanded into rows.  Ignored if \code{expand_int} is specified.
 #' @param expand_name The name of the new variable to be created with the category index for the expanded variable.
 #' @param multi A list of lists, for the purposes of creating a list of multiple processed files. This will vastly speed up processing over doing each of them one at a time. Each named list has the entry \code{name} as well as any of the options \code{by, fun, filter, expand_int, expand_cat, expand_name} as specified above. If specified, will override other entries of \code{by}, etc..
-#' @param naics_link A \code{data.table}, possibly produced by \code{link_poi_naics}, that links \code{safegraph_place_id} and \code{naics_code}. This will allow you to include \code{'naics_code'} in the \code{by} argument. Technically you could have stuff other than \code{naics_code} in here and use that in \code{by} too, I won't stop ya.
+#' @param naics_link A \code{data.table}, possibly produced by \code{link_poi_naics}, that links \code{placekey} and \code{naics_code}. This will allow you to include \code{'naics_code'} in the \code{by} argument. Technically you could have stuff other than \code{naics_code} in here and use that in \code{by} too, I won't stop ya.
 #' @param select Character vector of variables to get from the file. Set to \code{NULL} to get all variables. **Specifying select is very much recommended, and will speed up the function a lot.**
 #' @param gen_fips Set to \code{TRUE} to use the \code{poi_cbg} variable to generate \code{state_fips} and \code{county_fips} variables. This will also result in \code{poi_cbg} being converted to character.
 #' @param start_date The first date in the file, as a date object. If omitted, will assume that the filename begins YYYY-MM-DD.
@@ -59,9 +59,9 @@ read_patterns <- function(filename,dir = '.',by = NULL, fun = function(x) sum(x,
     select <- union(select,'poi_cbg')
   }
 
-  # To do naics_link you need safegraph_place_id
+  # To do naics_link you need placekey
   if (!is.null(naics_link) & !is.null(select)) {
-    select <- union(select,'safegraph_place_id')
+    select <- union(select,'placekey')
   }
 
   # Read in data
@@ -72,7 +72,7 @@ read_patterns <- function(filename,dir = '.',by = NULL, fun = function(x) sum(x,
   }
 
   if (!is.null(naics_link)) {
-    patterns <- merge(patterns,naics_link,all.x=TRUE,by='safegraph_place_id')
+    patterns <- merge(patterns,naics_link,all.x=TRUE,by='placekey')
   }
 
   # Get state and county fips
@@ -149,6 +149,10 @@ read_patterns <- function(filename,dir = '.',by = NULL, fun = function(x) sum(x,
       patternsb <- patterns
     } else {
       patternsb <- patterns[eval(parse(text=filter))]
+      if (nrow(patternsb) == 0) {
+        warning(paste0('After applying filter, no observations left in ',filename))
+        return(data.table::data.table())
+      }
     }
 
 
