@@ -57,7 +57,7 @@ growth_over_time(
 
 \item{filter}{A character variable describing a subset of the data to include, for example \code{filter = 'state_fips == 6'} to only include California, or \code{brands == 'McDonald\'s'} to only include McDonald's. See the variable names in the [patterns documentation](http://docs.safegraph.com), and in addition you may use \code{state_fips} and/or \code{county_fips} for state and county FIPS codes.}
 
-\item{naics_link}{Necessary only to \code{filter} or \code{by} on a NAICS code. A \code{data.table}, possibly produced by \code{link_poi_naics}, that links \code{safegraph_place_id} and \code{naics_code}. This will allow you to include \code{'naics_code'} in the \code{by} argument. Technically you could have stuff other than \code{naics_code} in here and use that in \code{by} too, I won't stop ya.}
+\item{naics_link}{Necessary only to \code{filter} or \code{by} on a NAICS code. A \code{data.table}, possibly produced by \code{link_poi_naics}, that links \code{placekey} and \code{naics_code}. This will allow you to include \code{'naics_code'} in the \code{by} argument. Technically you could have stuff other than \code{naics_code} in here and use that in \code{by} too, I won't stop ya.}
 
 \item{origin}{The value indicating no growth/initial value. The first date for each group will have this value. Usually 0 (for "0 percent growth") or 1 ("100 percent of initial value").}
 

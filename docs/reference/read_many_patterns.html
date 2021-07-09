@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SafeGraphR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.1</span>
       </span>
     </div>
 
@@ -141,7 +141,7 @@
   recursive <span class='op'>=</span> <span class='cn'>TRUE</span>,
   filelist <span class='op'>=</span> <span class='cn'>NULL</span>,
   start_date <span class='op'>=</span> <span class='cn'>NULL</span>,
-  post_by <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  post_by <span class='op'>=</span> <span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/NULL.html'>is.null</a></span><span class='op'>(</span><span class='va'>by</span><span class='op'>)</span>,
   by <span class='op'>=</span> <span class='cn'>NULL</span>,
   fun <span class='op'>=</span> <span class='va'>sum</span>,
   na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>,
@@ -178,7 +178,7 @@
     </tr>
     <tr>
       <th>post_by</th>
-      <td><p>After reading in all the files, re-perform aggregation to this level. Use a character vector of variable names (or a list of vectors if using <code>multi</code>). Or just set to <code>TRUE</code> to have <code>post_by = by</code> plus, if present, <code>expand_name</code> or <code>'date'</code>. Set to <code>FALSE</code> to skip re-aggregation. Including <code>'start_date'</code> in both <code>by</code> and <code>post_by</code> is a good idea if you aren't using an approach that creates a <code>date</code> variable.</p></td>
+      <td><p>After reading in all the files, re-perform aggregation to this level. Use a character vector of variable names (or a list of vectors if using <code>multi</code>). Or just set to <code>TRUE</code> to have <code>post_by = by</code> plus, if present, <code>expand_name</code> or <code>'date'</code>. Set to <code>FALSE</code> to skip re-aggregation. Including <code>'start_date'</code> in both <code>by</code> and <code>post_by</code> is a good idea if you aren't using an approach that creates a <code>date</code> variable. By default this is <code>TRUE</code> unless <code>by = NULL</code> (if <code>by = NULL</code> in a <code>multi</code> option, it will still be <code>TRUE</code> by default for that).</p></td>
     </tr>
     <tr>
       <th>by, fun, na.rm, filter, expand_int, expand_cat, expand_name, multi, naics_link, select, gen_fips, silent, ...</th>

@@ -27,7 +27,7 @@ link_poi_naics(
 Feed this function the most recent Core Places file, and it will give you back a \code{data.table} with two columns: \code{safegraph_place_id} and \code{naics_code}. Saving this file is recommended. Then, provide this object to \code{read_shop} or \code{read_many_shop} so that you can use \code{'naics_code'} in the \code{by} argument.
 }
 \details{
-This function is DEPRECATED. It only works with the OLD Core files, and is superseded by the more flexible \code{read_core()} function.
+This function is DEPRECATED. It only works with the OLD Core files (and thus the continued usage of \code{safegraph_place_id} instead of \code{placekey}), and is superseded by the more flexible \code{read_core()} function.
 }
 \examples{
 

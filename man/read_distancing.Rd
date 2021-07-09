@@ -38,6 +38,8 @@ read_distancing(
 Takes a folder of stay-at-home Safegraph data structured how it comes from AWS (i.e. folders 2020/04/03 for April 3 2020) and reads them in.
 }
 \details{
+The stay-at-home data is no longer being updated as of April 19, 2021. This function should still work for the old data though.
+
 Note that after reading in data, if \code{gen_fips = TRUE}, state and county names can be merged in using \code{data(fips_to_names)}.
 }
 \examples{

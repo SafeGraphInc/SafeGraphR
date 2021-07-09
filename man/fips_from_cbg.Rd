@@ -2,7 +2,7 @@
 % Please edit documentation in R/helpers.R
 \name{fips_from_cbg}
 \alias{fips_from_cbg}
-\title{Pull state and county FIPS from CBG code}
+\title{Pull state and county FIPS (US) or province and census division (CA) from CBG code}
 \usage{
 fips_from_cbg(cbg, return = "both")
 }
@@ -15,7 +15,11 @@ fips_from_cbg(cbg, return = "both")
 This function takes a CBG code (as numeric or string) and returns the state and county FIPS codes associated with it.
 }
 \details{
-Why a list and not a vector? For \code{data.table} usage.
+The syntax for this function was developed before the Canadian data was introduced, so it is definitely US-first, down to the function name, with Canadian additions tacked on. Sorry neighbors to the North. Canadian province ("state") and census division ("county") identifiers will be preceded with \code{"CA:"} as in the SafeGraph \code{cbg} variable.
+
+This function now returns character values rather than numeric, to account for the Canadian data.
+
+Why does this produce a list and not a vector? For \code{data.table} usage.
 }
 \examples{
 

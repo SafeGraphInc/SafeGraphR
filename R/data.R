@@ -1,6 +1,6 @@
 #' Unweighted Population by Census Block Group
 #'
-#' A dataset containing the unweighted population by Census Block Group from the Open Census file. Use with \code{fips_from_cbg} to get state and county FIPS codes from the CBG ID.
+#' A dataset containing the unweighted population by Census Block Group from the Open Census file (US Only). Use with \code{fips_from_cbg} to get state and county FIPS codes from the CBG ID.
 #'
 #' @format A \code{data.table} with 220333 rows and 2 variables:
 #' \describe{
@@ -12,43 +12,75 @@
 
 #' Unweighted Population by County
 #'
-#' A dataset containing the unweighted population by county from the Open Census file. Merge with \code{data(fips_to_names)} to name the states and counties.
+#' A dataset containing the unweighted population by county from the Open Census file (US only). See \code{canada_cd_pop} for Canadian county population. Merge with \code{data(fips_to_names)} to name the states and counties.
 #'
 #' @format A \code{data.table} with 3220 rows and 3 variables:
 #' \describe{
 #'   \item{unweighted_pop}{Population from the 2016 American Community Survey (the "unweighted" part is outdated but kept for consistency with old code).}
-#'   \item{state_fips}{State FIPS code for the census block group}
-#'   \item{county_fips}{County FIPS code for the census block group}
+#'   \item{state_fips}{State FIPS code for the county}
+#'   \item{county_fips}{County FIPS code for the county}
 #' }
 #' @source \url{https://docs.safegraph.com/docs/open-census-data}
 "county_pop"
 
+#' Canadian Census District Populations
+#'
+#' Population by census district (with \code{state_fips} and \code{county_fips} identifiers to link with other data sets in the package - sorry for the naming, Canadians). The "unweighted" in the variable name \code{unweighted_pop} doesn't refer to anything specific in the Canadian census, but is so you can easily \code{rbind} this with \code{county_pop}.
+#'
+#' This comes from the Canadian census directly instead of SafeGraph.
+#'
+#' @format A \code{data.table} with 293 rows and 3 variables:
+#' \describe{
+#'   \item{unweighted_pop}{Population from the 2016 Canadian census.}
+#'   \item{state_fips}{Province SGC for the county}
+#'   \item{county_fips}{Census division code}
+#' }
+#' @source \url{https://www12.statcan.gc.ca/census-recensement/2016/dp-pd/hlt-fst/pd-pl/Tables/CompFile.cfm?Lang=Eng&T=701&OFT=FULLCSV}
+"canada_cd_pop"
+
 #' State and county names by FIPS codes
 #'
-#' A dataset that links state and county FIPS codes (as numeric values) to the names of those states and counties
+#' A dataset that links state and county FIPS codes in the US (as character values) and province and census division codes (Canada) to the names of those states/provinces and counties/census divisions. This data predates the inclusion of Canada in SafeGraph, thus the US-centric naming.
 #'
 #' @format A \code{data.table} with 3142 rows and 4 variables:
 #' \describe{
-#'   \item{state_fips}{State FIPS code}
-#'   \item{county_fips}{County FIPS code}
-#'   \item{statename}{The full name of the state}
-#'   \item{countyname}{The full name of the county, including "County"}
+#'   \item{state_fips}{State FIPS code / Canadian SGC code}
+#'   \item{county_fips}{County FIPS code / Canadian Census division}
+#'   \item{statename}{The full name of the state / province}
+#'   \item{countyname}{The full English name of the county / census division, including "County" for US entries. Merge with \code{canada_cd_types} to get the equivalent division type for Canada and French names.}
+#'   \item{iso_country_code}{Indicator for US or Canada}
 #' }
 #' @source \url{US Census}
 "fips_to_names"
+
+#' Additional census division information for Canada
+#'
+#' A dataset that can be merged with \code{fips_to_names} with information on French names for locations as well as the type of census division it is.
+#'
+#' \describe{
+#'   \item{state_fips}{Canadian SGC code}
+#'   \item{county_fips}{Canadian Census division}
+#'   \item{countyname_french}{Census division name in French}
+#'   \item{cd_type}{Census district type in English}
+#'   \item{cd_type_french}{Census district type in French}
+#' }
+"canada_cd_types"
 
 #' State Information
 #'
 #' A dataset that links state (and Washington DC) names, FIPs codes, two-letter abbreviations (called "region" because this is what it is called in SafeGraph files that use it), and Census regions. Can be merged with \code{fips_to_names} using \code{state_fips} and \code{statename}.
 #'
-#' Note that this is a data set purely of *states* and DC. Some SafeGraph files contain information on \code{region} values of \code{GU} (Guam), \code{PR} (Puerto Rico), etc., but those will be lost if merging with \code{state_info}.
+#' This also includes Canadian data on provinces.
+#'
+#' Note that this is a data set purely of Canadian provinces, US *states*, and DC. Some SafeGraph files contain information on \code{region} values of \code{GU} (Guam), \code{PR} (Puerto Rico), etc., but those will be lost if merging with \code{state_info}.
 #'
 #' @format A \code{data.table} with 51 rows and 4 variables:
 #' \describe{
-#'   \item{statename}{The full name of the state}
-#'   \item{CensusRegion}{The four broad Census regions}
-#'   \item{region}{The state's two-digit abbreviation}
-#'   \item{state_fips}{State FIPS code}
+#'   \item{statename}{The full name of the state / province}
+#'   \item{CensusRegion}{The broad Census regions}
+#'   \item{region}{The state's two-digit abbreviation / the province's international alpha code}
+#'   \item{state_fips}{State FIPS code / Canadian SGC code}
+#'   \item{iso_country_code}{Indicator for US or Canada}
 #' }
 #' @source \url{US Census}
 "state_info"

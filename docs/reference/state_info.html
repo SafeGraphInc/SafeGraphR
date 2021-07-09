@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SafeGraphR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.1</span>
       </span>
     </div>
 
@@ -142,10 +142,11 @@
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
     <p>A <code>data.table</code> with 51 rows and 4 variables:</p><dl>
-  <dt>statename</dt><dd><p>The full name of the state</p></dd>
-  <dt>CensusRegion</dt><dd><p>The four broad Census regions</p></dd>
-  <dt>region</dt><dd><p>The state's two-digit abbreviation</p></dd>
-  <dt>state_fips</dt><dd><p>State FIPS code</p></dd>
+  <dt>statename</dt><dd><p>The full name of the state / province</p></dd>
+  <dt>CensusRegion</dt><dd><p>The broad Census regions</p></dd>
+  <dt>region</dt><dd><p>The state's two-digit abbreviation / the province's international alpha code</p></dd>
+  <dt>state_fips</dt><dd><p>State FIPS code / Canadian SGC code</p></dd>
+  <dt>iso_country_code</dt><dd><p>Indicator for US or Canada</p></dd>
 
 </dl>
 
@@ -154,7 +155,8 @@
     <p><a href='US Census'>US Census</a></p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Note that this is a data set purely of *states* and DC. Some SafeGraph files contain information on <code>region</code> values of <code>GU</code> (Guam), <code>PR</code> (Puerto Rico), etc., but those will be lost if merging with <code>state_info</code>.</p>
+    <p>This also includes Canadian data on provinces.</p>
+<p>Note that this is a data set purely of Canadian provinces, US *states*, and DC. Some SafeGraph files contain information on <code>region</code> values of <code>GU</code> (Guam), <code>PR</code> (Puerto Rico), etc., but those will be lost if merging with <code>state_info</code>.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SafeGraphR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.1</span>
       </span>
     </div>
 
@@ -140,6 +140,23 @@
 <li>Added the ability to download the appropriate patterns files in <code>read_many_patterns</code>, and automated post-read re-aggregation.</li>
 <li>Added (and integrated) the <code><a href="../reference/patterns_lookup.html">patterns_lookup()</a></code> function, which shows the proper weekly files to look in for data on a particular date, and also can download those files.</li>
 <li>Added the suite of “Volume Over Time” functions which can download, process, and graph <code>visits_by_day</code> weekly patterns data.</li>
+</ul>
+</div>
+    <div id="safegraphr-040" class="section level1">
+<h1 class="page-header" data-toc-text="0.4.0">
+<a href="#safegraphr-040" class="anchor"></a>SafeGraphR 0.4.0</h1>
+<ul>
+<li>Switched reliance on <code>safegraph_place_id</code> to <code>placekey</code> since new files will no longer contain <code>safegraph_place_id</code>
+</li>
+<li>Fixed an issue in <code><a href="../reference/read_many_patterns.html">read_many_patterns()</a></code> where it would error if <code>filter</code> left zero observations in some subfiles</li>
+</ul>
+</div>
+    <div id="safegraphr-041" class="section level1">
+<h1 class="page-header" data-toc-text="0.4.1">
+<a href="#safegraphr-041" class="anchor"></a>SafeGraphR 0.4.1</h1>
+<ul>
+<li>Added considerable support for Canadian data, including place names in <code>state_info</code>, <code>fips_to_names</code>, <code>canada_cd_pop</code>, and <code>canada_cd_types</code>.</li>
+<li>Also changed <code>fips_to_cbg</code> to support Canada, and as a result the output is now character rather than numeric.</li>
 </ul>
 </div>
   </div>

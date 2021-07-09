@@ -7,10 +7,11 @@
 \format{
 A \code{data.table} with 51 rows and 4 variables:
 \describe{
-  \item{statename}{The full name of the state}
-  \item{CensusRegion}{The four broad Census regions}
-  \item{region}{The state's two-digit abbreviation}
-  \item{state_fips}{State FIPS code}
+  \item{statename}{The full name of the state / province}
+  \item{CensusRegion}{The broad Census regions}
+  \item{region}{The state's two-digit abbreviation / the province's international alpha code}
+  \item{state_fips}{State FIPS code / Canadian SGC code}
+  \item{iso_country_code}{Indicator for US or Canada}
 }
 }
 \source{
@@ -23,6 +24,8 @@ state_info
 A dataset that links state (and Washington DC) names, FIPs codes, two-letter abbreviations (called "region" because this is what it is called in SafeGraph files that use it), and Census regions. Can be merged with \code{fips_to_names} using \code{state_fips} and \code{statename}.
 }
 \details{
-Note that this is a data set purely of *states* and DC. Some SafeGraph files contain information on \code{region} values of \code{GU} (Guam), \code{PR} (Puerto Rico), etc., but those will be lost if merging with \code{state_info}.
+This also includes Canadian data on provinces.
+
+Note that this is a data set purely of Canadian provinces, US *states*, and DC. Some SafeGraph files contain information on \code{region} values of \code{GU} (Guam), \code{PR} (Puerto Rico), etc., but those will be lost if merging with \code{state_info}.
 }
 \keyword{datasets}

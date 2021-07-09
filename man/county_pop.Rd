@@ -8,8 +8,8 @@
 A \code{data.table} with 3220 rows and 3 variables:
 \describe{
   \item{unweighted_pop}{Population from the 2016 American Community Survey (the "unweighted" part is outdated but kept for consistency with old code).}
-  \item{state_fips}{State FIPS code for the census block group}
-  \item{county_fips}{County FIPS code for the census block group}
+  \item{state_fips}{State FIPS code for the county}
+  \item{county_fips}{County FIPS code for the county}
 }
 }
 \source{
@@ -19,6 +19,6 @@ A \code{data.table} with 3220 rows and 3 variables:
 county_pop
 }
 \description{
-A dataset containing the unweighted population by county from the Open Census file. Merge with \code{data(fips_to_names)} to name the states and counties.
+A dataset containing the unweighted population by county from the Open Census file (US only). See \code{canada_cd_pop} for Canadian county population. Merge with \code{data(fips_to_names)} to name the states and counties.
 }
 \keyword{datasets}

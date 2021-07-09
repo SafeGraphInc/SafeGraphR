@@ -9,7 +9,7 @@ read_many_patterns(
   recursive = TRUE,
   filelist = NULL,
   start_date = NULL,
-  post_by = TRUE,
+  post_by = !is.null(by),
   by = NULL,
   fun = sum,
   na.rm = TRUE,
@@ -34,7 +34,7 @@ read_many_patterns(
 
 \item{start_date}{A vector of dates giving the first date present in each zip file, to be passed to \code{read_patterns} giving the first date present in the file, as a date object. Unlike in \code{read_patterns}, this value will be added to the data as a variable called \code{start_date} so you can use it in \code{post_by}.}
 
-\item{post_by}{After reading in all the files, re-perform aggregation to this level. Use a character vector of variable names (or a list of vectors if using \code{multi}). Or just set to \code{TRUE} to have \code{post_by = by} plus, if present, \code{expand_name} or \code{'date'}. Set to \code{FALSE} to skip re-aggregation. Including \code{'start_date'} in both \code{by} and \code{post_by} is a good idea if you aren't using an approach that creates a \code{date} variable.}
+\item{post_by}{After reading in all the files, re-perform aggregation to this level. Use a character vector of variable names (or a list of vectors if using \code{multi}). Or just set to \code{TRUE} to have \code{post_by = by} plus, if present, \code{expand_name} or \code{'date'}. Set to \code{FALSE} to skip re-aggregation. Including \code{'start_date'} in both \code{by} and \code{post_by} is a good idea if you aren't using an approach that creates a \code{date} variable. By default this is \code{TRUE} unless \code{by = NULL} (if \code{by = NULL} in a \code{multi} option, it will still be \code{TRUE} by default for that).}
 
 \item{by, fun, na.rm, filter, expand_int, expand_cat, expand_name, multi, naics_link, select, gen_fips, silent, ...}{Arguments to be passed to \code{read_patterns}, specified as in \code{help(read_patterns)}.}
 }

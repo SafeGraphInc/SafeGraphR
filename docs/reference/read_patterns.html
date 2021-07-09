@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SafeGraphR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.1</span>
       </span>
     </div>
 
@@ -168,7 +168,7 @@
     </tr>
     <tr>
       <th>by</th>
-      <td><p>A character vector giving the variable names of the level to be collapsed to using <code>fun</code>. The resulting data will have X rows per unique combination of <code>by</code>, where X is 1 if no expand variables are specified, or the length of the expand variable if specified. Set to <code>NULL</code> to aggregate across all initial rows, or set to <code>FALSE</code> to not aggregate at all (this will also add an <code>initial_rowno</code> column showing the original row number). You can also avoid aggregating by doing <code>by = 'safegraph_place_id'</code> which might play more nicely with some of the other features..</p></td>
+      <td><p>A character vector giving the variable names of the level to be collapsed to using <code>fun</code>. The resulting data will have X rows per unique combination of <code>by</code>, where X is 1 if no expand variables are specified, or the length of the expand variable if specified. Set to <code>NULL</code> to aggregate across all initial rows, or set to <code>FALSE</code> to not aggregate at all (this will also add an <code>initial_rowno</code> column showing the original row number). You can also avoid aggregating by doing <code>by = 'placekey'</code> which might play more nicely with some of the other features..</p></td>
     </tr>
     <tr>
       <th>fun</th>
@@ -200,7 +200,7 @@
     </tr>
     <tr>
       <th>naics_link</th>
-      <td><p>A <code>data.table</code>, possibly produced by <code>link_poi_naics</code>, that links <code>safegraph_place_id</code> and <code>naics_code</code>. This will allow you to include <code>'naics_code'</code> in the <code>by</code> argument. Technically you could have stuff other than <code>naics_code</code> in here and use that in <code>by</code> too, I won't stop ya.</p></td>
+      <td><p>A <code>data.table</code>, possibly produced by <code>link_poi_naics</code>, that links <code>placekey</code> and <code>naics_code</code>. This will allow you to include <code>'naics_code'</code> in the <code>by</code> argument. Technically you could have stuff other than <code>naics_code</code> in here and use that in <code>by</code> too, I won't stop ya.</p></td>
     </tr>
     <tr>
       <th>select</th>

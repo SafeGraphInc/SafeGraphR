@@ -1,4 +1,4 @@
-pandoc: 2.10.1
+pandoc: '2.13'
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
@@ -6,5 +6,5 @@ articles:
   distancing_vignette: distancing_vignette.html
   patterns_vignette: patterns_vignette.html
   SafeGraphR: SafeGraphR.html
-last_built: 2020-12-30T06:44Z
+last_built: 2021-07-09T18:06Z
 

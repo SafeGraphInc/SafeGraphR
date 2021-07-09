@@ -1,8 +1,12 @@
-#' Pull state and county FIPS from CBG code
+#' Pull state and county FIPS (US) or province and census division (CA) from CBG code
 #'
 #' This function takes a CBG code (as numeric or string) and returns the state and county FIPS codes associated with it.
 #'
-#' Why a list and not a vector? For \code{data.table} usage.
+#' The syntax for this function was developed before the Canadian data was introduced, so it is definitely US-first, down to the function name, with Canadian additions tacked on. Sorry neighbors to the North. Canadian province ("state") and census division ("county") identifiers will be preceded with \code{"CA:"} as in the SafeGraph \code{cbg} variable.
+#'
+#' This function now returns character values rather than numeric, to account for the Canadian data.
+#'
+#' Why does this produce a list and not a vector? For \code{data.table} usage.
 #'
 #' @param cbg CBG code, in numeric or string form. To aid speed since this function is called millions of times, \code{cbg} is not checked to ensure it is a valid CBG identifier.
 #' @param return Set to 'state' to get back only state FIPS, 'county' for only county, or 'both' for a list of both (state then county).
@@ -21,12 +25,18 @@ fips_from_cbg <- function(cbg,return='both') {
   # work with string because we use nchar
   cbg <- as.character(cbg)
 
-  # length of cbg string depends on whether it's a one-digit state fips or two
-  onedigitfips <- (nchar(cbg) == 11)
+  # Canada vs the US
+  if (stringr::str_sub(cbg, 1, 3) == 'CA:') {
+    state <- stringr::str_sub(cbg,1,5)
+    county <- paste0('CA:',stringr::str_sub(cbg,6,7))
+  } else {
+    # length of cbg string depends on whether it's a one-digit state fips or two
+    onedigitfips <- (nchar(cbg) == 11)
 
-  state <- as.numeric(stringr::str_sub(cbg,1,2 - onedigitfips))
-  county <- as.numeric(stringr::str_sub(cbg,3 - onedigitfips,
-                             5 - onedigitfips))
+    state <- stringr::str_sub(cbg,1,2 - onedigitfips)
+    county <- stringr::str_sub(cbg,3 - onedigitfips,
+                               5 - onedigitfips)
+  }
 
   if (return == 'both') {
     return(list(state,county))

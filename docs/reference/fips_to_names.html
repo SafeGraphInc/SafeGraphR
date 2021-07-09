@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="State and county names by FIPS codes — fips_to_names" />
-<meta property="og:description" content="A dataset that links state and county FIPS codes (as numeric values) to the names of those states and counties" />
+<meta property="og:description" content="A dataset that links state and county FIPS codes in the US (as character values) and province and census division codes (Canada) to the names of those states/provinces and counties/census divisions. This data predates the inclusion of Canada in SafeGraph, thus the US-centric naming." />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SafeGraphR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.1</span>
       </span>
     </div>
 
@@ -133,7 +133,7 @@
     </div>
 
     <div class="ref-description">
-    <p>A dataset that links state and county FIPS codes (as numeric values) to the names of those states and counties</p>
+    <p>A dataset that links state and county FIPS codes in the US (as character values) and province and census division codes (Canada) to the names of those states/provinces and counties/census divisions. This data predates the inclusion of Canada in SafeGraph, thus the US-centric naming.</p>
     </div>
 
     <pre class="usage"><span class='va'>fips_to_names</span></pre>
@@ -142,10 +142,11 @@
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
     <p>A <code>data.table</code> with 3142 rows and 4 variables:</p><dl>
-  <dt>state_fips</dt><dd><p>State FIPS code</p></dd>
-  <dt>county_fips</dt><dd><p>County FIPS code</p></dd>
-  <dt>statename</dt><dd><p>The full name of the state</p></dd>
-  <dt>countyname</dt><dd><p>The full name of the county, including "County"</p></dd>
+  <dt>state_fips</dt><dd><p>State FIPS code / Canadian SGC code</p></dd>
+  <dt>county_fips</dt><dd><p>County FIPS code / Canadian Census division</p></dd>
+  <dt>statename</dt><dd><p>The full name of the state / province</p></dd>
+  <dt>countyname</dt><dd><p>The full English name of the county / census division, including "County" for US entries. Merge with <code>canada_cd_types</code> to get the equivalent division type for Canada and French names.</p></dd>
+  <dt>iso_country_code</dt><dd><p>Indicator for US or Canada</p></dd>
 
 </dl>
 

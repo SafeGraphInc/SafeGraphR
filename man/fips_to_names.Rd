@@ -7,10 +7,11 @@
 \format{
 A \code{data.table} with 3142 rows and 4 variables:
 \describe{
-  \item{state_fips}{State FIPS code}
-  \item{county_fips}{County FIPS code}
-  \item{statename}{The full name of the state}
-  \item{countyname}{The full name of the county, including "County"}
+  \item{state_fips}{State FIPS code / Canadian SGC code}
+  \item{county_fips}{County FIPS code / Canadian Census division}
+  \item{statename}{The full name of the state / province}
+  \item{countyname}{The full English name of the county / census division, including "County" for US entries. Merge with \code{canada_cd_types} to get the equivalent division type for Canada and French names.}
+  \item{iso_country_code}{Indicator for US or Canada}
 }
 }
 \source{
@@ -20,6 +21,6 @@ A \code{data.table} with 3142 rows and 4 variables:
 fips_to_names
 }
 \description{
-A dataset that links state and county FIPS codes (as numeric values) to the names of those states and counties
+A dataset that links state and county FIPS codes in the US (as character values) and province and census division codes (Canada) to the names of those states/provinces and counties/census divisions. This data predates the inclusion of Canada in SafeGraph, thus the US-centric naming.
 }
 \keyword{datasets}

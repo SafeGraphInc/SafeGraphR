@@ -18,6 +18,6 @@ A \code{data.table} with 220333 rows and 2 variables:
 cbg_pop
 }
 \description{
-A dataset containing the unweighted population by Census Block Group from the Open Census file. Use with \code{fips_from_cbg} to get state and county FIPS codes from the CBG ID.
+A dataset containing the unweighted population by Census Block Group from the Open Census file (US Only). Use with \code{fips_from_cbg} to get state and county FIPS codes from the CBG ID.
 }
 \keyword{datasets}
