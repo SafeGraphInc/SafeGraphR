@@ -26,17 +26,16 @@ fips_from_cbg <- function(cbg,return='both') {
   cbg <- as.character(cbg)
 
   # Canada vs the US
-  if (stringr::str_sub(cbg, 1, 3) == 'CA:') {
-    state <- stringr::str_sub(cbg,1,5)
-    county <- paste0('CA:',stringr::str_sub(cbg,6,7))
-  } else {
-    # length of cbg string depends on whether it's a one-digit state fips or two
-    onedigitfips <- (nchar(cbg) == 11)
+  # in US length of cbg string depends on whether it's a one-digit state fips or two
+  onedigitfips <- (nchar(cbg) == 11)
 
-    state <- stringr::str_sub(cbg,1,2 - onedigitfips)
-    county <- stringr::str_sub(cbg,3 - onedigitfips,
-                               5 - onedigitfips)
-  }
+  state <- data.table::fifelse(stringr::str_sub(cbg, 1, 3) == 'CA:',
+                               stringr::str_sub(cbg,1,5),
+                               stringr::str_sub(cbg,1,2 - onedigitfips))
+  county <- data.table::fifelse(stringr::str_sub(cbg, 1, 3) == 'CA:',
+                                paste0('CA:',stringr::str_sub(cbg,6,7)),
+                                stringr::str_sub(cbg,3 - onedigitfips,
+                                                 5 - onedigitfips))
 
   if (return == 'both') {
     return(list(state,county))
