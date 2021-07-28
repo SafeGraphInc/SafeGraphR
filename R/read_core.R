@@ -63,7 +63,7 @@ read_core <- function(dir = 'core_poi/',
       }
 
       try(safegraph_aws(paste0(dir,year(current_date),'/',str_pad(month(current_date),2,"left","0"),'/'),
-          'core-new',
+          'core',
           prefix = paste0('core_poi/',year(current_date),'/',str_pad(month(current_date),2,"left","0"),'/'),
           key = key, secret = secret))
 
@@ -77,7 +77,7 @@ read_core <- function(dir = 'core_poi/',
         current_date <- current_date - lubridate::months(1)
 
         try(safegraph_aws(paste0(dir,year(current_date),'/',str_pad(month(current_date),2,"left","0"),'/'),
-              'core-new',
+              'core',
               prefix = paste0('core_poi/',year(current_date),'/',str_pad(month(current_date),2,"left","0"),'/'),
               key = key, secret = secret))
       }

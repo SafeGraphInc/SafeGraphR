@@ -39,7 +39,7 @@ patterns_lookup <- function(dates,
                             subfolder = "patterns",
                             silent = FALSE,
                             add_ma = 0,
-                            patterns_backfill_date = '2020/12/14/21/',
+                            patterns_backfill_date = '2021/07/15/15/',
                             key = NULL,
                             secret = NULL,
                             list_files = FALSE) {
@@ -76,7 +76,7 @@ patterns_lookup <- function(dates,
   # Warn about new dates
   if (!silent) {
     if (max(dates) > lubridate::ymd('2021-07-09')) {
-      warning('This function has been tested to match the SafeGraph file structure as of July 9, 2021. Any file structure changes since then could make your result wrong.')
+      warning('This function has been tested to match the SafeGraph file structure as of July 28, 2021. Any file structure changes since then could make your result wrong.')
     }
   }
 
@@ -92,8 +92,8 @@ patterns_lookup <- function(dates,
   }
 
   # Split the dates into new and old
-  old <- dates[dates <= lubridate::ymd('2020-12-06')]
-  new <- dates[dates >= lubridate::ymd('2020-12-07')]
+  old <- dates[dates <= lubridate::ymd('2021-07-11')]
+  new <- dates[dates >= lubridate::ymd('2021-07-12')]
 
   filelist <- c()
 
@@ -149,8 +149,6 @@ patterns_lookup <- function(dates,
     # Find the most recent wday = 2, which is the first day in the file
     # Then add 9 days to get to release date
     new_dt[, recent := date + lubridate::days(2 - lubridate::wday(date)) + lubridate::days(9)  - lubridate::days(7*(lubridate::wday(date) == 1))]
-    # This file was late
-    new_dt[recent == lubridate::ymd('2021-03-10'), recent := lubridate::ymd('2021-03-11')]
 
     # And filename
     new_dt[, filename := paste0(
@@ -165,7 +163,7 @@ patterns_lookup <- function(dates,
     if (!is.null(key) & !is.null(secret)) {
       for (fn in unique(new_dt$filename)) {
         safegraph_aws(new_dir,
-                      dataset = 'weekly-new',
+                      dataset = 'weekly',
                       key = key,
                       secret = secret,
                       prefix = stringr::str_sub(fn, nchar(new_dir)+1),

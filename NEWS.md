@@ -16,3 +16,7 @@
 
 * Added considerable support for Canadian data, including place names in `state_info`, `fips_to_names`, `canada_cd_pop`, and `canada_cd_types`.
 * Also changed `fips_to_cbg` to support Canada, and as a result the output is now character rather than numeric.
+
+# SafeGraphR 0.4.2
+
+* Updated buckets for `safegraph_aws()` (and `patterns_lookup` to match). NOTE THIS IS A BREAKING CHANGE. `safegraph_aws()` now only looks at the most updated versions of the data. Access to previous versions is discontinued, and you'll need to do it by hand using `aws.s3::s3sync`. There's no reason to use the old versions of the data anyway.
