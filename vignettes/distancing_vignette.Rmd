@@ -142,7 +142,7 @@ distancing[statename == 'New York' &
   directlabels::geom_dl(ggplot2::aes(x = date + .25), method = list('last.bumpup', cex = 1.1)) + 
   ggplot2::scale_y_continuous(labels = scales::percent) + 
   ggplot2::scale_x_date(limits = c(min(distancing$date),max(distancing$date) + 4)) +
-  ggplot2::guides(color = FALSE) +
+  ggplot2::guides(color = 'none') +
   ggplot2::theme_minimal() + 
   ggplot2::labs(x = "Date", y = "Proportion Staying Home", 
                 title = "SafeGraph: Stay-at-Home Rates in New York City") +

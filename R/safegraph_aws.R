@@ -9,7 +9,7 @@
 #' See catalog.safegraph.io for more description of the various buckets.
 #'
 #' @param path The local directory to synchronize.
-#' @param dataset The SafeGraph bucket to get from. Can be "weekly" (new method since July 2021), "weekly-backfill" (the new method for times before July 2021), "monthly" (method since July 2021; also contains backfill folders as \code{*_backfill/}), "neighborhood" (June 2021 and forward), "neighborhood-backfill" (May 2021 and previous), "distancing",  "core", "geo-supplement", or, to get the baseline bucket, "none".
+#' @param dataset The SafeGraph bucket to get from. Can be "weekly" (new method since July 2021), "weekly-backfill" (the new method for times before July 2021), "monthly" (method since July 2021; also contains backfill folders as \code{*_backfill/}), "neighborhood" (June 2021 and forward), "neighborhood-backfill" (May 2021 and previous), "distancing",  "core", "core-canada", "geo-supplement", or, to get the baseline bucket, "none".
 #' @param bucket_only Instead of doing an \code{aws.s3::s3sync} call, just return the correct bucket as a string. Then you can use that to do your own \code{aws.s3::s3sync} call, or work with the AWS CLI.
 #' @param base_url The base URL to pull the data from.
 #' @param key A character string containing an AWS Access Key ID.
@@ -57,6 +57,8 @@ safegraph_aws <- function(path = '.',
     buck <-  'geo-supplement/'
   } else if (dataset == 'core') {
     buck <- 'core-places-delivery/'
+  } else if (dataset == 'core-canada') {
+    buck <- 'core-places-canada/'
   } else if (dataset == 'neighborhood-backfill') {
     buck <- 'neighborhood-patterns/neighborhood-patterns/2021/07/07/release-2021-07-01/'
   } else if (dataset == 'neighborhood') {

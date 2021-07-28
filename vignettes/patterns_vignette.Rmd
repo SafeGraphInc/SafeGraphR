@@ -328,7 +328,7 @@ ggplot2::ggplot(pat_NY_NJ,
   ggplot2::labs(x = 'Date',
                 y = 'Change Since June 22',
                 title = 'SafeGraph: Change in Visits Since June 22, 2020') + 
-  ggplot2::guides(color = FALSE) +
+  ggplot2::guides(color = 'none') +
   directlabels::geom_dl(ggplot2::aes(x = date + .1, label = statename), 
                         method = list('last.bumpup', cex = 1.3)) + 
   ggplot2::scale_x_date(limits = c(min(pat_NY_NJ$date), max(pat_NY_NJ$date)+2)) + 
