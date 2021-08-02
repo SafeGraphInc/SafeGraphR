@@ -20,3 +20,7 @@
 # SafeGraphR 0.4.2
 
 * Updated buckets for `safegraph_aws()` (and `patterns_lookup` to match). NOTE THIS IS A BREAKING CHANGE. `safegraph_aws()` now only looks at the most updated versions of the data. Access to previous versions is discontinued, and you'll need to do it by hand using `aws.s3::s3sync`. There's no reason to use the old versions of the data anyway.
+
+# SafeGraphR 0.4.3
+
+* Changed data files to include leading zeroes for state and county FIPS

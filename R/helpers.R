@@ -31,11 +31,11 @@ fips_from_cbg <- function(cbg,return='both') {
 
   state <- data.table::fifelse(stringr::str_sub(cbg, 1, 3) == 'CA:',
                                stringr::str_sub(cbg,1,5),
-                               stringr::str_sub(cbg,1,2 - onedigitfips))
+                               stringr::str_pad(stringr::str_sub(cbg,1,2 - onedigitfips),2,'left','0'))
   county <- data.table::fifelse(stringr::str_sub(cbg, 1, 3) == 'CA:',
                                 paste0('CA:',stringr::str_sub(cbg,6,7)),
-                                stringr::str_sub(cbg,3 - onedigitfips,
-                                                 5 - onedigitfips))
+                                stringr::str_pad(stringr::str_sub(cbg,3 - onedigitfips,
+                                                 5 - onedigitfips),3,'left','0'))
 
   if (return == 'both') {
     return(list(state,county))
