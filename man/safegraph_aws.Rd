@@ -21,7 +21,7 @@ safegraph_aws(
 \arguments{
 \item{path}{The local directory to synchronize.}
 
-\item{dataset}{The SafeGraph bucket to get from. Can be "weekly" (OLD VERSION), "weekly-new" (new method since December 2020), "weekly-backfill" (the new method for times before December 2020), "monthly" (OLD VERSION, but also includes the backfill data for the new version), "monthly-backfill" (method since Dec 2020), "distancing", "core" (before Nov 2020), "core-new" (Nov 2020 or later), "geo-supplement", "neighborhood" or, to get the baseline bucket, "none". v2 versions always selected.}
+\item{dataset}{The SafeGraph bucket to get from. Can be "weekly" (new method since July 2021), "weekly-backfill" (the new method for times before July 2021), "monthly" (method since July 2021; also contains backfill folders as \code{*_backfill/}), "neighborhood" (June 2021 and forward), "neighborhood-backfill" (May 2021 and previous), "distancing",  "core", "core-canada", "geo-supplement", or, to get the baseline bucket, "none".}
 
 \item{bucket_only}{Instead of doing an \code{aws.s3::s3sync} call, just return the correct bucket as a string. Then you can use that to do your own \code{aws.s3::s3sync} call, or work with the AWS CLI.}
 
@@ -33,7 +33,7 @@ safegraph_aws(
 
 \item{region}{A character string containing the AWS region.}
 
-\item{prefix}{Leading part of the objects in the bucket must have this prefix. For example, to download social distancing data only from 2020, set this to "2020/".}
+\item{prefix}{Leading part of the objects in the bucket must have this prefix. For example, to download social distancing data only from 2020, set this to "2020/". Some of the backfill buckets can be tricky because folder structure also includes the release date. For example, for "weekly-backfill" if you want patterns data, you want "patterns_backfill/2021/07/15/15/" and THEN followed by the time period you want like "2021/". If you want backfill data from "monthly", for example patterns, it's "patterns_backfill/2021/07/15/16/", then followed by the year/month. The "neighborhood" buckets use "y=2021/m=06/" etc instead of "2021/06".}
 
 \item{prefix_is_dir}{If \code{FALSE}, the files matching \code{prefix} will be downloaded directly to \code{path}, which may not be desired behavior if \code{prefix} contains a directory (you probably want the directory structure to match!). Set to \code{TRUE} to, in effect, replace \code{path} with \code{paste0(path, prefix)} and so download files to the appropriate folder. Don't use if \code{prefix} also contains file characteristics like extension. This is \code{prefix_IS_dir}, not \code{prefix_CONTAINS_dir}.}
 
@@ -45,6 +45,8 @@ safegraph_aws(
 This is a thin wrapper for \code{aws.s3::s3sync} that will aim you at the right directory to synchronize.
 }
 \details{
+NOTE THE BREAKING CHANGE WITH SafeGraphR 0.4.2: BUCKET NAMES ARE CHANGED AND ACCESS TO OUTDATED VERSIONS OF DATA IS REMOVED.
+
 This function doesn't add too much, but it does make the default behavior you probably want a bit easier. If you plan to specify the \code{aws.s3::s3sync} "bucket" option yourself, this function is largely useless.
 
 See catalog.safegraph.io for more description of the various buckets.
@@ -54,7 +56,7 @@ See catalog.safegraph.io for more description of the various buckets.
 \dontrun{
 
 # Download all the recent weekly-patterns files to the working directory
-safegraph_aws(dataset = 'weekly-new', key = 'MYINFO', secret = 'MYOTHERINFO')
+safegraph_aws(dataset = 'weekly', key = 'MYINFO', secret = 'MYOTHERINFO')
 
 }
 
