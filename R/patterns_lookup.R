@@ -39,7 +39,7 @@ patterns_lookup <- function(dates,
                             subfolder = "patterns",
                             silent = FALSE,
                             add_ma = 0,
-                            patterns_backfill_date = '2021/07/15/15/',
+                            patterns_backfill_date = '2021/08/02/22/',
                             key = NULL,
                             secret = NULL,
                             list_files = FALSE) {
@@ -75,8 +75,8 @@ patterns_lookup <- function(dates,
 
   # Warn about new dates
   if (!silent) {
-    if (max(dates) > lubridate::ymd('2021-07-09')) {
-      warning('This function has been tested to match the SafeGraph file structure as of July 28, 2021. Any file structure changes since then could make your result wrong.')
+    if (max(dates) > lubridate::ymd('2021-08-01')) {
+      warning('This function has been tested to match the SafeGraph file structure for data up to/including August 1, 2021. Any file structure changes since then could make your result wrong.')
     }
   }
 

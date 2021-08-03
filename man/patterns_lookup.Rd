@@ -12,7 +12,7 @@ patterns_lookup(
   subfolder = "patterns",
   silent = FALSE,
   add_ma = 0,
-  patterns_backfill_date = "2021/07/15/15/",
+  patterns_backfill_date = "2021/08/02/22/",
   key = NULL,
   secret = NULL,
   list_files = FALSE

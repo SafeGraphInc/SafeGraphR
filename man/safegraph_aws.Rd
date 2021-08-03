@@ -21,7 +21,7 @@ safegraph_aws(
 \arguments{
 \item{path}{The local directory to synchronize.}
 
-\item{dataset}{The SafeGraph bucket to get from. Can be "weekly" (new method since July 2021), "weekly-backfill" (the new method for times before July 2021), "monthly" (method since July 2021; also contains backfill folders as \code{*_backfill/}), "neighborhood" (June 2021 and forward), "neighborhood-backfill" (May 2021 and previous), "distancing",  "core", "core-canada", "geo-supplement", or, to get the baseline bucket, "none".}
+\item{dataset}{The SafeGraph bucket to get from. Can be "weekly" (new method since July 2021), "weekly-backfill" (the new method for times before July 2021; note AS OF AUGUST 2021 this gives the same result as "weekly" but I've kept "weekly-backfill" here in case it switches back to being different later), "monthly" (method since July 2021; also contains backfill folders as \code{*_backfill/}), "neighborhood" (June 2021 and forward), "neighborhood-backfill" (May 2021 and previous), "distancing",  "core", "core-canada", "geo-supplement", or, to get the baseline bucket, "none".}
 
 \item{bucket_only}{Instead of doing an \code{aws.s3::s3sync} call, just return the correct bucket as a string. Then you can use that to do your own \code{aws.s3::s3sync} call, or work with the AWS CLI.}
 

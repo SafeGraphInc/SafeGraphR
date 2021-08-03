@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SafeGraphR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.4</span>
       </span>
     </div>
 
@@ -125,11 +125,11 @@
 
 <span class="va">pat_NY_NJ</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span>visits_by_day <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">visits_by_day</span><span class="op">)</span><span class="op">)</span>, by <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">date</span>, <span class="va">state_fips</span>, <span class="va">county_fips</span><span class="op">)</span><span class="op">]</span>
 <span class="co">#&gt;            date state_fips county_fips visits_by_day</span>
-<span class="co">#&gt;   1: 2020-06-22         34           1         23878</span>
-<span class="co">#&gt;   2: 2020-06-23         34           1         23898</span>
-<span class="co">#&gt;   3: 2020-06-24         34           1         24463</span>
-<span class="co">#&gt;   4: 2020-06-25         34           1         24788</span>
-<span class="co">#&gt;   5: 2020-06-26         34           1         28190</span>
+<span class="co">#&gt;   1: 2020-06-22         34          01         23878</span>
+<span class="co">#&gt;   2: 2020-06-23         34          01         23898</span>
+<span class="co">#&gt;   3: 2020-06-24         34          01         24463</span>
+<span class="co">#&gt;   4: 2020-06-25         34          01         24788</span>
+<span class="co">#&gt;   5: 2020-06-26         34          01         28190</span>
 <span class="co">#&gt;  ---                                                </span>
 <span class="co">#&gt; 577: 2020-06-24         36         123          1001</span>
 <span class="co">#&gt; 578: 2020-06-25         36         123           961</span>
@@ -155,29 +155,29 @@
 
 <span class="va">growth_data</span>
 <span class="co">#&gt;            date state_fips county_fips visits_by_day total_devices_seen</span>
-<span class="co">#&gt;   1: 2020-06-23         34           1         23898           16870682</span>
-<span class="co">#&gt;   2: 2020-06-24         34           1         24463           17103600</span>
-<span class="co">#&gt;   3: 2020-06-25         34           1         24788           17014972</span>
-<span class="co">#&gt;   4: 2020-06-26         34           1         28190           16964900</span>
-<span class="co">#&gt;   5: 2020-06-27         34           1         28943           16304498</span>
+<span class="co">#&gt;   1: 2020-06-23         34          01         23898           16870682</span>
+<span class="co">#&gt;   2: 2020-06-24         34          01         24463           17103600</span>
+<span class="co">#&gt;   3: 2020-06-25         34          01         24788           17014972</span>
+<span class="co">#&gt;   4: 2020-06-26         34          01         28190           16964900</span>
+<span class="co">#&gt;   5: 2020-06-27         34          01         28943           16304498</span>
 <span class="co">#&gt;  ---                                                                   </span>
-<span class="co">#&gt; 494: 2020-06-24         36         123          1001           17103600</span>
-<span class="co">#&gt; 495: 2020-06-25         36         123           961           17014972</span>
-<span class="co">#&gt; 496: 2020-06-26         36         123          1212           16964900</span>
-<span class="co">#&gt; 497: 2020-06-27         36         123          1328           16304498</span>
-<span class="co">#&gt; 498: 2020-06-28         36         123           823           16341487</span>
+<span class="co">#&gt; 494: 2020-06-24         36          99          2292           17103600</span>
+<span class="co">#&gt; 495: 2020-06-25         36          99          2145           17014972</span>
+<span class="co">#&gt; 496: 2020-06-26         36          99          2335           16964900</span>
+<span class="co">#&gt; 497: 2020-06-27         36          99          2751           16304498</span>
+<span class="co">#&gt; 498: 2020-06-28         36          99          2026           16341487</span>
 <span class="co">#&gt;        adj_visits     growth</span>
-<span class="co">#&gt;   1: 1.397905e-03 0.00000000</span>
-<span class="co">#&gt;   2: 1.423412e-03 0.01824687</span>
-<span class="co">#&gt;   3: 1.443559e-03 0.03265929</span>
-<span class="co">#&gt;   4: 1.559250e-03 0.11541975</span>
-<span class="co">#&gt;   5: 1.718410e-03 0.22927577</span>
+<span class="co">#&gt;   1: 0.0013979046 0.00000000</span>
+<span class="co">#&gt;   2: 0.0014234120 0.01824687</span>
+<span class="co">#&gt;   3: 0.0014435591 0.03265929</span>
+<span class="co">#&gt;   4: 0.0015592504 0.11541975</span>
+<span class="co">#&gt;   5: 0.0017184102 0.22927577</span>
 <span class="co">#&gt;  ---                        </span>
-<span class="co">#&gt; 494: 5.795167e-05 0.07569769</span>
-<span class="co">#&gt; 495: 5.750268e-05 0.06736359</span>
-<span class="co">#&gt; 496: 6.396065e-05 0.18723624</span>
-<span class="co">#&gt; 497: 7.644577e-05 0.41898484</span>
-<span class="co">#&gt; 498: 6.590627e-05 0.22335077</span></code></pre></div>
+<span class="co">#&gt; 494: 0.0001255962 0.09600879</span>
+<span class="co">#&gt; 495: 0.0001300362 0.13475380</span>
+<span class="co">#&gt; 496: 0.0001318513 0.15059337</span>
+<span class="co">#&gt; 497: 0.0001531818 0.33673288</span>
+<span class="co">#&gt; 498: 0.0001463527 0.27713911</span></code></pre></div>
 <p>This output from <code><a href="../reference/processing_template.html">processing_template()</a></code> is then the output from <code><a href="../reference/growth_over_time.html">growth_over_time()</a></code>.</p>
 <p>Or, if <code>make_graph = TRUE</code>, instead you get a list where the <code><a href="../reference/processing_template.html">processing_template()</a></code> output is the first element of that list! The second would then be a graph or list of graphs. The other arguments in <code><a href="../reference/growth_over_time.html">growth_over_time()</a></code> have to do with the creation of graphs.</p>
 <hr>
@@ -198,6 +198,13 @@
                by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'county_fips'</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
   <span class="co"># This is a regular ggplot2 object, so we can further modify it as one</span>
   <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>text <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>family <span class="op">=</span> <span class="st">'serif'</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; Warning in max(.): no non-missing arguments to max; returning -Inf</span>
+<span class="co">#&gt; Warning in max.default(structure(numeric(0), class = "Date"), na.rm = FALSE): no</span>
+<span class="co">#&gt; non-missing arguments to max; returning -Inf</span>
+<span class="co">#&gt; Warning in min.default(structure(numeric(0), class = "Date"), na.rm = FALSE): no</span>
+<span class="co">#&gt; non-missing arguments to min; returning Inf</span>
+<span class="co">#&gt; Warning in max.default(structure(numeric(0), class = "Date"), na.rm = FALSE): no</span>
+<span class="co">#&gt; non-missing arguments to max; returning -Inf</span>
 <span class="co">#&gt; Warning: `guides(&lt;scale&gt; = FALSE)` is deprecated. Please use `guides(&lt;scale&gt; =</span>
 <span class="co">#&gt; "none")` instead.</span></code></pre></div>
 <p><img src="Automatic_Traffic-over-Time_Processing_files/figure-html/unnamed-chunk-6-1.png" width="672"></p>

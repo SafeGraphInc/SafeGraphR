@@ -24,3 +24,7 @@
 # SafeGraphR 0.4.3
 
 * Changed data files to include leading zeroes for state and county FIPS
+
+# SafeGraphR 0.4.4
+
+* Moved filepaths for backfill data

@@ -9,7 +9,7 @@
 #' See catalog.safegraph.io for more description of the various buckets.
 #'
 #' @param path The local directory to synchronize.
-#' @param dataset The SafeGraph bucket to get from. Can be "weekly" (new method since July 2021), "weekly-backfill" (the new method for times before July 2021), "monthly" (method since July 2021; also contains backfill folders as \code{*_backfill/}), "neighborhood" (June 2021 and forward), "neighborhood-backfill" (May 2021 and previous), "distancing",  "core", "core-canada", "geo-supplement", or, to get the baseline bucket, "none".
+#' @param dataset The SafeGraph bucket to get from. Can be "weekly" (new method since July 2021), "weekly-backfill" (the new method for times before July 2021; note AS OF AUGUST 2021 this gives the same result as "weekly" but I've kept "weekly-backfill" here in case it switches back to being different later), "monthly" (method since July 2021; also contains backfill folders as \code{*_backfill/}), "neighborhood" (June 2021 and forward), "neighborhood-backfill" (May 2021 and previous), "distancing",  "core", "core-canada", "geo-supplement", or, to get the baseline bucket, "none".
 #' @param bucket_only Instead of doing an \code{aws.s3::s3sync} call, just return the correct bucket as a string. Then you can use that to do your own \code{aws.s3::s3sync} call, or work with the AWS CLI.
 #' @param base_url The base URL to pull the data from.
 #' @param key A character string containing an AWS Access Key ID.
@@ -42,7 +42,7 @@ safegraph_aws <- function(path = '.',
                           ...) {
 
   if (grepl('new',dataset)) {
-    stop('As of 0.4.2, the bucket names are changed and the "new" suffix is no longer required. See help(safegraph_aws).')
+    stop('As of SafeGraphR 0.4.2, the bucket names are changed and the "new" suffix is no longer required. See help(safegraph_aws).')
   }
 
   if (dataset == 'monthly') {
@@ -50,7 +50,7 @@ safegraph_aws <- function(path = '.',
   } else if (dataset == 'weekly') {
     buck <- 'weekly-patterns-delivery-2020-12/release-2021-07/weekly/'
   } else if (dataset == 'weekly-backfill') {
-    buck <- 'weekly-patterns-delivery-2020-12-backfill/release-2021-07/weekly/'
+    buck <- 'weekly-patterns-delivery-2020-12/release-2021-07/weekly/'
   } else if (dataset == 'distancing') {
     buck <- 'social-distancing/v2/'
   } else if (dataset == 'geo-supplement') {

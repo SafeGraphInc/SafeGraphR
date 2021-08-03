@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SafeGraphR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.4</span>
       </span>
     </div>
 
@@ -187,11 +187,11 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">pat_NY_NJ</span><span class="op">)</span>
 <span class="va">pat_NY_NJ</span><span class="op">[</span><span class="op">]</span>
 <span class="co">#&gt;       state_fips county_fips naics_code visits_by_day day start_date       date</span>
-<span class="co">#&gt;    1:         34           1         NA          5862   1 2020-06-22 2020-06-22</span>
-<span class="co">#&gt;    2:         34           1         NA          5754   2 2020-06-22 2020-06-23</span>
-<span class="co">#&gt;    3:         34           1         NA          5769   3 2020-06-22 2020-06-24</span>
-<span class="co">#&gt;    4:         34           1         NA          5887   4 2020-06-22 2020-06-25</span>
-<span class="co">#&gt;    5:         34           1         NA          6778   5 2020-06-22 2020-06-26</span>
+<span class="co">#&gt;    1:         34          01         NA          5862   1 2020-06-22 2020-06-22</span>
+<span class="co">#&gt;    2:         34          01         NA          5754   2 2020-06-22 2020-06-23</span>
+<span class="co">#&gt;    3:         34          01         NA          5769   3 2020-06-22 2020-06-24</span>
+<span class="co">#&gt;    4:         34          01         NA          5887   4 2020-06-22 2020-06-25</span>
+<span class="co">#&gt;    5:         34          01         NA          6778   5 2020-06-22 2020-06-26</span>
 <span class="co">#&gt;   ---                                                                          </span>
 <span class="co">#&gt; 2320:         36         123   40485879           253   3 2020-06-22 2020-06-24</span>
 <span class="co">#&gt; 2321:         36         123   40485879           217   4 2020-06-22 2020-06-25</span>
@@ -250,17 +250,17 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">panel</span><span class="op">)</span>
 <span class="va">panel</span><span class="op">[</span><span class="op">]</span>
 <span class="co">#&gt;       state_fips county_fips number_devices_residing start_date</span>
-<span class="co">#&gt;    1:          2         170                    4565 2020-06-22</span>
-<span class="co">#&gt;    2:          2         195                      73 2020-06-22</span>
-<span class="co">#&gt;    3:          2         158                      90 2020-06-22</span>
-<span class="co">#&gt;    4:          2          90                    3562 2020-06-22</span>
-<span class="co">#&gt;    5:          2          50                     175 2020-06-22</span>
+<span class="co">#&gt;    1:         02         170                    4565 2020-06-22</span>
+<span class="co">#&gt;    2:         02         195                      73 2020-06-22</span>
+<span class="co">#&gt;    3:         02         158                      90 2020-06-22</span>
+<span class="co">#&gt;    4:         02         090                    3562 2020-06-22</span>
+<span class="co">#&gt;    5:         02         050                     175 2020-06-22</span>
 <span class="co">#&gt;   ---                                                          </span>
-<span class="co">#&gt; 3224:         56          15                     626 2020-06-22</span>
-<span class="co">#&gt; 3225:         56          11                     367 2020-06-22</span>
-<span class="co">#&gt; 3226:         56          35                     431 2020-06-22</span>
-<span class="co">#&gt; 3227:         56          17                     236 2020-06-22</span>
-<span class="co">#&gt; 3228:         56          19                     483 2020-06-22</span></code></pre></div>
+<span class="co">#&gt; 3224:         56         015                     626 2020-06-22</span>
+<span class="co">#&gt; 3225:         56         011                     367 2020-06-22</span>
+<span class="co">#&gt; 3226:         56         035                     431 2020-06-22</span>
+<span class="co">#&gt; 3227:         56         017                     236 2020-06-22</span>
+<span class="co">#&gt; 3228:         56         019                     483 2020-06-22</span></code></pre></div>
 <hr>
 </div>
 <div id="processing-data" class="section level1">
@@ -359,21 +359,14 @@
 <span class="co"># and merge in</span>
 <span class="va">pat_NY_NJ</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html">merge</a></span><span class="op">(</span><span class="va">pat_NY_NJ</span>, <span class="va">fips_to_names</span><span class="op">)</span>
 <span class="va">pat_NY_NJ</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'state_fips'</span>,<span class="st">'statename'</span>,<span class="st">'date'</span>,<span class="st">'norm_visits'</span><span class="op">)</span><span class="op">]</span>
-<span class="co">#&gt;     state_fips  statename       date norm_visits</span>
-<span class="co">#&gt;  1:         34 New Jersey 2020-06-22  0.00000000</span>
-<span class="co">#&gt;  2:         34 New Jersey 2020-06-23  0.03211382</span>
-<span class="co">#&gt;  3:         34 New Jersey 2020-06-24  0.05995530</span>
-<span class="co">#&gt;  4:         34 New Jersey 2020-06-25  0.07611231</span>
-<span class="co">#&gt;  5:         34 New Jersey 2020-06-26  0.14633842</span>
-<span class="co">#&gt;  6:         34 New Jersey 2020-06-27  0.04615868</span>
-<span class="co">#&gt;  7:         34 New Jersey 2020-06-28 -0.12373093</span>
-<span class="co">#&gt;  8:         36   New York 2020-06-22  0.00000000</span>
-<span class="co">#&gt;  9:         36   New York 2020-06-23  0.05549741</span>
-<span class="co">#&gt; 10:         36   New York 2020-06-24  0.07369239</span>
-<span class="co">#&gt; 11:         36   New York 2020-06-25  0.09724966</span>
-<span class="co">#&gt; 12:         36   New York 2020-06-26  0.14681163</span>
-<span class="co">#&gt; 13:         36   New York 2020-06-27 -0.03903597</span>
-<span class="co">#&gt; 14:         36   New York 2020-06-28 -0.13794200</span></code></pre></div>
+<span class="co">#&gt;    state_fips statename       date norm_visits</span>
+<span class="co">#&gt; 1:         36  New York 2020-06-22  0.00000000</span>
+<span class="co">#&gt; 2:         36  New York 2020-06-23  0.07674197</span>
+<span class="co">#&gt; 3:         36  New York 2020-06-24  0.10886993</span>
+<span class="co">#&gt; 4:         36  New York 2020-06-25  0.15266644</span>
+<span class="co">#&gt; 5:         36  New York 2020-06-26  0.21461643</span>
+<span class="co">#&gt; 6:         36  New York 2020-06-27  0.09342100</span>
+<span class="co">#&gt; 7:         36  New York 2020-06-28 -0.05968155</span></code></pre></div>
 <p>The <code>naics_codes</code> data set links NAICS codes to their titles. These can sometimes still be a little longer than we need, but at least now we’ll know what they mean! If we had aggregated to the four-digit or two-digit NAICS code level using <code><a href="https://rdrr.io/r/base/Round.html">floor(naics_code/100)</a></code> or <code><a href="https://rdrr.io/r/base/Round.html">floor(naics_code/10000)</a></code>, we could instead label them using the <code>naics_4</code> or <code>naics_2</code> data sets.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"naics_codes"</span><span class="op">)</span>
