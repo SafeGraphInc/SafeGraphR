@@ -1,7 +1,7 @@
 Package: SafeGraphR
 Type: Package
 Title: Package for Processing and Analyzing SafeGraph Data
-Version: 0.4.4
+Version: 0.5.0
 Authors@R: c(
     person(given = "Nick", family = "Huntington-Klein", role = c("aut","cre"), 
            email = "nhuntington-klein@seattleu.edu", 
@@ -23,8 +23,9 @@ Imports:
     jsonlite,
     utils,
     data.table,
-	bit64,
-    aws.s3
+	  bit64,
+    aws.s3,
+    ghql
 Suggests:
     ggplot2,
     directlabels,
@@ -32,5 +33,5 @@ Suggests:
     paletteer,
     knitr,
     rmarkdown
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 VignetteBuilder: knitr

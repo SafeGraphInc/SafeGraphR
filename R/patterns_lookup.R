@@ -10,9 +10,12 @@
 #' @param silent If specified, will omit the warning for using any dates after the package author last checked the consistency of the SafeGraph file structure.
 #' @param add_ma Also looks at the \code{add_ma} days before the dates listed in \code{dates}, so you can calculate an \code{add_ma}-day moving average. Or you could just change the \code{dates} argument yourself to allow this.
 #' @param patterns_backfill_date Character variable with the folder structure for the most recent \code{patterns_backfill} pull. i.e., the 2018, 2019, and 2020 folders containing backfill data in their subfolders should set in the \code{paste0(old_dir,'/patterns_backfill/',patterns_backfill_date)} folder.
+#' @param old_date_split Date indicating the last day on which "old" data is present, before switching to the "new" data structure.
+#' @param old_bucket,new_bucket The \code{safegraph_aws()} \code{dataset} argument for the buckets containing the old and new data, respectively.
 #' @param key A character string containing an AWS Access Key ID. If \code{key} and \code{secret} are both specified, \code{patterns_lookup} will download all the files it finds.
 #' @param secret A character string containing an AWS Secret Access Key.
 #' @param list_files After creating folderpaths (and, possibly, downloading files), run each of them through \code{list.files(pattern = '.csv', recursive = TRUE, full.names = TRUE)} to get a usable list of files. This only works if all the files have already been downloaded.
+#' @param ... Arguments to be passed to \code{safegraph_aws()}.
 #' @examples
 #'
 #' # We have already downloaded all of AWS data into the working directory and just need to locate and load it
@@ -40,9 +43,17 @@ patterns_lookup <- function(dates,
                             silent = FALSE,
                             add_ma = 0,
                             patterns_backfill_date = '2021/08/02/22/',
+                            old_date_split = lubridate::ymd('2021-07-11'),
+                            old_bucket = 'weekly-backfill',
+                            new_bucket = 'weekly',
                             key = NULL,
                             secret = NULL,
-                            list_files = FALSE) {
+                            list_files = FALSE,
+                            ...) {
+
+  warning('The safegraph C19 AWS server will be shut down as of January 31, 2022.')
+  warning('This function has defaults set to still use that server,')
+  warning('but generally will be intentioned for use with enterprise customers.')
 
   if (!lubridate::is.Date(dates)) {
     stop('dates must be a vector of Date objects.')
@@ -92,8 +103,8 @@ patterns_lookup <- function(dates,
   }
 
   # Split the dates into new and old
-  old <- dates[dates <= lubridate::ymd('2021-07-11')]
-  new <- dates[dates >= lubridate::ymd('2021-07-12')]
+  old <- dates[dates <= old_date_split]
+  new <- dates[dates > old_date_split]
 
   filelist <- c()
 
@@ -119,12 +130,13 @@ patterns_lookup <- function(dates,
     if (!is.null(key) & !is.null(secret)) {
       for (fn in filelist) {
         safegraph_aws(old_dir,
-                      dataset = 'weekly-backfill',
+                      dataset = old_bucket,
                       key = key,
                       secret = secret,
                       prefix = stringr::str_sub(fn, nchar(old_dir)+1),
                       prefix_is_dir = TRUE,
-                      max_print = 1)
+                      max_print = 1,
+                      ...)
       }
     }
 
@@ -163,7 +175,7 @@ patterns_lookup <- function(dates,
     if (!is.null(key) & !is.null(secret)) {
       for (fn in unique(new_dt$filename)) {
         safegraph_aws(new_dir,
-                      dataset = 'weekly',
+                      dataset = new_bucket,
                       key = key,
                       secret = secret,
                       prefix = stringr::str_sub(fn, nchar(new_dir)+1),

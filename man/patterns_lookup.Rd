@@ -13,9 +13,13 @@ patterns_lookup(
   silent = FALSE,
   add_ma = 0,
   patterns_backfill_date = "2021/08/02/22/",
+  old_date_split = lubridate::ymd("2021-07-11"),
+  old_bucket = "weekly-backfill",
+  new_bucket = "weekly",
   key = NULL,
   secret = NULL,
-  list_files = FALSE
+  list_files = FALSE,
+  ...
 )
 }
 \arguments{
@@ -35,11 +39,17 @@ patterns_lookup(
 
 \item{patterns_backfill_date}{Character variable with the folder structure for the most recent \code{patterns_backfill} pull. i.e., the 2018, 2019, and 2020 folders containing backfill data in their subfolders should set in the \code{paste0(old_dir,'/patterns_backfill/',patterns_backfill_date)} folder.}
 
+\item{old_date_split}{Date indicating the last day on which "old" data is present, before switching to the "new" data structure.}
+
+\item{old_bucket, new_bucket}{The \code{safegraph_aws()} \code{dataset} argument for the buckets containing the old and new data, respectively.}
+
 \item{key}{A character string containing an AWS Access Key ID. If \code{key} and \code{secret} are both specified, \code{patterns_lookup} will download all the files it finds.}
 
 \item{secret}{A character string containing an AWS Secret Access Key.}
 
 \item{list_files}{After creating folderpaths (and, possibly, downloading files), run each of them through \code{list.files(pattern = '.csv', recursive = TRUE, full.names = TRUE)} to get a usable list of files. This only works if all the files have already been downloaded.}
+
+\item{...}{Arguments to be passed to \code{safegraph_aws()}.}
 }
 \description{
 This function, given a date or range of dates, will return a character vector of folder paths in the weekly (new or backfill) data you will need to run through \code{list.files(pattern = '.csv.gz', full.names = TRUE)} after downloading files (or just set \code{list_files = TRUE}. This is done because the subfolder after this is based on the hour the data is released, which can't be predicted ahead of time for future weeks.

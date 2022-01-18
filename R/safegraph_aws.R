@@ -17,6 +17,7 @@
 #' @param region A character string containing the AWS region.
 #' @param prefix Leading part of the objects in the bucket must have this prefix. For example, to download social distancing data only from 2020, set this to "2020/". Some of the backfill buckets can be tricky because folder structure also includes the release date. For example, for "weekly-backfill" if you want patterns data, you want "patterns_backfill/2021/07/15/15/" and THEN followed by the time period you want like "2021/". If you want backfill data from "monthly", for example patterns, it's "patterns_backfill/2021/07/15/16/", then followed by the year/month. The "neighborhood" buckets use "y=2021/m=06/" etc instead of "2021/06".
 #' @param prefix_is_dir If \code{FALSE}, the files matching \code{prefix} will be downloaded directly to \code{path}, which may not be desired behavior if \code{prefix} contains a directory (you probably want the directory structure to match!). Set to \code{TRUE} to, in effect, replace \code{path} with \code{paste0(path, prefix)} and so download files to the appropriate folder. Don't use if \code{prefix} also contains file characteristics like extension. This is \code{prefix_IS_dir}, not \code{prefix_CONTAINS_dir}.
+#' @param s3 The S3 server that stores the data.
 #' @param max_print Temporarily set \code{options(max.print)} to this value. This will massively speed up the function, as \code{aws.s3::s3sync} likes to print the full list of files on the server before moving on. The option will be returned to its original value afterwards. Set to \code{NULL} to not alter any options.
 #' @param ... Additional parameters to be sent to \code{aws.s3::s3sync} and from there on to \code{aws.s3:s3HTTP}. "direction" will be ignored.
 #' @examples
@@ -38,9 +39,13 @@ safegraph_aws <- function(path = '.',
                           region = '',
                           prefix ='',
                           prefix_is_dir = FALSE,
+                          s3 = 's3://sg-c19-response/',
                           max_print = 1,
                           ...) {
 
+  warning('The safegraph C19 AWS server will be shut down as of January 31, 2022.')
+  warning('At that time this function will stop working with the C19 AWS server,')
+  warning('but will work for enterprise clients with AWS access.')
   if (grepl('new',dataset)) {
     stop('As of SafeGraphR 0.4.2, the bucket names are changed and the "new" suffix is no longer required. See help(safegraph_aws).')
   }
@@ -64,7 +69,8 @@ safegraph_aws <- function(path = '.',
   } else if (dataset == 'neighborhood') {
     buck <- 'neighborhood-patterns/neighborhood-patterns/2021/07/27/release-2021-07-01/'
   } else if (dataset != 'none') {
-    stop('Unrecognized value of dataset.')
+    warning('Custom bucket name being used.')
+    buck <- dataset
   }
 
   if (bucket_only) {
@@ -90,7 +96,7 @@ safegraph_aws <- function(path = '.',
     dir.create(path, recursive = TRUE)
   }
 
-  aws.s3::s3sync(path = path, bucket = 's3://sg-c19-response/',
+  aws.s3::s3sync(path = path, bucket = s3,
                  prefix = paste0(buck,prefix),
                  key = key, base_url = base_url, secret = secret,
                  region = region, direction = 'download', ...)

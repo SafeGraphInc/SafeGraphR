@@ -20,6 +20,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -32,18 +34,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">SafeGraphR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="articles/SafeGraphR.html">Get started</a>
 </li>
@@ -85,54 +81,54 @@
       </header><div class="row">
   <div class="contents col-md-9">
 
-<div id="safegraphr" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#safegraphr" class="anchor"></a>SafeGraphR</h1></div>
-<p><strong>SafeGraphR</strong> is an R package designed to make it easy to read in and process data from <a href="safegraph.com">SafeGraph</a>, including data that comes through the Placekey consortium or the <a href="catalog.safegraph.io">catalog</a>. You may want to consult the <a href="https://docs.google.com/document/d/1Xx-nzOX1qF3WfOpg4D8aemwFrrAkQaJuT0-1-CbgxQs/edit">Quick Start Guide</a>, the <a href="https://github.com/SafeGraphInc/awesome-safegraph-datascience">Awesome SafeGraph Data Science List</a>, the <a href="https://colab.research.google.com/drive/16BELpcum4TKoH-5wg8Xym_CGgIGgpu1I?usp=sharing">Normalization Best Practices</a>, and especially the <a href="docs.safegraph.com/">SafeGraph Docs</a>.</p>
+<div class="section level1">
+<div class="page-header"><h1 id="safegraphr">SafeGraphR<a class="anchor" aria-label="anchor" href="#safegraphr"></a>
+</h1></div>
+<p><strong>SafeGraphR</strong> is an R package designed to make it easy to read in and process data from <a href="safegraph.com">SafeGraph</a>, including data that comes through the Placekey consortium or the <a href="catalog.safegraph.io">catalog</a>. You may want to consult the <a href="https://docs.google.com/document/d/1Xx-nzOX1qF3WfOpg4D8aemwFrrAkQaJuT0-1-CbgxQs/edit" class="external-link">Quick Start Guide</a>, the <a href="https://github.com/SafeGraphInc/awesome-safegraph-datascience" class="external-link">Awesome SafeGraph Data Science List</a>, the <a href="https://colab.research.google.com/drive/16BELpcum4TKoH-5wg8Xym_CGgIGgpu1I?usp=sharing" class="external-link">Normalization Best Practices</a>, and especially the <a href="docs.safegraph.com/">SafeGraph Docs</a>.</p>
 <p>You can install <strong>SafeGraphR</strong> directly from GitHub.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># if necessary</span>
 <span class="co"># install.packages('remotes')</span>
-<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">'SafeGraphInc/SafeGraphR'</span><span class="op">)</span></code></pre></div>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">'SafeGraphInc/SafeGraphR'</span><span class="op">)</span></code></pre></div>
 <p>The other pages on this site will walk you through how you can use <strong>SafeGraphR</strong> to work with the data.</p>
 </div>
-<div id="bugs-and-help" class="section level1">
-<h1 class="hasAnchor">
-<a href="#bugs-and-help" class="anchor"></a>Bugs and Help!</h1>
+<div class="section level1">
+<h1 id="bugs-and-help">Bugs and Help!<a class="anchor" aria-label="anchor" href="#bugs-and-help"></a>
+</h1>
 <p><strong>SafeGraphR</strong> is currently in <em>beta</em>. All of its functions work, but of course there may be bugs remaining. The code has also not been checked with every possible combination of options that you could pick. Lastly, the SafeGraph data itself changes format on occasion, which may break some <strong>SafeGraphR</strong> functionality.</p>
-<p>If you run into an issue or bug in the code, please raise an Issue on the <strong>SafeGraphR</strong> Github <a href="https://github.com/SafeGraphInc/SafeGraphR/issues">Issues page</a>.</p>
+<p>If you run into an issue or bug in the code, please raise an Issue on the <strong>SafeGraphR</strong> Github <a href="https://github.com/SafeGraphInc/SafeGraphR/issues" class="external-link">Issues page</a>.</p>
 <p>If you’re just having trouble getting things to work, you can find help at the <a href="placekey-community.slack.com/">Placekey Community Slack Channel</a> in the <em>r-troubleshooting</em> room.</p>
 <p>Below is a list of what’s in the package with a brief description.</p>
-<div id="data-reading-functions" class="section level2">
-<h2 class="hasAnchor">
-<a href="#data-reading-functions" class="anchor"></a>Data Reading Functions</h2>
+<div class="section level2">
+<h2 id="data-reading-functions">Data Reading Functions<a class="anchor" aria-label="anchor" href="#data-reading-functions"></a>
+</h2>
 <p><code><a href="reference/read_core.html">read_core()</a></code>: Read in a Core Places file, which you can then merge with patterns or other data to add information about each location. There is also the older <code><a href="reference/link_poi_naics.html">link_poi_naics()</a></code> which does the same thing but can only be used to create a link between POIs and NAICS codes.</p>
 <p><code><a href="reference/read_distancing.html">read_distancing()</a></code>: Given a list of dates, reads in and aggregates SafeGraph social-distancing v2 files.</p>
 <p><code><a href="reference/read_many_csvs.html">read_many_csvs()</a></code>: Reads a bunch of CSVs in the same folder and row-binds them all together. Useful for stuff like normalization data.</p>
 <p><code><a href="reference/read_many_patterns.html">read_many_patterns()</a></code> and <code><a href="reference/read_patterns.html">read_patterns()</a></code>: Reads a bunch of (or one, respectively) monthly or weekly patterns <code>.csv.gz</code> files all in the same folder, does appropriate processing, and row-binds the results together.</p>
 <p><code><a href="reference/read_many_shop.html">read_many_shop()</a></code> and <code><a href="reference/read_shop.html">read_shop()</a></code>: Reads a bunch of (or one, respectively) <code>.zip</code> files in the format they come in from the shop and combines the data sets inside the zip across zip-files appropriately.</p>
-<p><code><a href="reference/safegraph_aws.html">safegraph_aws()</a></code>: A thin wrapper for <code><a href="https://rdrr.io/pkg/aws.s3/man/sync.html">aws.s3::s3sync()</a></code> that downloads data from the SafeGraph AWS buckets.</p>
+<p><code><a href="reference/safegraph_aws.html">safegraph_aws()</a></code>: A thin wrapper for <code><a href="https://rdrr.io/pkg/aws.s3/man/sync.html" class="external-link">aws.s3::s3sync()</a></code> that downloads data from the SafeGraph AWS buckets.</p>
 </div>
-<div id="data-processing-functions" class="section level2">
-<h2 class="hasAnchor">
-<a href="#data-processing-functions" class="anchor"></a>Data Processing Functions</h2>
+<div class="section level2">
+<h2 id="data-processing-functions">Data Processing Functions<a class="anchor" aria-label="anchor" href="#data-processing-functions"></a>
+</h2>
 <p><code><a href="reference/expand_cat_json.html">expand_cat_json()</a></code> and <code><a href="reference/expand_integer_json.html">expand_integer_json()</a></code>: Take SafeGraph data with a column of categorical (named) or numeric (unnamed) JSON data and expand that column, pivot the data to long format, and then aggregate to the desired level.</p>
 <p><code><a href="reference/expand_open_hours.html">expand_open_hours()</a></code>: Expand the <code>open_hours</code> variable into something easy to use!</p>
 <p><code><a href="reference/fips_from_cbg.html">fips_from_cbg()</a></code>: Take a census block group identifier and extract the state and/or county FIPS codes.</p>
-<p><code><a href="reference/rbind_by_list_pos.html">rbind_by_list_pos()</a></code>: Take a list of lists of <code>data.table</code>s and row-binds them by their position in the sub-list. For example, <code><a href="reference/rbind_by_list_pos.html">rbind_by_list_pos(list(A,B),list(C,D))</a></code> would return <code><a href="https://rdrr.io/r/base/list.html">list(rbind(A,C),rbind(B,D))</a></code>. Can be used after <code>read_</code> functions, which in some cases return a list of <code>data.table</code>s for each file they read.</p>
+<p><code><a href="reference/rbind_by_list_pos.html">rbind_by_list_pos()</a></code>: Take a list of lists of <code>data.table</code>s and row-binds them by their position in the sub-list. For example, <code>rbind_by_list_pos(list(A,B),list(C,D))</code> would return <code>list(rbind(A,C),rbind(B,D))</code>. Can be used after <code>read_</code> functions, which in some cases return a list of <code>data.table</code>s for each file they read.</p>
 </div>
-<div id="final-stages-processing-functions" class="section level2">
-<h2 class="hasAnchor">
-<a href="#final-stages-processing-functions" class="anchor"></a>Final-Stages Processing Functions</h2>
+<div class="section level2">
+<h2 id="final-stages-processing-functions">Final-Stages Processing Functions<a class="anchor" aria-label="anchor" href="#final-stages-processing-functions"></a>
+</h2>
 <p><code><a href="reference/hb_shrink.html">hb_shrink()</a></code>: Perform hierarchical Bayesian shrinkage on the CBG-to-county or county-to-state level.</p>
 <p><code><a href="reference/ma.html">ma()</a></code>: Calculates a (by default) seven day moving average on pre-sorted data with no gaps.</p>
 <p><code><a href="reference/sample_size_adjust.html">sample_size_adjust()</a></code>: Adjusts data for differences in sampling rates across geographic locations.</p>
 <p><code><a href="reference/scale_to_date.html">scale_to_date()</a></code>: Adjusts data to be relative to a specific date.</p>
 <p><code><a href="reference/scale_yoy.html">scale_yoy()</a></code>: Adjusts data to be relative to the same date the previous year.</p>
 </div>
-<div id="data-sets" class="section level2">
-<h2 class="hasAnchor">
-<a href="#data-sets" class="anchor"></a>Data Sets</h2>
+<div class="section level2">
+<h2 id="data-sets">Data Sets<a class="anchor" aria-label="anchor" href="#data-sets"></a>
+</h2>
 <p><code>cbg_pop</code>: Population data from the easy census file.</p>
 <p><code>county_pop</code>: Population aggregated to the county level.</p>
 <p><code>fips_to_names</code>: Data set linking state and county FIPS codes to state and county names, for merging in and labeling.</p>
@@ -144,28 +140,41 @@
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>Apache 2.0</li>
 </ul>
 </div>
-<div class="developers">
-<h2>Developers</h2>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li>Nick Huntington-Klein <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-7352-3991" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li><a href="authors.html#citation">Citing SafeGraphR</a></li>
 </ul>
 </div>
+
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
+<ul class="list-unstyled">
+<li>Nick Huntington-Klein <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-7352-3991" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+</ul>
+</div>
+
+
 
   </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Nick Huntington-Klein.</p>
+  <p></p>
+<p>Developed by Nick Huntington-Klein.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -173,6 +182,8 @@
 
   
 
+
+  
 
   </body>
 </html>

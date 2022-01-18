@@ -14,6 +14,7 @@ safegraph_aws(
   region = "",
   prefix = "",
   prefix_is_dir = FALSE,
+  s3 = "s3://sg-c19-response/",
   max_print = 1,
   ...
 )
@@ -36,6 +37,8 @@ safegraph_aws(
 \item{prefix}{Leading part of the objects in the bucket must have this prefix. For example, to download social distancing data only from 2020, set this to "2020/". Some of the backfill buckets can be tricky because folder structure also includes the release date. For example, for "weekly-backfill" if you want patterns data, you want "patterns_backfill/2021/07/15/15/" and THEN followed by the time period you want like "2021/". If you want backfill data from "monthly", for example patterns, it's "patterns_backfill/2021/07/15/16/", then followed by the year/month. The "neighborhood" buckets use "y=2021/m=06/" etc instead of "2021/06".}
 
 \item{prefix_is_dir}{If \code{FALSE}, the files matching \code{prefix} will be downloaded directly to \code{path}, which may not be desired behavior if \code{prefix} contains a directory (you probably want the directory structure to match!). Set to \code{TRUE} to, in effect, replace \code{path} with \code{paste0(path, prefix)} and so download files to the appropriate folder. Don't use if \code{prefix} also contains file characteristics like extension. This is \code{prefix_IS_dir}, not \code{prefix_CONTAINS_dir}.}
+
+\item{s3}{The S3 server that stores the data.}
 
 \item{max_print}{Temporarily set \code{options(max.print)} to this value. This will massively speed up the function, as \code{aws.s3::s3sync} likes to print the full list of files on the server before moving on. The option will be returned to its original value afterwards. Set to \code{NULL} to not alter any options.}
 

@@ -28,3 +28,7 @@
 # SafeGraphR 0.4.4
 
 * Moved filepaths for backfill data
+
+# SafeGraphR 0.5.0
+
+* Added `safegraph_api` and made `safegraph_aws` more flexible to not rely on the soon-shutting-down C19 bucket.

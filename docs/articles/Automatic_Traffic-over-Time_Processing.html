@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,18 +33,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SafeGraphR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../articles/SafeGraphR.html">Get started</a>
 </li>
@@ -81,7 +77,7 @@
 
       
 
-      </header><script src="Automatic_Traffic-over-Time_Processing_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Automatic Traffic-over-Time Processing</h1>
@@ -95,20 +91,20 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">SafeGraphR</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">SafeGraphR</span><span class="op">)</span></code></pre></div>
 <p>This vignette will walk through the process of using the Traffic-Over-Time functions, introduced in <strong>SafeGraphR</strong> version 0.3.0, which completely automate the process of downloading, reading, processing, and outputting SafeGraph data in the <code>visits_by_day</code> column. This process is optimized for use with <code>visits_by_day</code>, although you might be able to get at least some of it to work for other variables.</p>
 <p>The idea is that you can do basically everything you need with a single <code><a href="../reference/growth_over_time.html">growth_over_time()</a></code> call. This vignette will discuss how to make that call, and also talk about some of the internal functions it uses, so you can know how to use them yourself if you’d like to be a little more hands-on.</p>
 <hr>
-<div id="growth_over_time" class="section level1">
-<h1 class="hasAnchor">
-<a href="#growth_over_time" class="anchor"></a>growth_over_time</h1>
+<div class="section level1">
+<h1 id="growth_over_time">growth_over_time<a class="anchor" aria-label="anchor" href="#growth_over_time"></a>
+</h1>
 <p>The <code><a href="../reference/growth_over_time.html">growth_over_time()</a></code> function is intended to produce a data set and (optionally) graph showing how a certain <em>subset</em> of traffic data from the weekly patterns files changes over <em>a set of dates</em>, possibly doing <em>different groups separately</em>.</p>
 <p>The first thing we need to do is determine the set of dates that we want to track traffic over, for the <code>dates</code> argument. This is a vector of dates. If you want a range of dates, one good way to do it is <code>lubridate::ymd('year-month-day') + lubridate::days(0:numberofdaystotrack)</code>. The date range you give will be expanded based on <code>ma</code> to ensure that when you take a moving average with <code><a href="../reference/ma.html">ma()</a></code>, your entire date range survives.</p>
 <p>This expanded date range will be passed to <code><a href="../reference/patterns_lookup.html">patterns_lookup()</a></code> to determine the set of folders that the data you need are in. If you also give an AWS <code>key</code> and <code>secret</code>, it will download all those files for you, along with the appropriate normalization data.</p>
 <p>If you want to get more precise, you can instead use the <code>filelist</code> and <code>filelist_norm</code> arguments to specify which files exactly you want being read in for patterns and normalization data. Note that <code>growth_over_time</code> uses the national-level <code>total_devices_seen</code> column for normalization.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Not yet working code</span>
-<span class="va">gr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/growth_over_time.html">growth_over_time</a></span><span class="op">(</span><span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/ymd.html">ymd</a></span><span class="op">(</span><span class="st">'2020-07-01'</span><span class="op">)</span> <span class="op">+</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/period.html">days</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">6</span><span class="op">)</span>,
+<span class="va">gr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/growth_over_time.html">growth_over_time</a></span><span class="op">(</span><span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd.html" class="external-link">ymd</a></span><span class="op">(</span><span class="st">'2020-07-01'</span><span class="op">)</span> <span class="op">+</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/period.html" class="external-link">days</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">6</span><span class="op">)</span>,
                        key <span class="op">=</span> <span class="st">'mykey'</span>,
                        secret <span class="op">=</span> <span class="st">'mysecret'</span><span class="op">)</span></code></pre></div>
 <p>We also must specify a <code>by</code> argument, which is a character vector giving the variables to do calculations by. Visits data will be aggregated to this level before growth calculations are made. So for example, <code>by = c('brands','state_fips')</code> would calculate visits in each state for each brand.</p>
@@ -120,10 +116,10 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Example data, imagine these came from read_many_patterns(expand_int = 'visits_by_day')</span>
 <span class="co"># and read_many_csvs(), respectively</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"pat_NY_NJ"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"norm"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"pat_NY_NJ"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"norm"</span><span class="op">)</span>
 
-<span class="va">pat_NY_NJ</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span>visits_by_day <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">visits_by_day</span><span class="op">)</span><span class="op">)</span>, by <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">date</span>, <span class="va">state_fips</span>, <span class="va">county_fips</span><span class="op">)</span><span class="op">]</span>
+<span class="va">pat_NY_NJ</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span>visits_by_day <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">visits_by_day</span><span class="op">)</span><span class="op">)</span>, by <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">date</span>, <span class="va">state_fips</span>, <span class="va">county_fips</span><span class="op">)</span><span class="op">]</span>
 <span class="co">#&gt;            date state_fips county_fips visits_by_day</span>
 <span class="co">#&gt;   1: 2020-06-22         34          01         23878</span>
 <span class="co">#&gt;   2: 2020-06-23         34          01         23898</span>
@@ -148,9 +144,9 @@
 <span class="co">#&gt; 7: 2020-06-28           16341487</span></code></pre></div>
 <p>We can pass these two to <code>processing_templtae()</code> and it will do the sample normalization, the moving average, and the growth-since-first-day. Note that the normalization variable we want should be the last column of <code>norm</code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">growth_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/processing_template.html">processing_template</a></span><span class="op">(</span><span class="va">pat_NY_NJ</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span>visits_by_day <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">visits_by_day</span><span class="op">)</span><span class="op">)</span>, by <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">date</span>, <span class="va">state_fips</span>, <span class="va">county_fips</span><span class="op">)</span><span class="op">]</span>,
+<code class="sourceCode R"><span class="va">growth_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/processing_template.html">processing_template</a></span><span class="op">(</span><span class="va">pat_NY_NJ</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span>visits_by_day <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">visits_by_day</span><span class="op">)</span><span class="op">)</span>, by <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">date</span>, <span class="va">state_fips</span>, <span class="va">county_fips</span><span class="op">)</span><span class="op">]</span>,
                     norm <span class="op">=</span> <span class="va">norm</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span><span class="va">date</span>, <span class="va">total_devices_seen</span><span class="op">)</span><span class="op">]</span>,
-                    by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'state_fips'</span>,<span class="st">'county_fips'</span><span class="op">)</span>,
+                    by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'state_fips'</span>,<span class="st">'county_fips'</span><span class="op">)</span>,
                     ma <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">[</span><span class="op">]</span> <span class="co"># since we only have one week of data, use a very short moving average, just to demonstrate</span>
 
 <span class="va">growth_data</span>
@@ -182,9 +178,9 @@
 <p>Or, if <code>make_graph = TRUE</code>, instead you get a list where the <code><a href="../reference/processing_template.html">processing_template()</a></code> output is the first element of that list! The second would then be a graph or list of graphs. The other arguments in <code><a href="../reference/growth_over_time.html">growth_over_time()</a></code> have to do with the creation of graphs.</p>
 <hr>
 </div>
-<div id="graphing-with-growth_over_time" class="section level1">
-<h1 class="hasAnchor">
-<a href="#graphing-with-growth_over_time" class="anchor"></a>Graphing with growth_over_time</h1>
+<div class="section level1">
+<h1 id="graphing-with-growth_over_time">Graphing with growth_over_time<a class="anchor" aria-label="anchor" href="#graphing-with-growth_over_time"></a>
+</h1>
 <p>If you want control over the graphing process, it’s probably just a good idea to take the <code><a href="../reference/processing_template.html">processing_template()</a></code>/<code><a href="../reference/growth_over_time.html">growth_over_time()</a></code> output and graph it yourself.</p>
 <p>However, setting <code>make_graph = TRUE</code> will get you a pretty nice-looking graph without any further work! Probably not completely publication-ready (but it <em>does</em> look nice - you’d have to fiddle with titles, etc., though), but definitely good enough for your own information.</p>
 <p>Setting <code>make_graph = TRUE</code> with nothing else will simply take the output discussed in the last section and send it to <code><a href="../reference/graph_template.html">graph_template()</a></code>, which produces a <strong>ggplot2</strong> line graph with labels at the end of the lines, and a separate line for each combination of <code>by</code>. It will also combine the elements of <code>by</code> into a single variable, if there’s more than one element.</p>
@@ -194,10 +190,10 @@
 <span class="co"># to label the lines with their county names rather than just the numbers)</span>
 
 <span class="co"># This example uses only a few counties</span>
-<span class="fu"><a href="../reference/graph_template.html">graph_template</a></span><span class="op">(</span><span class="va">growth_data</span><span class="op">[</span><span class="va">state_fips</span> <span class="op">==</span> <span class="fl">34</span> <span class="op">&amp;</span> <span class="va">county_fips</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">3</span>,<span class="fl">5</span><span class="op">)</span><span class="op">]</span>,
-               by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'county_fips'</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+<span class="fu"><a href="../reference/graph_template.html">graph_template</a></span><span class="op">(</span><span class="va">growth_data</span><span class="op">[</span><span class="va">state_fips</span> <span class="op">==</span> <span class="fl">34</span> <span class="op">&amp;</span> <span class="va">county_fips</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">3</span>,<span class="fl">5</span><span class="op">)</span><span class="op">]</span>,
+               by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'county_fips'</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
   <span class="co"># This is a regular ggplot2 object, so we can further modify it as one</span>
-  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>text <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>family <span class="op">=</span> <span class="st">'serif'</span><span class="op">)</span><span class="op">)</span>
+  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>text <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>family <span class="op">=</span> <span class="st">'serif'</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; Warning in max(.): no non-missing arguments to max; returning -Inf</span>
 <span class="co">#&gt; Warning in max.default(structure(numeric(0), class = "Date"), na.rm = FALSE): no</span>
 <span class="co">#&gt; non-missing arguments to max; returning -Inf</span>
@@ -227,11 +223,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Nick Huntington-Klein.</p>
+  <p></p>
+<p>Developed by Nick Huntington-Klein.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -239,6 +237,8 @@
 
   
 
+
+  
 
   </body>
 </html>

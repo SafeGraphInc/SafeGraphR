@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,18 +33,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SafeGraphR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../articles/SafeGraphR.html">Get started</a>
 </li>
@@ -81,7 +77,7 @@
 
       
 
-      </header><script src="distancing_vignette_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Processing and Using SafeGraph Stay-at-Home Data</h1>
@@ -95,26 +91,26 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">SafeGraphR</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">SafeGraphR</span><span class="op">)</span></code></pre></div>
 <p>This vignette will walk you through the process of reading in, processing, and displaying SafeGraph stay-at-home data.</p>
 <p>Note that the stay-at-home-data is <strong>no longer being updated</strong> as of April 19, 2021. However, this should work for the old data.</p>
-<p>This vignette will work with data from the <em>social-distancing/v2/</em> SafeGraph Amazon Web Services bucket (see the <a href="https://catalog.safegraph.io">SafeGraph Catalog</a> for more information), which could also be downloaded using <code><a href="../reference/safegraph_aws.html">safegraph_aws()</a></code>.</p>
-<p>Note that throughout this vignette, we will be working with data manipulation using the <strong>data.table</strong> package. <strong>data.table</strong> is used throughout <strong>SafeGraphR</strong> (and on the backend) because it is very fast and can handle large data sets easily. However, once the data is read in and processed, it’s often no longer necessary to use <strong>data.table</strong> if you prefer something else. The code in this vignette could have easily used, for example, <strong>dplyr</strong> instead. If you are having trouble understanding the code chunks because you’re familiar with <strong>dplyr</strong> but not <strong>data.table</strong>, see <a href="https://atrebas.github.io/post/2019-03-03-datatable-dplyr/">this guide</a> that links the two.</p>
+<p>This vignette will work with data from the <em>social-distancing/v2/</em> SafeGraph Amazon Web Services bucket (see the <a href="https://catalog.safegraph.io" class="external-link">SafeGraph Catalog</a> for more information), which could also be downloaded using <code><a href="../reference/safegraph_aws.html">safegraph_aws()</a></code>.</p>
+<p>Note that throughout this vignette, we will be working with data manipulation using the <strong>data.table</strong> package. <strong>data.table</strong> is used throughout <strong>SafeGraphR</strong> (and on the backend) because it is very fast and can handle large data sets easily. However, once the data is read in and processed, it’s often no longer necessary to use <strong>data.table</strong> if you prefer something else. The code in this vignette could have easily used, for example, <strong>dplyr</strong> instead. If you are having trouble understanding the code chunks because you’re familiar with <strong>dplyr</strong> but not <strong>data.table</strong>, see <a href="https://atrebas.github.io/post/2019-03-03-datatable-dplyr/" class="external-link">this guide</a> that links the two.</p>
 <hr>
-<div id="reading-in-data" class="section level1">
-<h1 class="hasAnchor">
-<a href="#reading-in-data" class="anchor"></a>Reading in Data</h1>
-<p>We will read in the distancing data using the <code><a href="../reference/read_distancing.html">read_distancing()</a></code> function. This relies on the files in the <code>social-distancing/v2</code> bucket in the Amazon Web Services bucket, which you can download using <code><a href="../reference/safegraph_aws.html">safegraph_aws()</a></code> (or using the AWS CLI). See the <a href="https://catalog.safegraph.io">SafeGraph Catalog</a>.</p>
+<div class="section level1">
+<h1 id="reading-in-data">Reading in Data<a class="anchor" aria-label="anchor" href="#reading-in-data"></a>
+</h1>
+<p>We will read in the distancing data using the <code><a href="../reference/read_distancing.html">read_distancing()</a></code> function. This relies on the files in the <code>social-distancing/v2</code> bucket in the Amazon Web Services bucket, which you can download using <code><a href="../reference/safegraph_aws.html">safegraph_aws()</a></code> (or using the AWS CLI). See the <a href="https://catalog.safegraph.io" class="external-link">SafeGraph Catalog</a>.</p>
 <p>Once we’ve downloaded it, the files will be in a YEAR/MONTH/DAY/FILE structure. We can tell it where to begin and end reading files (we probably don’t want ALL the files - that would be very large!) by specifying a <code>start</code> and <code>end</code> date. Let’s get all the data from June 1 to June 14, 2020.</p>
 <p><strong>IMPORTANT</strong>: by default, <code><a href="../reference/read_distancing.html">read_distancing()</a></code> will only <code>select</code> the variables necessary to get stay-at-home percentages, and will aggregate <code>by</code> the state and county level. If you want more variables from the data, change <code>select</code>. And if you want the original raw census block group-level data (<code>origin_census_block_group</code>), change <code>by</code>. There is also an option to <code>filter</code> the data.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Our working directory is in the same folder as the "2020" folder</span>
 <span class="va">distancing</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_distancing.html">read_distancing</a></span><span class="op">(</span>
-   start <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/ymd.html">ymd</a></span><span class="op">(</span><span class="st">'2020-06-01'</span><span class="op">)</span>,
-   end <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/ymd.html">ymd</a></span><span class="op">(</span><span class="st">'2020-06-14'</span><span class="op">)</span>
+   start <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd.html" class="external-link">ymd</a></span><span class="op">(</span><span class="st">'2020-06-01'</span><span class="op">)</span>,
+   end <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd.html" class="external-link">ymd</a></span><span class="op">(</span><span class="st">'2020-06-14'</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">distancing</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">distancing</span><span class="op">)</span>
 <span class="va">distancing</span><span class="op">[</span><span class="op">]</span>
 <span class="co">#&gt;        state_fips county_fips device_count completely_home_device_count</span>
 <span class="co">#&gt;     1:         01         053         2735                          704</span>
@@ -154,9 +150,9 @@
 <span class="co">#&gt; 45158: 2020-06-01</span></code></pre></div>
 <hr>
 </div>
-<div id="processing-data" class="section level1">
-<h1 class="hasAnchor">
-<a href="#processing-data" class="anchor"></a>Processing Data</h1>
+<div class="section level1">
+<h1 id="processing-data">Processing Data<a class="anchor" aria-label="anchor" href="#processing-data"></a>
+</h1>
 <p>We will be calculating and using the percentage of each county that is staying home, which is <code>completely_home_device_count/device_count</code>, but we may need to do some adjustments.</p>
 <p>We have a few goals at this point:</p>
 <ol style="list-style-type: decimal">
@@ -164,9 +160,9 @@
 <li>Smooth out weekend effects</li>
 <li>Make the data presentable!</li>
 </ol>
-<div id="do-any-further-aggregation-or-adjustments-we-like" class="section level2">
-<h2 class="hasAnchor">
-<a href="#do-any-further-aggregation-or-adjustments-we-like" class="anchor"></a>1. Do any further aggregation or adjustments we like</h2>
+<div class="section level2">
+<h2 id="do-any-further-aggregation-or-adjustments-we-like">1. Do any further aggregation or adjustments we like<a class="anchor" aria-label="anchor" href="#do-any-further-aggregation-or-adjustments-we-like"></a>
+</h2>
 <p>Any additional adjustments that we do depend on the level we want the eventual data at. If we want to aggregate the data up to a higher level (perhaps to get stay-at-home by state), we might want to do <code><a href="../reference/sample_size_adjust.html">sample_size_adjust()</a></code> to account for different sampling rates across regions. See the Patterns Vignette for an example of using <code><a href="../reference/sample_size_adjust.html">sample_size_adjust()</a></code>.</p>
 <p>If instead we want to report the granular individual-level data, we should perform Bayesian shrinkage with <code><a href="../reference/hb_shrink.html">hb_shrink()</a></code>. so that we don’t get strange results from small regions with few people in them.</p>
 <p>Hierarchical Bayesian shrinkage basically says “we’re going to start by assuming that you, the individual county, are exactly the same as the overall state. Then we adjust that assumption by looking at your individual data. If you’re small, we won’t adjust much, since we don’t see much from you. But if you’re big, we adjust a lot.” We will be doing this to shrink counties to states, but you could instead shrink census block groups to counties or states.</p>
@@ -204,42 +200,42 @@
 <span class="co">#&gt; 45157:          109     0.3302752        0.3432126</span>
 <span class="co">#&gt; 45158:           13     0.4615385        0.4173651</span></code></pre></div>
 </div>
-<div id="smooth-out-weekend-effects-and-scale" class="section level2">
-<h2 class="hasAnchor">
-<a href="#smooth-out-weekend-effects-and-scale" class="anchor"></a>2. Smooth out weekend effects and scale</h2>
+<div class="section level2">
+<h2 id="smooth-out-weekend-effects-and-scale">2. Smooth out weekend effects and scale<a class="anchor" aria-label="anchor" href="#smooth-out-weekend-effects-and-scale"></a>
+</h2>
 <p>Next we will likely want to smooth things out and handle day-of-week effects by using the <code><a href="../reference/ma.html">ma()</a></code> moving average function. Don’t forget to sort first!</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Not actually run since we only have 14 days of data here anyway</span>
-<span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/setorder.html">setorder</a></span><span class="op">(</span><span class="va">distancing</span>, <span class="va">state_fips</span>, <span class="va">county_fips</span>, <span class="va">date</span><span class="op">)</span>
-<span class="va">distancing</span><span class="op">[</span>, <span class="va">shrunk_stay_home</span> <span class="op">:=</span> <span class="fu"><a href="../reference/ma.html">ma</a></span><span class="op">(</span><span class="va">shrunk_stay_home</span><span class="op">)</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'state_fips'</span>, <span class="st">'county_fips'</span><span class="op">)</span><span class="op">]</span></code></pre></div>
+<span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/setorder.html" class="external-link">setorder</a></span><span class="op">(</span><span class="va">distancing</span>, <span class="va">state_fips</span>, <span class="va">county_fips</span>, <span class="va">date</span><span class="op">)</span>
+<span class="va">distancing</span><span class="op">[</span>, <span class="va">shrunk_stay_home</span> <span class="op">:=</span> <span class="fu"><a href="../reference/ma.html">ma</a></span><span class="op">(</span><span class="va">shrunk_stay_home</span><span class="op">)</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'state_fips'</span>, <span class="st">'county_fips'</span><span class="op">)</span><span class="op">]</span></code></pre></div>
 <p>Now we may want to consider scaling the data relative to a specific date in the past. This isn’t as necessary for distancing data as it is for patterns data, but it can make things easier to compare sometimes.</p>
 <p>We’ll skip this scale-to-a-certain-date step with our example (see the Patterns Vignetter for an example of how this is done), but I will provide some code for doing a year-on-year adjustment, in case you want to combine multiple years of data to see how much more at-home we are this year than last year.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># let's pretend we have another year by just duplicating the data we have</span>
-<span class="va">fake_lastyear</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/copy.html">copy</a></span><span class="op">(</span><span class="va">distancing</span><span class="op">)</span>
-<span class="va">fake_lastyear</span><span class="op">[</span>,<span class="va">date</span> <span class="op">:=</span> <span class="va">date</span> <span class="op">-</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/period.html">years</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">]</span>
-<span class="va">fake_lastyear</span><span class="op">[</span>,<span class="va">shrunk_stay_home</span> <span class="op">:=</span> <span class="va">shrunk_stay_home</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">45158</span>, max <span class="op">=</span> <span class="fl">.02</span><span class="op">)</span><span class="op">]</span>
+<span class="va">fake_lastyear</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/copy.html" class="external-link">copy</a></span><span class="op">(</span><span class="va">distancing</span><span class="op">)</span>
+<span class="va">fake_lastyear</span><span class="op">[</span>,<span class="va">date</span> <span class="op">:=</span> <span class="va">date</span> <span class="op">-</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/period.html" class="external-link">years</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">]</span>
+<span class="va">fake_lastyear</span><span class="op">[</span>,<span class="va">shrunk_stay_home</span> <span class="op">:=</span> <span class="va">shrunk_stay_home</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">45158</span>, max <span class="op">=</span> <span class="fl">.02</span><span class="op">)</span><span class="op">]</span>
 
-<span class="va">fake_lastyear</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="va">distancing</span>, <span class="va">fake_lastyear</span><span class="op">)</span>
+<span class="va">fake_lastyear</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">distancing</span>, <span class="va">fake_lastyear</span><span class="op">)</span>
 
 <span class="va">fake_lastyear_scaled</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/scale_yoy.html">scale_yoy</a></span><span class="op">(</span><span class="va">fake_lastyear</span>,
                                   yoy_vars <span class="op">=</span> <span class="st">'shrunk_stay_home'</span>,
-                                  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'state_fips'</span>,<span class="st">'county_fips'</span><span class="op">)</span><span class="op">)</span>
+                                  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'state_fips'</span>,<span class="st">'county_fips'</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># Notice the "2019" data has no growth since we din't give it 2018 data to grow from</span>
-<span class="va">fake_lastyear_scaled</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'date'</span>,<span class="st">'state_fips'</span>,<span class="st">'county_fips'</span>,<span class="st">'shrunk_stay_home'</span>,<span class="st">'shrunk_stay_home_lag'</span>,<span class="st">'shrunk_stay_home_YOY'</span><span class="op">)</span><span class="op">]</span>
+<span class="va">fake_lastyear_scaled</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'date'</span>,<span class="st">'state_fips'</span>,<span class="st">'county_fips'</span>,<span class="st">'shrunk_stay_home'</span>,<span class="st">'shrunk_stay_home_lag'</span>,<span class="st">'shrunk_stay_home_YOY'</span><span class="op">)</span><span class="op">]</span>
 <span class="co">#&gt;              date state_fips county_fips shrunk_stay_home shrunk_stay_home_lag</span>
-<span class="co">#&gt;     1: 2019-06-01         01         001        0.2143620                   NA</span>
-<span class="co">#&gt;     2: 2019-06-02         01         001        0.2202748                   NA</span>
-<span class="co">#&gt;     3: 2019-06-03         01         001        0.2015984                   NA</span>
-<span class="co">#&gt;     4: 2019-06-04         01         001        0.2036443                   NA</span>
-<span class="co">#&gt;     5: 2019-06-05         01         001        0.1922475                   NA</span>
+<span class="co">#&gt;     1: 2019-06-01         01         001        0.2188864                   NA</span>
+<span class="co">#&gt;     2: 2019-06-02         01         001        0.2150723                   NA</span>
+<span class="co">#&gt;     3: 2019-06-03         01         001        0.2062400                   NA</span>
+<span class="co">#&gt;     4: 2019-06-04         01         001        0.2084007                   NA</span>
+<span class="co">#&gt;     5: 2019-06-05         01         001        0.1903687                   NA</span>
 <span class="co">#&gt;    ---                                                                        </span>
-<span class="co">#&gt; 90312: 2020-06-10         78         030        0.2962983            0.2800319</span>
-<span class="co">#&gt; 90313: 2020-06-11         78         030        0.2995778            0.2970374</span>
-<span class="co">#&gt; 90314: 2020-06-12         78         030        0.2693960            0.2568019</span>
-<span class="co">#&gt; 90315: 2020-06-13         78         030        0.3269283            0.3232531</span>
-<span class="co">#&gt; 90316: 2020-06-14         78         030        0.3441301            0.3326492</span>
+<span class="co">#&gt; 90312: 2020-06-10         78         030        0.2962983            0.2877297</span>
+<span class="co">#&gt; 90313: 2020-06-11         78         030        0.2995778            0.2870146</span>
+<span class="co">#&gt; 90314: 2020-06-12         78         030        0.2693960            0.2624232</span>
+<span class="co">#&gt; 90315: 2020-06-13         78         030        0.3269283            0.3080789</span>
+<span class="co">#&gt; 90316: 2020-06-14         78         030        0.3441301            0.3434008</span>
 <span class="co">#&gt;        shrunk_stay_home_YOY</span>
 <span class="co">#&gt;     1:                   NA</span>
 <span class="co">#&gt;     2:                   NA</span>
@@ -247,41 +243,41 @@
 <span class="co">#&gt;     4:                   NA</span>
 <span class="co">#&gt;     5:                   NA</span>
 <span class="co">#&gt;    ---                     </span>
-<span class="co">#&gt; 90312:           0.05808766</span>
-<span class="co">#&gt; 90313:           0.00855264</span>
-<span class="co">#&gt; 90314:           0.04904188</span>
-<span class="co">#&gt; 90315:           0.01136931</span>
-<span class="co">#&gt; 90316:           0.03451361</span></code></pre></div>
+<span class="co">#&gt; 90312:          0.029780297</span>
+<span class="co">#&gt; 90313:          0.043772249</span>
+<span class="co">#&gt; 90314:          0.026570705</span>
+<span class="co">#&gt; 90315:          0.061183575</span>
+<span class="co">#&gt; 90316:          0.002123816</span></code></pre></div>
 </div>
-<div id="make-the-data-presentable" class="section level2">
-<h2 class="hasAnchor">
-<a href="#make-the-data-presentable" class="anchor"></a>3. Make the data presentable!</h2>
+<div class="section level2">
+<h2 id="make-the-data-presentable">3. Make the data presentable!<a class="anchor" aria-label="anchor" href="#make-the-data-presentable"></a>
+</h2>
 <p>Let’s bring in the state and county names for nice labeling</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"fips_to_names"</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"fips_to_names"</span><span class="op">)</span>
 
 <span class="co"># And merge in</span>
-<span class="va">distancing</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html">merge</a></span><span class="op">(</span><span class="va">distancing</span>, <span class="va">fips_to_names</span><span class="op">)</span></code></pre></div>
+<span class="va">distancing</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">distancing</span>, <span class="va">fips_to_names</span><span class="op">)</span></code></pre></div>
 <p>Let’s take a look at the five boroughs of New York!</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">distancing</span><span class="op">[</span><span class="va">statename</span> <span class="op">==</span> <span class="st">'New York'</span> <span class="op">&amp;</span> 
-             <span class="va">countyname</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'New York'</span>, 
+             <span class="va">countyname</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'New York'</span>, 
                               <span class="st">'Kings'</span>, 
                               <span class="st">'Queens'</span>,
                               <span class="st">'Bronx'</span>, 
-                              <span class="st">'Richmond'</span><span class="op">)</span>,<span class="st">'County'</span><span class="op">)</span><span class="op">]</span> <span class="op">%&gt;%</span>
-  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">shrunk_stay_home</span>, color <span class="op">=</span> <span class="va">countyname</span>, label <span class="op">=</span> <span class="va">countyname</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu">directlabels</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/directlabels/man/geom_dl.html">geom_dl</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">date</span> <span class="op">+</span> <span class="fl">.25</span><span class="op">)</span>, method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">'last.bumpup'</span>, cex <span class="op">=</span> <span class="fl">1.1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/label_percent.html">percent</a></span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_date.html">scale_x_date</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">distancing</span><span class="op">$</span><span class="va">date</span><span class="op">)</span> <span class="op">+</span> <span class="fl">4</span>,<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">distancing</span><span class="op">$</span><span class="va">date</span><span class="op">)</span> <span class="op">+</span> <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html">guides</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">'none'</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Date"</span>, y <span class="op">=</span> <span class="st">"Proportion Staying Home"</span>, 
+                              <span class="st">'Richmond'</span><span class="op">)</span>,<span class="st">'County'</span><span class="op">)</span><span class="op">]</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
+  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">shrunk_stay_home</span>, color <span class="op">=</span> <span class="va">countyname</span>, label <span class="op">=</span> <span class="va">countyname</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu">directlabels</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/directlabels/man/geom_dl.html" class="external-link">geom_dl</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">date</span> <span class="op">+</span> <span class="fl">.25</span><span class="op">)</span>, method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">'last.bumpup'</span>, cex <span class="op">=</span> <span class="fl">1.1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/label_percent.html" class="external-link">percent</a></span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_date.html" class="external-link">scale_x_date</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">distancing</span><span class="op">$</span><span class="va">date</span><span class="op">)</span> <span class="op">+</span> <span class="fl">4</span>,<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">distancing</span><span class="op">$</span><span class="va">date</span><span class="op">)</span> <span class="op">+</span> <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html" class="external-link">guides</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">'none'</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Date"</span>, y <span class="op">=</span> <span class="st">"Proportion Staying Home"</span>, 
                 title <span class="op">=</span> <span class="st">"SafeGraph: Stay-at-Home Rates in New York City"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>panel.grid.major.x <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span>,
-                 panel.grid.minor.x <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span>,
-                 text <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span>
+  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>panel.grid.major.x <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,
+                 panel.grid.minor.x <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,
+                 text <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; Warning: Removed 20 row(s) containing missing values (geom_path).</span>
 <span class="co">#&gt; Warning: Removed 20 rows containing missing values (geom_dl).</span></code></pre></div>
 <p><img src="distancing_vignette_files/figure-html/unnamed-chunk-8-1.png" width="672"></p>
@@ -300,11 +296,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Nick Huntington-Klein.</p>
+  <p></p>
+<p>Developed by Nick Huntington-Klein.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -312,6 +310,8 @@
 
   
 
+
+  
 
   </body>
 </html>
