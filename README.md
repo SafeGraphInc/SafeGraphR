@@ -1,6 +1,6 @@
 # SafeGraphR
 
-**SafeGraphR** is an R package designed to make it easy to read in and process data from [SafeGraph](safegraph.com), including data that comes through the Placekey consortium or the [catalog](catalog.safegraph.io). You may want to consult the [Quick Start Guide](https://docs.google.com/document/d/1Xx-nzOX1qF3WfOpg4D8aemwFrrAkQaJuT0-1-CbgxQs/edit), the [Awesome SafeGraph Data Science List](https://github.com/SafeGraphInc/awesome-safegraph-datascience), the [Normalization Best Practices](https://colab.research.google.com/drive/16BELpcum4TKoH-5wg8Xym_CGgIGgpu1I?usp=sharing), and especially the [SafeGraph Docs](docs.safegraph.com/).
+**SafeGraphR** is an R package designed to make it easy to read in and process data from [SafeGraph](safegraph.com). You may want to consult the [SafeGraph Community](https://www.safegraph.com/community), the [Awesome SafeGraph Data Science List](https://github.com/SafeGraphInc/awesome-safegraph-datascience), the [Normalization Best Practices](https://colab.research.google.com/drive/16BELpcum4TKoH-5wg8Xym_CGgIGgpu1I?usp=sharing), and especially the [SafeGraph Docs](docs.safegraph.com/).
 
 You can install **SafeGraphR** directly from GitHub.
 
@@ -19,7 +19,7 @@ The other pages on this site will walk you through how you can use **SafeGraphR*
 
 If you run into an issue or bug in the code, please raise an Issue on the **SafeGraphR** Github [Issues page](https://github.com/SafeGraphInc/SafeGraphR/issues).
 
-If you're just having trouble getting things to work, you can find help at the [Placekey Community Slack Channel](placekey-community.slack.com/) in the *r-troubleshooting* room.
+If you're just having trouble getting things to work, you can find help at the [Placekey Community Slack Channel](placekey-community.slack.com/).
 
 Below is a list of what's in the package with a brief description.
 
@@ -35,7 +35,9 @@ Below is a list of what's in the package with a brief description.
 
 `read_many_shop()` and `read_shop()`: Reads a bunch of (or one, respectively) `.zip` files in the format they come in from the shop and combines the data sets inside the zip across zip-files appropriately.
 
-`safegraph_aws()`: A thin wrapper for `aws.s3::s3sync()` that downloads data from the SafeGraph AWS buckets.
+`safegraph_aws()`: A thin wrapper for `aws.s3::s3sync()` that downloads data from the SafeGraph AWS buckets. As of January 31, 2022, this function will only be useful for enterprise customers with their own AWS access.
+
+`safegraph_api()`: A function you can use to access the [SafeGraph API](https://shop.safegraph.com/api), which allows you to easily pull data on a small number of SafeGraph POIs at a time.
 
 
 ## Data Processing Functions

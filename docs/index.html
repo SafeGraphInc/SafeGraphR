@@ -84,7 +84,7 @@
 <div class="section level1">
 <div class="page-header"><h1 id="safegraphr">SafeGraphR<a class="anchor" aria-label="anchor" href="#safegraphr"></a>
 </h1></div>
-<p><strong>SafeGraphR</strong> is an R package designed to make it easy to read in and process data from <a href="safegraph.com">SafeGraph</a>, including data that comes through the Placekey consortium or the <a href="catalog.safegraph.io">catalog</a>. You may want to consult the <a href="https://docs.google.com/document/d/1Xx-nzOX1qF3WfOpg4D8aemwFrrAkQaJuT0-1-CbgxQs/edit" class="external-link">Quick Start Guide</a>, the <a href="https://github.com/SafeGraphInc/awesome-safegraph-datascience" class="external-link">Awesome SafeGraph Data Science List</a>, the <a href="https://colab.research.google.com/drive/16BELpcum4TKoH-5wg8Xym_CGgIGgpu1I?usp=sharing" class="external-link">Normalization Best Practices</a>, and especially the <a href="docs.safegraph.com/">SafeGraph Docs</a>.</p>
+<p><strong>SafeGraphR</strong> is an R package designed to make it easy to read in and process data from <a href="safegraph.com">SafeGraph</a>. You may want to consult the <a href="https://www.safegraph.com/community" class="external-link">SafeGraph Community</a>, the <a href="https://github.com/SafeGraphInc/awesome-safegraph-datascience" class="external-link">Awesome SafeGraph Data Science List</a>, the <a href="https://colab.research.google.com/drive/16BELpcum4TKoH-5wg8Xym_CGgIGgpu1I?usp=sharing" class="external-link">Normalization Best Practices</a>, and especially the <a href="docs.safegraph.com/">SafeGraph Docs</a>.</p>
 <p>You can install <strong>SafeGraphR</strong> directly from GitHub.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># if necessary</span>
@@ -97,7 +97,7 @@
 </h1>
 <p><strong>SafeGraphR</strong> is currently in <em>beta</em>. All of its functions work, but of course there may be bugs remaining. The code has also not been checked with every possible combination of options that you could pick. Lastly, the SafeGraph data itself changes format on occasion, which may break some <strong>SafeGraphR</strong> functionality.</p>
 <p>If you run into an issue or bug in the code, please raise an Issue on the <strong>SafeGraphR</strong> Github <a href="https://github.com/SafeGraphInc/SafeGraphR/issues" class="external-link">Issues page</a>.</p>
-<p>If you’re just having trouble getting things to work, you can find help at the <a href="placekey-community.slack.com/">Placekey Community Slack Channel</a> in the <em>r-troubleshooting</em> room.</p>
+<p>If you’re just having trouble getting things to work, you can find help at the <a href="placekey-community.slack.com/">Placekey Community Slack Channel</a>.</p>
 <p>Below is a list of what’s in the package with a brief description.</p>
 <div class="section level2">
 <h2 id="data-reading-functions">Data Reading Functions<a class="anchor" aria-label="anchor" href="#data-reading-functions"></a>
@@ -107,7 +107,8 @@
 <p><code><a href="reference/read_many_csvs.html">read_many_csvs()</a></code>: Reads a bunch of CSVs in the same folder and row-binds them all together. Useful for stuff like normalization data.</p>
 <p><code><a href="reference/read_many_patterns.html">read_many_patterns()</a></code> and <code><a href="reference/read_patterns.html">read_patterns()</a></code>: Reads a bunch of (or one, respectively) monthly or weekly patterns <code>.csv.gz</code> files all in the same folder, does appropriate processing, and row-binds the results together.</p>
 <p><code><a href="reference/read_many_shop.html">read_many_shop()</a></code> and <code><a href="reference/read_shop.html">read_shop()</a></code>: Reads a bunch of (or one, respectively) <code>.zip</code> files in the format they come in from the shop and combines the data sets inside the zip across zip-files appropriately.</p>
-<p><code><a href="reference/safegraph_aws.html">safegraph_aws()</a></code>: A thin wrapper for <code><a href="https://rdrr.io/pkg/aws.s3/man/sync.html" class="external-link">aws.s3::s3sync()</a></code> that downloads data from the SafeGraph AWS buckets.</p>
+<p><code><a href="reference/safegraph_aws.html">safegraph_aws()</a></code>: A thin wrapper for <code><a href="https://rdrr.io/pkg/aws.s3/man/sync.html" class="external-link">aws.s3::s3sync()</a></code> that downloads data from the SafeGraph AWS buckets. As of January 31, 2022, this function will only be useful for enterprise customers with their own AWS access.</p>
+<p><code><a href="reference/safegraph_api.html">safegraph_api()</a></code>: A function you can use to access the <a href="https://shop.safegraph.com/api" class="external-link">SafeGraph API</a>, which allows you to easily pull data on a small number of SafeGraph POIs at a time.</p>
 </div>
 <div class="section level2">
 <h2 id="data-processing-functions">Data Processing Functions<a class="anchor" aria-label="anchor" href="#data-processing-functions"></a>
