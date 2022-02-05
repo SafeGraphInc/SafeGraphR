@@ -26,7 +26,7 @@ safegraph_api(
 
 \item{location}{A named vector of location data, or one-row \code{data.frame} with appropriately-named columns, that specifies a single place of interest to look up data for. Available location variable names, and the different combinations that uniquely identify a single location, are available at \url{https://docs.safegraph.com/reference/lookup-name-address}.  Exactly one of \code{placekeys}, \code{address}, or \code{search} must be specified.}
 
-\item{search}{A named list of filter settings, where \code{'address'} may be one entry that is itself a named list, that specifies a set of filter criteria for the SafeGraph POIs. Data will be returned for the first \code{first} matches.}
+\item{search}{A named list of filter settings that specifies a set of filter criteria for the SafeGraph POIs. Data will be returned for the first \code{first} matches.}
 
 \item{first}{If using \code{search}, return only the first \code{first} matches found. If set to any number above \code{20}, batching will be performed automatically if \code{batch = TRUE}. Will not accept a value above \code{1000}.}
 
@@ -34,7 +34,7 @@ safegraph_api(
 
 \item{dataset}{The SafeGraph response dataset(s) to get from. Can be \code{'core'} for the SafeGraph Core data, \code{'geometry'} for geometry files, or \code{'weekly_patterns'} or \code{'monthly_patterns'} for weekly/monthly patterns data. Weekly patterns data will be the week of your choosing; monthly patterns data will always be the most recent month. Or, if using the \code{location} or \code{search} options, set to \code{'placekey'} to return only the Placekeys and not actual data (note you'll get the Placekeys anyway with all the other options). Defaults to \code{'weekly_patterns'}. See \url{https://docs.safegraph.com/reference/safegraph-response-datasets} for more information.}
 
-\item{date}{If \code{dataset = 'weekly_patterns'}, this option is requireed. A string in \code{'YYYY-MM-DD'} format specifying the week of data you want. Can be any day in that week.}
+\item{date}{If \code{dataset = 'weekly_patterns'}, this option is required. A string in \code{'YYYY-MM-DD'} format specifying the week of data you want. Can be any day in that week. The \code{start_date} and \code{end_date} variant currently not supported.}
 
 \item{select}{A character vector with the names of the variables you want returned. Defaults to all variables in the dataset. For the list of variables in each \code{dataset}, see the "Response Objects" section on \url{https://docs.safegraph.com/reference/safegraph-response-datasets}. For variables like \code{brands}, which has sub-variables \code{brand_id} and \code{brand_name}, putting \code{brands} will get all the sub-variables, or you can just get the sub-variables by themselves.}
 
@@ -54,9 +54,19 @@ This function will allow you to make API requests of the SafeGraph API. See the 
 
 \dontrun{
 
-# Download all the recent weekly-patterns files to the working directory
-safegraph_aws(dataset = 'weekly_patterns', key = 'MYINFO', secret = 'MYOTHERINFO')
+# You can look up data for individual placekeys
+mydat = safegraph_api('MY API KEY', placekeys = "222-223@5x4-4b6-mff", select = 'open_hours')
+# Or a vector of them
 
+
+# For specific addresses
+address =   list('location_name' = "Taco Bell",'street_address' = "710 3rd St", 'city'="San Francisco",'region' =  "CA", 'iso_country_code' = "US")
+mydat = safegraph_api('MY API KEY', location= address, select = 'open_hours')
+
+# Or for (a subset of) POIs that match a search
+search <- list('city' = 'San Francisco', 'brand' = 'Starbucks')
+mydat = safegraph_api('MY API KEY', search = search, select = 'raw_visit_counts',
+                       dataset = 'weekly_patterns', date = '2021-01-01')
 }
 
 }

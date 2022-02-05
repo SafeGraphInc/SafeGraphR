@@ -20,11 +20,10 @@ knitr::opts_chunk$set(
 library(SafeGraphR)
 ```
 
-**Note that any part of this vignette about pulling data from the SafeGraph C19 AWS bucket will be outdated as of January 31, 2022 when that server goes offline.**
 
 This vignette will walk you through the process of reading in, processing, and displaying SafeGraph patterns data. This will look at the use of patterns data *generally*. For a more automated look at processing `visits_by_day` data for foot traffic over time, see the "Automatic Traffic-over-Time Processing" vignette.
 
-This vignette will work with weekly data from the *weekly-patterns-delivery/weekly* SafeGraph Amazon Web Services bucket (see the [SafeGraph Catalog](https://catalog.safegraph.io) for more information), which could also be downloaded using `safegraph_aws()` or `safegraph_api()`. However, with only minor variation in the first section, the same processes could be applied to data downloaded from the SafeGraph shop, or to monthly patterns, or to *weekly-patterns/v2* data under the old format.
+This vignette will work with weekly data files, which could also be downloaded using `safegraph_aws()` if you have an AWS connection, or `safegraph_api()`. However, with only minor variation in the first section, the same processes could be applied to data downloaded from the SafeGraph shop, or to monthly patterns.
 
 Note that throughout this vignette, we will be working with data manipulation using the **data.table** package. **data.table** is used throughout **SafeGraphR** (and on the backend) because it is very fast and can handle large data sets easily. However, once the data is read in and processed, it's often no longer necessary to use **data.table** if you prefer something else. The code in this vignette could have easily used, for example, **dplyr** instead. If you are having trouble understanding the code chunks because you're familiar with **dplyr** but not **data.table**, see [this guide](https://atrebas.github.io/post/2019-03-03-datatable-dplyr/) that links the two.
 
@@ -205,7 +204,7 @@ We have a few goals at this point:
 
 The aggregation we want to do at this point depends on where we want the data to go. Let's work on `pat_NY_NJ`. If we want to use state-level data to inform individual county estimates, we should consider using `hb_shrink` (and an example of that will be in the social distancing vignette). But if we want to use county-level estimates to aggregate up to the state level, we might want to use `sample_size_adjust()` to account for differences in sampling rates across counties.
 
-You may also want to do more adjustments for changes over time in the sample size, as described in Section 2 of the [Normalization Best Practices](https://colab.research.google.com/drive/16BELpcum4TKoH-5wg8Xym_CGgIGgpu1I?usp=sharing) guide. But this is not done here (except in the normalization step).
+You may also want to do more adjustments for changes over time in the sample size, as described in Section 2 of the [Normalization Best Practices](https://colab.research.google.com/drive/16BELpcum4TKoH-5wg8Xym_CGgIGgpu1I?usp=sharing) guide. But this is not done here (except in the normalization step). **Note also that newer versions of the patterns data, as of February 2022, contain pre-normalized columns so you can use those instead and skip this step if those do what you want.**
 
 In general, `sample_size_adjust()` compares the number of devices in each county (or census block group) to the population in that area, and adjusts the total counts as though every region were sampled at the same rate.
 
@@ -232,13 +231,7 @@ pat_NY_NJ[, visits_by_day_adj := visits_by_day*adjust_factor]
 pat_NY_NJ <- pat_NY_NJ[,.(visits_by_day_adj = sum(visits_by_day_adj)), by = c('state_fips', 'date')]
 ```
 
-Now for NAICS, we don't need to do this sample size adjustment. However, **as previously mentioned**, this used new data, so we have one row per NAICS code per day **per original file**, and since the patterns data was broken up into four files, we have four rows where we want one, and need to aggregate again.
-
-```{r}
-pat_naics <- pat_naics[,.(visits_by_day = sum(visits_by_day)), by = c('naics_code', 'date')]
-```
-
-Next up we normalize by the size of the SafeGraph data set on the day, which came from the normalization stats.
+For NAICS, we don't need to do this sample size adjustment. Next up we normalize by the size of the SafeGraph data set on the day, which came from the normalization stats.
 
 This is as simple as merging in our `norm` data we made, and dividing by `total_devices_seen`. We do this for both `pat_NY_NJ` and `pat_naics`.
 

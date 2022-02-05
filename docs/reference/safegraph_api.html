@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SafeGraphR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.2</span>
       </span>
     </div>
 
@@ -91,7 +91,7 @@
 <dt>location</dt>
 <dd><p>A named vector of location data, or one-row <code>data.frame</code> with appropriately-named columns, that specifies a single place of interest to look up data for. Available location variable names, and the different combinations that uniquely identify a single location, are available at <a href="https://docs.safegraph.com/reference/lookup-name-address" class="external-link">https://docs.safegraph.com/reference/lookup-name-address</a>.  Exactly one of <code>placekeys</code>, <code>address</code>, or <code>search</code> must be specified.</p></dd>
 <dt>search</dt>
-<dd><p>A named list of filter settings, where <code>'address'</code> may be one entry that is itself a named list, that specifies a set of filter criteria for the SafeGraph POIs. Data will be returned for the first <code>first</code> matches.</p></dd>
+<dd><p>A named list of filter settings that specifies a set of filter criteria for the SafeGraph POIs. Data will be returned for the first <code>first</code> matches.</p></dd>
 <dt>first</dt>
 <dd><p>If using <code>search</code>, return only the first <code>first</code> matches found. If set to any number above <code>20</code>, batching will be performed automatically if <code>batch = TRUE</code>. Will not accept a value above <code>1000</code>.</p></dd>
 <dt>after</dt>
@@ -99,7 +99,7 @@
 <dt>dataset</dt>
 <dd><p>The SafeGraph response dataset(s) to get from. Can be <code>'core'</code> for the SafeGraph Core data, <code>'geometry'</code> for geometry files, or <code>'weekly_patterns'</code> or <code>'monthly_patterns'</code> for weekly/monthly patterns data. Weekly patterns data will be the week of your choosing; monthly patterns data will always be the most recent month. Or, if using the <code>location</code> or <code>search</code> options, set to <code>'placekey'</code> to return only the Placekeys and not actual data (note you'll get the Placekeys anyway with all the other options). Defaults to <code>'weekly_patterns'</code>. See <a href="https://docs.safegraph.com/reference/safegraph-response-datasets" class="external-link">https://docs.safegraph.com/reference/safegraph-response-datasets</a> for more information.</p></dd>
 <dt>date</dt>
-<dd><p>If <code>dataset = 'weekly_patterns'</code>, this option is requireed. A string in <code>'YYYY-MM-DD'</code> format specifying the week of data you want. Can be any day in that week.</p></dd>
+<dd><p>If <code>dataset = 'weekly_patterns'</code>, this option is required. A string in <code>'YYYY-MM-DD'</code> format specifying the week of data you want. Can be any day in that week. The <code>start_date</code> and <code>end_date</code> variant currently not supported.</p></dd>
 <dt>select</dt>
 <dd><p>A character vector with the names of the variables you want returned. Defaults to all variables in the dataset. For the list of variables in each <code>dataset</code>, see the "Response Objects" section on <a href="https://docs.safegraph.com/reference/safegraph-response-datasets" class="external-link">https://docs.safegraph.com/reference/safegraph-response-datasets</a>. For variables like <code>brands</code>, which has sub-variables <code>brand_id</code> and <code>brand_name</code>, putting <code>brands</code> will get all the sub-variables, or you can just get the sub-variables by themselves.</p></dd>
 <dt>batch</dt>
@@ -119,9 +119,19 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="co"># Download all the recent weekly-patterns files to the working directory</span></span>
-<span class="r-in"><span class="fu"><a href="safegraph_aws.html">safegraph_aws</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="st">'weekly_patterns'</span>, key <span class="op">=</span> <span class="st">'MYINFO'</span>, secret <span class="op">=</span> <span class="st">'MYOTHERINFO'</span><span class="op">)</span></span>
+<span class="r-in"><span class="co"># You can look up data for individual placekeys</span></span>
+<span class="r-in"><span class="va">mydat</span> <span class="op">=</span> <span class="fu">safegraph_api</span><span class="op">(</span><span class="st">'MY API KEY'</span>, placekeys <span class="op">=</span> <span class="st">"222-223@5x4-4b6-mff"</span>, select <span class="op">=</span> <span class="st">'open_hours'</span><span class="op">)</span></span>
+<span class="r-in"><span class="co"># Or a vector of them</span></span>
 <span class="r-in"></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># For specific addresses</span></span>
+<span class="r-in"><span class="va">address</span> <span class="op">=</span>   <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">'location_name'</span> <span class="op">=</span> <span class="st">"Taco Bell"</span>,<span class="st">'street_address'</span> <span class="op">=</span> <span class="st">"710 3rd St"</span>, <span class="st">'city'</span><span class="op">=</span><span class="st">"San Francisco"</span>,<span class="st">'region'</span> <span class="op">=</span>  <span class="st">"CA"</span>, <span class="st">'iso_country_code'</span> <span class="op">=</span> <span class="st">"US"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">mydat</span> <span class="op">=</span> <span class="fu">safegraph_api</span><span class="op">(</span><span class="st">'MY API KEY'</span>, location<span class="op">=</span> <span class="va">address</span>, select <span class="op">=</span> <span class="st">'open_hours'</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># Or for (a subset of) POIs that match a search</span></span>
+<span class="r-in"><span class="va">search</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">'city'</span> <span class="op">=</span> <span class="st">'San Francisco'</span>, <span class="st">'brand'</span> <span class="op">=</span> <span class="st">'Starbucks'</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">mydat</span> <span class="op">=</span> <span class="fu">safegraph_api</span><span class="op">(</span><span class="st">'MY API KEY'</span>, search <span class="op">=</span> <span class="va">search</span>, select <span class="op">=</span> <span class="st">'raw_visit_counts'</span>,</span>
+<span class="r-in">                       dataset <span class="op">=</span> <span class="st">'weekly_patterns'</span>, date <span class="op">=</span> <span class="st">'2021-01-01'</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-in"></span>
 </code></pre></div>
@@ -138,7 +148,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer></div>

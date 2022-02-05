@@ -31,4 +31,8 @@
 
 # SafeGraphR 0.5.0
 
-* Added `safegraph_api` and made `safegraph_aws` more flexible to not rely on the soon-shutting-down C19 bucket.
+* Added `safegraph_api` and made `safegraph_aws` more flexible to not rely on the soon-shutting-down C19 bucket
+
+# SafeGraphR 0.5.2
+
+* Updated vignettes to reflect new usage, removed warning about "upcoming" changes.

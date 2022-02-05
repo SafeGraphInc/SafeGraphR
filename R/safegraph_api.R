@@ -7,11 +7,11 @@
 #' @param key A character string containing an API Access Key. See \url{https://docs.safegraph.com/reference/access-and-authentication} to get one.
 #' @param placekeys A character vector of Placekeys to look up data with. If this is more than 20 Placekeys long, batching will be performed automatically as long as \code{batch = TRUE}. Cannot be longer than 1000 entries. Exactly one of \code{placekeys}, \code{address}, or \code{search} must be specified.
 #' @param location A named vector of location data, or one-row \code{data.frame} with appropriately-named columns, that specifies a single place of interest to look up data for. Available location variable names, and the different combinations that uniquely identify a single location, are available at \url{https://docs.safegraph.com/reference/lookup-name-address}.  Exactly one of \code{placekeys}, \code{address}, or \code{search} must be specified.
-#' @param search A named list of filter settings, where \code{'address'} may be one entry that is itself a named list, that specifies a set of filter criteria for the SafeGraph POIs. Data will be returned for the first \code{first} matches.
+#' @param search A named list of filter settings that specifies a set of filter criteria for the SafeGraph POIs. Data will be returned for the first \code{first} matches.
 #' @param first If using \code{search}, return only the first \code{first} matches found. If set to any number above \code{20}, batching will be performed automatically if \code{batch = TRUE}. Will not accept a value above \code{1000}.
 #' @param after If using \code{search}, skip the first \code{after} matches before returning the next \code{first} matches.
 #' @param dataset The SafeGraph response dataset(s) to get from. Can be \code{'core'} for the SafeGraph Core data, \code{'geometry'} for geometry files, or \code{'weekly_patterns'} or \code{'monthly_patterns'} for weekly/monthly patterns data. Weekly patterns data will be the week of your choosing; monthly patterns data will always be the most recent month. Or, if using the \code{location} or \code{search} options, set to \code{'placekey'} to return only the Placekeys and not actual data (note you'll get the Placekeys anyway with all the other options). Defaults to \code{'weekly_patterns'}. See \url{https://docs.safegraph.com/reference/safegraph-response-datasets} for more information.
-#' @param date If \code{dataset = 'weekly_patterns'}, this option is requireed. A string in \code{'YYYY-MM-DD'} format specifying the week of data you want. Can be any day in that week.
+#' @param date If \code{dataset = 'weekly_patterns'}, this option is required. A string in \code{'YYYY-MM-DD'} format specifying the week of data you want. Can be any day in that week. The \code{start_date} and \code{end_date} variant currently not supported.
 #' @param select A character vector with the names of the variables you want returned. Defaults to all variables in the dataset. For the list of variables in each \code{dataset}, see the "Response Objects" section on \url{https://docs.safegraph.com/reference/safegraph-response-datasets}. For variables like \code{brands}, which has sub-variables \code{brand_id} and \code{brand_name}, putting \code{brands} will get all the sub-variables, or you can just get the sub-variables by themselves.
 #' @param batch Set to \code{TRUE} to allow for batching of results if there are more than 20 POIs being returned. Batching may be quite slow if there are a lot of matches! See the rate limiting in the Placekey API docs. Also note the 1000-per-minute rate limit, so if you decide to run multiple of your own large \code{safegraph_api} calls you may want to space them out.
 #' @param display_call Set to \code{TRUE} to print out the API call.
@@ -20,9 +20,19 @@
 #'
 #' \dontrun{
 #'
-#' # Download all the recent weekly-patterns files to the working directory
-#' safegraph_aws(dataset = 'weekly_patterns', key = 'MYINFO', secret = 'MYOTHERINFO')
+#' # You can look up data for individual placekeys
+#' mydat = safegraph_api('MY API KEY', placekeys = "222-223@5x4-4b6-mff", select = 'open_hours')
+#' # Or a vector of them
 #'
+#'
+#' # For specific addresses
+#' address =   list('location_name' = "Taco Bell",'street_address' = "710 3rd St", 'city'="San Francisco",'region' =  "CA", 'iso_country_code' = "US")
+#' mydat = safegraph_api('MY API KEY', location= address, select = 'open_hours')
+#'
+#' # Or for (a subset of) POIs that match a search
+#' search <- list('city' = 'San Francisco', 'brand' = 'Starbucks')
+#' mydat = safegraph_api('MY API KEY', search = search, select = 'raw_visit_counts',
+#'                        dataset = 'weekly_patterns', date = '2021-01-01')
 #' }
 #'
 #' @export
@@ -137,6 +147,7 @@ safegraph_api <- function(key,
       querylist[[i]] <- build_placekeys_query(thiscall, dataset, date, select, brandreqs)
     }
   } else if (!is.null(location)) {
+    numcalls <- 1
     querylist[[1]] <- build_location_query(location, dataset, date, select, brandreqs)
   } else if (!is.null(search)) {
     # How many calls will this take
@@ -170,7 +181,11 @@ safegraph_api <- function(key,
   count <- 1
   for (query in querylist) {
     if (count > 1) {
-      sleep()
+      Sys.sleep(1)
+    }
+
+    if (display_call) {
+      cat(query[[2]])
     }
 
     # Pull data
@@ -178,7 +193,29 @@ safegraph_api <- function(key,
     result <- conn$exec(new$link, variables = query[[1]])
 
     resproc <- jsonlite::fromJSON(result)
-    resdata <- data.table::as.data.table(resproc$data)
+
+    # Get out the actual data
+    resdata <- resproc$data
+    if (!is.null(location)) {
+      resdata <- resdata[[1]]
+    } else {
+      while (!is.data.frame(resdata)) {
+        resdata <- resdata[[1]]
+
+        if (!is.list(resdata)) {
+          stop('Unable to find the data inside the returned JSON object,')
+        }
+      }
+
+      if (!is.null(resdata$node)) {
+        resdata <- resdata$node
+      }
+    }
+    resdata <- data.table::as.data.table(cbind(data.frame(placekey = resdata[[1]]),resdata[[2]]))
+
+    data.table::setnames(resdata, gsub('edges\\.node\\.','',names(resdata)))
+    data.table::setnames(resdata, gsub('batch_lookup\\.','',names(resdata)))
+    data.table::setnames(resdata, gsub('node\\.','',names(resdata)))
 
     resdata[, version_date := resproc$extensions$version_date]
 
@@ -228,8 +265,13 @@ build_location_query <- function(location, dataset, date = NULL, select, brandre
   } else {
     location <- as.data.frame(lapply(location, as.character))
   }
-  locstring <- as.character(jsonlite::toJSON(location, pretty = TRUE))
-  locstring <- stringr::str_sub(locstring, 3, -3)
+
+  locstring <- ''
+  for (v in names(location)) {
+    locstring <- paste0(locstring, '\t', v, ': "', location[[v]][1], '"\n')
+  }
+  locstring <- paste0('{\n',locstring,'}')
+
 
   query <- paste0('query {\n',
                   '  lookup(\n',
@@ -275,10 +317,36 @@ build_search_query <- function(search, dataset, date, select,  brandreqs, after,
                       filterstr,
                       '\t}) {\n')
 
+  weeklydate <- ''
+  if (dataset == 'weekly_patterns') {
+    weeklydate <- paste0(' (date: "',date,'")')
+  }
+
+  if (is.null(after)) {
+    resline <- paste0('results(first: ', first, ') {\n')
+  } else {
+    resline <- paste0('results(first: ', first, ' after: ', after, ') {\n')
+  }
+
   query <- paste0('query {\n',
                   filterstr,
-                  '')
+                  '\t\tplaces {\n\t\t\t',
+                  resline,
+                  '\t\t\t\tedges {\n',
+                  '\t\t\t\t\tnode {\n',
+                  '\t\t\t\t\t\tplacekey\n',
+                  '\t\t\t\t\t\tsafegraph_',dataset, weeklydate, ' {\n',
+                  variable_request_list(select, brandreqs),
+                  '\t\t\t\t\t}\n',
+                  '\t\t\t\t}\n',
+                  '\t\t\t}\n',
+                  '\t\t}\n',
+                  '\t}\n',
+                  '}}')
+
+  return(list(NULL, query))
 }
+
 
 
 search_filter_build <- function(jlist, tabs = 2) {

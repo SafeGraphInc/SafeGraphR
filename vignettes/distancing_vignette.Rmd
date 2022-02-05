@@ -22,9 +22,9 @@ library(SafeGraphR)
 
 This vignette will walk you through the process of reading in, processing, and displaying SafeGraph stay-at-home data.
 
-Note that the stay-at-home-data is **no longer being updated** as of April 19, 2021. However, this should work for the old data.
+**Note that the stay-at-home-data is no longer being updated as of April 19, 2021. However, this should work for the old data.**
 
-This vignette will work with data from the *social-distancing/v2/* SafeGraph Amazon Web Services bucket (see the [SafeGraph Catalog](https://catalog.safegraph.io) for more information), which could also be downloaded using `safegraph_aws()`. 
+This vignette will work with data from the *social-distancing/v2/* SafeGraph Amazon Web Services bucket (see the [SafeGraph Catalog](https://catalog.safegraph.io) for more information), which is no longer available. 
 
 Note that throughout this vignette, we will be working with data manipulation using the **data.table** package. **data.table** is used throughout **SafeGraphR** (and on the backend) because it is very fast and can handle large data sets easily. However, once the data is read in and processed, it's often no longer necessary to use **data.table** if you prefer something else. The code in this vignette could have easily used, for example, **dplyr** instead. If you are having trouble understanding the code chunks because you're familiar with **dplyr** but not **data.table**, see [this guide](https://atrebas.github.io/post/2019-03-03-datatable-dplyr/) that links the two.
 
@@ -60,7 +60,7 @@ We will be calculating and using the percentage of each county that is staying h
 We have a few goals at this point:
 
 1. Do any further aggregation or adjustments we like
-2. Smooth out weekend effects
+2. Smoothe out weekend effects
 3. Make the data presentable!
 
 ## 1. Do any further aggregation or adjustments we like

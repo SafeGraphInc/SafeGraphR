@@ -24,6 +24,8 @@ This vignette will walk through the process of using the Traffic-Over-Time funct
 
 The idea is that you can do basically everything you need with a single `growth_over_time()` call. This vignette will discuss how to make that call, and also talk about some of the internal functions it uses, so you can know how to use them yourself if you'd like to be a little more hands-on.
 
+**Note that in any case where this function downloads data from AWS - wherever you need a key or secret argument - that the original AWS bucket no longer exists; you'll need to pass along the appropriate `safegraph_aws()` arguments as well if you have your own AWS setup.**
+
 ---
 
 # growth_over_time

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SafeGraphR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.2</span>
       </span>
     </div>
 
@@ -95,7 +95,8 @@
     <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"SafeGraph Foot Traffic Growth by"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">by</span><span class="op">[</span><span class="op">!</span><span class="op">(</span><span class="va">by</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">graph_by</span><span class="op">)</span><span class="op">]</span>, collapse <span class="op">=</span>
     <span class="st">", "</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
   patterns_backfill_date <span class="op">=</span> <span class="st">"2020/12/14/21/"</span>,
-  norm_backfill_date <span class="op">=</span> <span class="st">"2020/12/14/21/"</span>
+  norm_backfill_date <span class="op">=</span> <span class="st">"2020/12/14/21/"</span>,
+  <span class="va">...</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -149,6 +150,8 @@
 <dd><p>Character variable with the folder structure for the most recent <code>patterns_backfill</code> pull. i.e., the 2018, 2019, and 2020 folders containing backfill data in their subfolders should set in the <code>paste0(old_dir,'/patterns_backfill/',patterns_backfill_date)</code> folder.</p></dd>
 <dt>norm_backfill_date</dt>
 <dd><p>A character string containing the series of dates that fills the X in <code>normalization_stats_backfill/X/</code> and in which the <code>2018</code>, <code>2019</code>, and <code>2020</code> folders sit.</p></dd>
+<dt>...</dt>
+<dd><p>Parameters to be passed on to <code><a href="patterns_lookup.html">patterns_lookup()</a></code> (and, often, from there on to <code><a href="safegraph_aws.html">safegraph_aws()</a></code>.)</p></dd>
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -198,7 +201,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer></div>

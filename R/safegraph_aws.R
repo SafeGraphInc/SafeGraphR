@@ -43,9 +43,7 @@ safegraph_aws <- function(path = '.',
                           max_print = 1,
                           ...) {
 
-  warning('The safegraph C19 AWS server will be shut down as of January 31, 2022.')
-  warning('At that time this function will stop working with the C19 AWS server,')
-  warning('but will work for enterprise clients with AWS access.')
+  warning('The safegraph C19 AWS server is to be shut down as of January 31, 2022. This function will still work for enterprise users with their own AWS access.')
   if (grepl('new',dataset)) {
     stop('As of SafeGraphR 0.4.2, the bucket names are changed and the "new" suffix is no longer required. See help(safegraph_aws).')
   }

@@ -33,7 +33,8 @@ growth_over_time(
     paste("SafeGraph Foot Traffic Growth by", paste(by[!(by \%in\% graph_by)], collapse =
     ", ")))),
   patterns_backfill_date = "2020/12/14/21/",
-  norm_backfill_date = "2020/12/14/21/"
+  norm_backfill_date = "2020/12/14/21/",
+  ...
 )
 }
 \arguments{
@@ -84,6 +85,8 @@ growth_over_time(
 \item{patterns_backfill_date}{Character variable with the folder structure for the most recent \code{patterns_backfill} pull. i.e., the 2018, 2019, and 2020 folders containing backfill data in their subfolders should set in the \code{paste0(old_dir,'/patterns_backfill/',patterns_backfill_date)} folder.}
 
 \item{norm_backfill_date}{A character string containing the series of dates that fills the X in \code{normalization_stats_backfill/X/} and in which the \code{2018}, \code{2019}, and \code{2020} folders sit.}
+
+\item{...}{Parameters to be passed on to \code{patterns_lookup()} (and, often, from there on to \code{safegraph_aws()}.)}
 }
 \description{
 A start-to-finish download and analysis! This function, given a range of dates, a subset of data, and a grouping set, will produce an estimate of how foot traffic to those groups has changed over that date range within that subset.

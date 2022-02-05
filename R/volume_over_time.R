@@ -350,6 +350,7 @@ processing_template <- function(dt,
 #' @param graph_opts A named list of options to be sent to \code{graph_template}.
 #' @param patterns_backfill_date Character variable with the folder structure for the most recent \code{patterns_backfill} pull. i.e., the 2018, 2019, and 2020 folders containing backfill data in their subfolders should set in the \code{paste0(old_dir,'/patterns_backfill/',patterns_backfill_date)} folder.
 #' @param norm_backfill_date A character string containing the series of dates that fills the X in \code{normalization_stats_backfill/X/} and in which the \code{2018}, \code{2019}, and \code{2020} folders sit.
+#' @param ... Parameters to be passed on to \code{patterns_lookup()} (and, often, from there on to \code{safegraph_aws()}.)
 #' @examples
 #'
 #'  \dontrun{
@@ -400,7 +401,7 @@ growth_over_time <- function(dates, by,
                                                    default = paste('SafeGraph Foot Traffic Growth by', paste(by[!(by %in% graph_by)], collapse = ', '))
                                                  )),
                              patterns_backfill_date = '2020/12/14/21/',
-                             norm_backfill_date = '2020/12/14/21/') {
+                             norm_backfill_date = '2020/12/14/21/',...) {
 
   if (test_run) {
     message('Running as a test run with one week of data. Surprised to see this message? Should have read the docs! This warning is in there because this function is slow and moves a lot of data, so be sure it\'s right before running.')
@@ -482,11 +483,11 @@ growth_over_time <- function(dates, by,
     newdates <- dates[dates >= lubridate::ymd('2020-12-07')]
 
     # First the old!
-    oldlist <- paste0(dir,patterns_lookup(olddates))
+    oldlist <- paste0(dir,patterns_lookup(olddates, ...))
     oldnorm <- stringr::str_replace_all(oldlist, 'patterns_backfill','normalization_stats_backfill')
 
     # And the new
-    newlist <- paste0(dir, patterns_lookup(newdates))
+    newlist <- paste0(dir, patterns_lookup(newdates, ...))
     newnorm <- stringr::str_replace_all(newlist, 'patterns', 'normalization_stats')
 
     # If there's no AWS access, make sure all files exist

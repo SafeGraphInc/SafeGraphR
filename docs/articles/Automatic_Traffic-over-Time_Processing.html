@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SafeGraphR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.2</span>
       </span>
     </div>
 
@@ -94,10 +94,11 @@
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">SafeGraphR</span><span class="op">)</span></code></pre></div>
 <p>This vignette will walk through the process of using the Traffic-Over-Time functions, introduced in <strong>SafeGraphR</strong> version 0.3.0, which completely automate the process of downloading, reading, processing, and outputting SafeGraph data in the <code>visits_by_day</code> column. This process is optimized for use with <code>visits_by_day</code>, although you might be able to get at least some of it to work for other variables.</p>
 <p>The idea is that you can do basically everything you need with a single <code><a href="../reference/growth_over_time.html">growth_over_time()</a></code> call. This vignette will discuss how to make that call, and also talk about some of the internal functions it uses, so you can know how to use them yourself if you’d like to be a little more hands-on.</p>
+<p><strong>Note that in any case where this function downloads data from AWS - wherever you need a key or secret argument - that the original AWS bucket no longer exists; you’ll need to pass along the appropriate <code><a href="../reference/safegraph_aws.html">safegraph_aws()</a></code> arguments as well if you have your own AWS setup.</strong></p>
 <hr>
-<div class="section level1">
-<h1 id="growth_over_time">growth_over_time<a class="anchor" aria-label="anchor" href="#growth_over_time"></a>
-</h1>
+<div class="section level2">
+<h2 id="growth_over_time">growth_over_time<a class="anchor" aria-label="anchor" href="#growth_over_time"></a>
+</h2>
 <p>The <code><a href="../reference/growth_over_time.html">growth_over_time()</a></code> function is intended to produce a data set and (optionally) graph showing how a certain <em>subset</em> of traffic data from the weekly patterns files changes over <em>a set of dates</em>, possibly doing <em>different groups separately</em>.</p>
 <p>The first thing we need to do is determine the set of dates that we want to track traffic over, for the <code>dates</code> argument. This is a vector of dates. If you want a range of dates, one good way to do it is <code>lubridate::ymd('year-month-day') + lubridate::days(0:numberofdaystotrack)</code>. The date range you give will be expanded based on <code>ma</code> to ensure that when you take a moving average with <code><a href="../reference/ma.html">ma()</a></code>, your entire date range survives.</p>
 <p>This expanded date range will be passed to <code><a href="../reference/patterns_lookup.html">patterns_lookup()</a></code> to determine the set of folders that the data you need are in. If you also give an AWS <code>key</code> and <code>secret</code>, it will download all those files for you, along with the appropriate normalization data.</p>
@@ -178,9 +179,9 @@
 <p>Or, if <code>make_graph = TRUE</code>, instead you get a list where the <code><a href="../reference/processing_template.html">processing_template()</a></code> output is the first element of that list! The second would then be a graph or list of graphs. The other arguments in <code><a href="../reference/growth_over_time.html">growth_over_time()</a></code> have to do with the creation of graphs.</p>
 <hr>
 </div>
-<div class="section level1">
-<h1 id="graphing-with-growth_over_time">Graphing with growth_over_time<a class="anchor" aria-label="anchor" href="#graphing-with-growth_over_time"></a>
-</h1>
+<div class="section level2">
+<h2 id="graphing-with-growth_over_time">Graphing with growth_over_time<a class="anchor" aria-label="anchor" href="#graphing-with-growth_over_time"></a>
+</h2>
 <p>If you want control over the graphing process, it’s probably just a good idea to take the <code><a href="../reference/processing_template.html">processing_template()</a></code>/<code><a href="../reference/growth_over_time.html">growth_over_time()</a></code> output and graph it yourself.</p>
 <p>However, setting <code>make_graph = TRUE</code> will get you a pretty nice-looking graph without any further work! Probably not completely publication-ready (but it <em>does</em> look nice - you’d have to fiddle with titles, etc., though), but definitely good enough for your own information.</p>
 <p>Setting <code>make_graph = TRUE</code> with nothing else will simply take the output discussed in the last section and send it to <code><a href="../reference/graph_template.html">graph_template()</a></code>, which produces a <strong>ggplot2</strong> line graph with labels at the end of the lines, and a separate line for each combination of <code>by</code>. It will also combine the elements of <code>by</code> into a single variable, if there’s more than one element.</p>
@@ -229,7 +230,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>

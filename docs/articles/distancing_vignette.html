@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SafeGraphR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.2</span>
       </span>
     </div>
 
@@ -93,13 +93,13 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">SafeGraphR</span><span class="op">)</span></code></pre></div>
 <p>This vignette will walk you through the process of reading in, processing, and displaying SafeGraph stay-at-home data.</p>
-<p>Note that the stay-at-home-data is <strong>no longer being updated</strong> as of April 19, 2021. However, this should work for the old data.</p>
-<p>This vignette will work with data from the <em>social-distancing/v2/</em> SafeGraph Amazon Web Services bucket (see the <a href="https://catalog.safegraph.io" class="external-link">SafeGraph Catalog</a> for more information), which could also be downloaded using <code><a href="../reference/safegraph_aws.html">safegraph_aws()</a></code>.</p>
+<p><strong>Note that the stay-at-home-data is no longer being updated as of April 19, 2021. However, this should work for the old data.</strong></p>
+<p>This vignette will work with data from the <em>social-distancing/v2/</em> SafeGraph Amazon Web Services bucket (see the <a href="https://catalog.safegraph.io" class="external-link">SafeGraph Catalog</a> for more information), which is no longer available.</p>
 <p>Note that throughout this vignette, we will be working with data manipulation using the <strong>data.table</strong> package. <strong>data.table</strong> is used throughout <strong>SafeGraphR</strong> (and on the backend) because it is very fast and can handle large data sets easily. However, once the data is read in and processed, it’s often no longer necessary to use <strong>data.table</strong> if you prefer something else. The code in this vignette could have easily used, for example, <strong>dplyr</strong> instead. If you are having trouble understanding the code chunks because you’re familiar with <strong>dplyr</strong> but not <strong>data.table</strong>, see <a href="https://atrebas.github.io/post/2019-03-03-datatable-dplyr/" class="external-link">this guide</a> that links the two.</p>
 <hr>
-<div class="section level1">
-<h1 id="reading-in-data">Reading in Data<a class="anchor" aria-label="anchor" href="#reading-in-data"></a>
-</h1>
+<div class="section level2">
+<h2 id="reading-in-data">Reading in Data<a class="anchor" aria-label="anchor" href="#reading-in-data"></a>
+</h2>
 <p>We will read in the distancing data using the <code><a href="../reference/read_distancing.html">read_distancing()</a></code> function. This relies on the files in the <code>social-distancing/v2</code> bucket in the Amazon Web Services bucket, which you can download using <code><a href="../reference/safegraph_aws.html">safegraph_aws()</a></code> (or using the AWS CLI). See the <a href="https://catalog.safegraph.io" class="external-link">SafeGraph Catalog</a>.</p>
 <p>Once we’ve downloaded it, the files will be in a YEAR/MONTH/DAY/FILE structure. We can tell it where to begin and end reading files (we probably don’t want ALL the files - that would be very large!) by specifying a <code>start</code> and <code>end</code> date. Let’s get all the data from June 1 to June 14, 2020.</p>
 <p><strong>IMPORTANT</strong>: by default, <code><a href="../reference/read_distancing.html">read_distancing()</a></code> will only <code>select</code> the variables necessary to get stay-at-home percentages, and will aggregate <code>by</code> the state and county level. If you want more variables from the data, change <code>select</code>. And if you want the original raw census block group-level data (<code>origin_census_block_group</code>), change <code>by</code>. There is also an option to <code>filter</code> the data.</p>
@@ -150,19 +150,19 @@
 <span class="co">#&gt; 45158: 2020-06-01</span></code></pre></div>
 <hr>
 </div>
-<div class="section level1">
-<h1 id="processing-data">Processing Data<a class="anchor" aria-label="anchor" href="#processing-data"></a>
-</h1>
+<div class="section level2">
+<h2 id="processing-data">Processing Data<a class="anchor" aria-label="anchor" href="#processing-data"></a>
+</h2>
 <p>We will be calculating and using the percentage of each county that is staying home, which is <code>completely_home_device_count/device_count</code>, but we may need to do some adjustments.</p>
 <p>We have a few goals at this point:</p>
 <ol style="list-style-type: decimal">
 <li>Do any further aggregation or adjustments we like</li>
-<li>Smooth out weekend effects</li>
+<li>Smoothe out weekend effects</li>
 <li>Make the data presentable!</li>
 </ol>
-<div class="section level2">
-<h2 id="do-any-further-aggregation-or-adjustments-we-like">1. Do any further aggregation or adjustments we like<a class="anchor" aria-label="anchor" href="#do-any-further-aggregation-or-adjustments-we-like"></a>
-</h2>
+<div class="section level3">
+<h3 id="do-any-further-aggregation-or-adjustments-we-like">1. Do any further aggregation or adjustments we like<a class="anchor" aria-label="anchor" href="#do-any-further-aggregation-or-adjustments-we-like"></a>
+</h3>
 <p>Any additional adjustments that we do depend on the level we want the eventual data at. If we want to aggregate the data up to a higher level (perhaps to get stay-at-home by state), we might want to do <code><a href="../reference/sample_size_adjust.html">sample_size_adjust()</a></code> to account for different sampling rates across regions. See the Patterns Vignette for an example of using <code><a href="../reference/sample_size_adjust.html">sample_size_adjust()</a></code>.</p>
 <p>If instead we want to report the granular individual-level data, we should perform Bayesian shrinkage with <code><a href="../reference/hb_shrink.html">hb_shrink()</a></code>. so that we don’t get strange results from small regions with few people in them.</p>
 <p>Hierarchical Bayesian shrinkage basically says “we’re going to start by assuming that you, the individual county, are exactly the same as the overall state. Then we adjust that assumption by looking at your individual data. If you’re small, we won’t adjust much, since we don’t see much from you. But if you’re big, we adjust a lot.” We will be doing this to shrink counties to states, but you could instead shrink census block groups to counties or states.</p>
@@ -200,9 +200,9 @@
 <span class="co">#&gt; 45157:          109     0.3302752        0.3432126</span>
 <span class="co">#&gt; 45158:           13     0.4615385        0.4173651</span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="smooth-out-weekend-effects-and-scale">2. Smooth out weekend effects and scale<a class="anchor" aria-label="anchor" href="#smooth-out-weekend-effects-and-scale"></a>
-</h2>
+<div class="section level3">
+<h3 id="smooth-out-weekend-effects-and-scale">2. Smooth out weekend effects and scale<a class="anchor" aria-label="anchor" href="#smooth-out-weekend-effects-and-scale"></a>
+</h3>
 <p>Next we will likely want to smooth things out and handle day-of-week effects by using the <code><a href="../reference/ma.html">ma()</a></code> moving average function. Don’t forget to sort first!</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Not actually run since we only have 14 days of data here anyway</span>
@@ -225,17 +225,17 @@
 <span class="co"># Notice the "2019" data has no growth since we din't give it 2018 data to grow from</span>
 <span class="va">fake_lastyear_scaled</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'date'</span>,<span class="st">'state_fips'</span>,<span class="st">'county_fips'</span>,<span class="st">'shrunk_stay_home'</span>,<span class="st">'shrunk_stay_home_lag'</span>,<span class="st">'shrunk_stay_home_YOY'</span><span class="op">)</span><span class="op">]</span>
 <span class="co">#&gt;              date state_fips county_fips shrunk_stay_home shrunk_stay_home_lag</span>
-<span class="co">#&gt;     1: 2019-06-01         01         001        0.2169029                   NA</span>
-<span class="co">#&gt;     2: 2019-06-02         01         001        0.2147627                   NA</span>
-<span class="co">#&gt;     3: 2019-06-03         01         001        0.1947311                   NA</span>
-<span class="co">#&gt;     4: 2019-06-04         01         001        0.2133012                   NA</span>
-<span class="co">#&gt;     5: 2019-06-05         01         001        0.1981482                   NA</span>
+<span class="co">#&gt;     1: 2019-06-01         01         001        0.2225649                   NA</span>
+<span class="co">#&gt;     2: 2019-06-02         01         001        0.2199512                   NA</span>
+<span class="co">#&gt;     3: 2019-06-03         01         001        0.1865503                   NA</span>
+<span class="co">#&gt;     4: 2019-06-04         01         001        0.1976422                   NA</span>
+<span class="co">#&gt;     5: 2019-06-05         01         001        0.1932117                   NA</span>
 <span class="co">#&gt;    ---                                                                        </span>
-<span class="co">#&gt; 90312: 2020-06-10         78         030        0.2962983            0.2895673</span>
-<span class="co">#&gt; 90313: 2020-06-11         78         030        0.2995778            0.2903688</span>
-<span class="co">#&gt; 90314: 2020-06-12         78         030        0.2693960            0.2538801</span>
-<span class="co">#&gt; 90315: 2020-06-13         78         030        0.3269283            0.3217581</span>
-<span class="co">#&gt; 90316: 2020-06-14         78         030        0.3441301            0.3248528</span>
+<span class="co">#&gt; 90312: 2020-06-10         78         030        0.2962983            0.2785883</span>
+<span class="co">#&gt; 90313: 2020-06-11         78         030        0.2995778            0.2821803</span>
+<span class="co">#&gt; 90314: 2020-06-12         78         030        0.2693960            0.2683497</span>
+<span class="co">#&gt; 90315: 2020-06-13         78         030        0.3269283            0.3210544</span>
+<span class="co">#&gt; 90316: 2020-06-14         78         030        0.3441301            0.3410606</span>
 <span class="co">#&gt;        shrunk_stay_home_YOY</span>
 <span class="co">#&gt;     1:                   NA</span>
 <span class="co">#&gt;     2:                   NA</span>
@@ -243,15 +243,15 @@
 <span class="co">#&gt;     4:                   NA</span>
 <span class="co">#&gt;     5:                   NA</span>
 <span class="co">#&gt;    ---                     </span>
-<span class="co">#&gt; 90312:           0.02324502</span>
-<span class="co">#&gt; 90313:           0.03171500</span>
-<span class="co">#&gt; 90314:           0.06111497</span>
-<span class="co">#&gt; 90315:           0.01606856</span>
-<span class="co">#&gt; 90316:           0.05934166</span></code></pre></div>
+<span class="co">#&gt; 90312:          0.063570791</span>
+<span class="co">#&gt; 90313:          0.061654063</span>
+<span class="co">#&gt; 90314:          0.003899023</span>
+<span class="co">#&gt; 90315:          0.018295575</span>
+<span class="co">#&gt; 90316:          0.008999834</span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="make-the-data-presentable">3. Make the data presentable!<a class="anchor" aria-label="anchor" href="#make-the-data-presentable"></a>
-</h2>
+<div class="section level3">
+<h3 id="make-the-data-presentable">3. Make the data presentable!<a class="anchor" aria-label="anchor" href="#make-the-data-presentable"></a>
+</h3>
 <p>Let’s bring in the state and county names for nice labeling</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"fips_to_names"</span><span class="op">)</span>
@@ -302,7 +302,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
